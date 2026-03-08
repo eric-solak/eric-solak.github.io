@@ -26,7 +26,8 @@
                         'ember-yellow': '#ffb347',
                         'dark-bg': '#0a0e1a',
                         'dark-card': '#1a1f2e',
-                        'dark-border': '#2a2f3e'
+                        'dark-border': '#2a2f3e',
+                        'mcmaster': '#79003d'
                     },
                     animation: {
                         'aurora': 'aurora 15s ease-in-out infinite',
@@ -209,13 +210,13 @@
                     <a href="#portfolio" class="px-8 py-3 bg-gradient-to-r from-ember-orange to-ember-darkorange rounded-full text-dark-bg font-semibold hover:shadow-lg hover:shadow-ember-orange/50 transition transform hover:scale-105">
                         View My Work
                     </a>
-                    <a href="Eric Solak Resume.pdf" class="px-8 py-3 border-2 border-ember-orange rounded-full hover:bg-ember-orange hover:text-dark-bg transition transform hover:scale-105">
+                    <a href="Eric Solak Resume.pdf" target="_blank" class="px-8 py-3 border-2 border-ember-orange rounded-full hover:bg-ember-orange hover:text-dark-bg transition transform hover:scale-105">
                         Download CV
                     </a>
                 </div>
                 <div class="mt-12 flex justify-center space-x-6">
-                    <a href="https://github.com/eric-solak" class="text-2xl mx-2 hover:text-ember-orange transition"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/ericsolak/" class="text-2xl mx-2 hover:text-ember-darkorange transition"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/eric-solak" target="_blank" class="text-2xl mx-2 hover:text-ember-orange transition"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/ericsolak/" target="_blank" class="text-2xl mx-2 hover:text-ember-darkorange transition"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
         </div>
@@ -575,7 +576,7 @@
                             <h3 class="text-2xl font-semibold mb-2 text-ember-darkorange">Neural Network Wildfire Risk Classification</h3>
                             <p class="text-gray-400 text-sm mb-4">Sep 2025 - Dec 2025</p>
                             <p class="text-gray-400 mb-4 leading-relaxed">
-                                Trained a neural network on 118k+ NASA satellite and weather samples to predict wildfire risk levels. The model hit 94.3% accuracy on test data—way better than the baseline approaches. This was about combining domain knowledge (wildfire patterns) with solid machine learning fundamentals to create something actually useful.
+                                Trained a neural network on 118k+ NASA satellite and weather samples to predict wildfire risk levels. The model hit 94.3% accuracy on test data, which is very strong in comparison with baseline approaches. This was about combining domain knowledge (wildfire patterns) with solid machine learning fundamentals to create something actually useful.
                             </p>
                             <div class="flex flex-wrap gap-2">
                                 <span class="px-2 py-1 bg-ember-orange/20 text-ember-orange rounded text-xs">Python</span>
@@ -584,13 +585,21 @@
 
                             </div>                            
                             <div class="mt-4 flex space-x-4">
-                                <a href="https://github.com/eric-solak/wildfire-risk-classifier/blob/main/docs/Report/Proposal%20LaTeX/main.pdf" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fas fa-file-alt"></i> Report</a>
-                                <a href="https://github.com/eric-solak/wildfire-risk-classifier" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fab fa-github"></i> Code</a>
+                                <a href="nn-classifier/wildfire-risk-map.html" class="text-ember-orange hover:text-ember-darkorange transition" target="_blank"><i class="fas fa-map"></i> Live Map</a>
+                                <a href="https://github.com/eric-solak/wildfire-risk-classifier/blob/main/docs/Report/Proposal%20LaTeX/main.pdf" target="_blank" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fas fa-file-alt"></i> Report</a>
+                                <a href="https://github.com/eric-solak/wildfire-risk-classifier" target="_blank" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fab fa-github"></i> Code</a>
                             </div>
                         </div>
-                        <div class="flex items-center justify-center">
-                            <i class="fas fa-fire text-6xl text-ember-yellow/30"></i>
+                        <a href="nn-classifier/wildfire-risk-map.html" target="_blank" class="flex items-center justify-center overflow-hidden rounded-lg bg-dark-card/50 cursor-pointer relative group" style="width: 275px; height: 200px;">
+                            <img src="nn-classifier/preview.png" alt="Wildfire Risk Classification Interactive Map" class="w-full h-full object-cover rounded-lg">
+                            <div class="absolute inset-0 bg-dark-bg/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
+                                <span class="text-ember-orange font-semibold text-sm"><i class="fas fa-map mr-2"></i>View Live Map</span>
+                            </div>
+                        </a>
+                        <div class="absolute inset-0 bg-dark-bg/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
+                            <span class="text-ember-orange font-semibold text-sm"><i class="fas fa-map mr-2"></i>View Live Map</span>
                         </div>
+                    </a>
                     </div>
                 </div>
 
@@ -601,7 +610,7 @@
                             <h3 class="text-2xl font-semibold mb-2 text-ember-darkred">AI Mobile Application - SneakPeek</h3>
                             <p class="text-gray-400 text-sm mb-4">Jan 2025 - Mar 2025</p>
                             <p class="text-gray-400 mb-4 leading-relaxed">
-                                Built a mobile app where sneaker enthusiasts can snap a photo and instantly identify kicks. I trained a DenseNet201 model on a custom sneaker dataset, then wired it into the app using a multi-agent backend. It's part AI recognition system, part social forum—a fun intersection of computer vision and community.
+                                Built a mobile app where sneaker enthusiasts can snap a photo and instantly identify shoes. I trained a DenseNet201 model on a custom sneaker dataset, then wired it into the app using a multi-agent backend. It's part AI recognition system, part social forum, a fun intersection of computer vision and community.
                             </p>
                             <div class="flex flex-wrap gap-2">
                                 <span class="px-2 py-1 bg-ember-orange/20 text-ember-orange rounded text-xs">Python</span>
@@ -610,7 +619,7 @@
                                 <span class="px-2 py-1 bg-ember-yellow/20 text-ember-yellow rounded text-xs">JavaScript</span>
                             </div>
                             <div class="mt-4 flex space-x-4">
-                                <a href="https://github.com/eric-solak/SneakPeek" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fab fa-github"></i> Code</a>
+                                <a href="https://github.com/eric-solak/SneakPeek" target="_blank" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fab fa-github"></i> Code</a>
                             </div>
                         </div>
                         <div class="flex items-center justify-center">
@@ -634,7 +643,7 @@
                                 <span class="px-2 py-1 bg-ember-yellow/20 text-ember-yellow rounded text-xs">Maven</span>
                             </div>
                             <div class="mt-4 flex space-x-4">
-                                <a href="https://github.com/eric-solak/Drone-Rescue-Mission" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fab fa-github"></i> Code</a>
+                                <a href="https://github.com/eric-solak/Drone-Rescue-Mission" target="_blank" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fab fa-github"></i> Code</a>
                             </div>
                         </div>
                         <div class="flex items-center justify-center overflow-hidden rounded-lg bg-dark-card/50" style="width: 275px; height: 200px;">
@@ -649,41 +658,28 @@
    
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-dark-card/30">
+    <section id="contact" class="py-20 bg-dark-card/20">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Get In Touch</h2>
-            <div class="max-w-4xl mx-auto">
-                <div class="grid md:grid-cols-2 gap-8 mb-8">
-                    <div class="space-y-6">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-ember-orange to-ember-darkorange flex items-center justify-center">
-                                <i class="fas fa-envelope text-dark-bg"></i>
-                            </div>
-                            <div>
-                                <p class="text-gray-400">Email</p>
-                                <p>solakeric28@gmail.com</p>
-                            </div>
-                        </div>
-                    
-                        <div class="flex items-center space-x-4">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-ember-darkred to-ember-yellow flex items-center justify-center">
-                                <i class="fas fa-map-marker-alt text-dark-bg"></i>
-                            </div>
-                            <div>
-                                <p class="text-gray-400">Location</p>
-                                <p>Ontario, Canada</p>
-                            </div>
-                        </div>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-12 w-full">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-ember-orange to-ember-darkorange flex items-center justify-center">
+                        <i class="fas fa-envelope text-dark-bg"></i>
                     </div>
+                    <div>
+                        <p class="text-gray-400">Email</p>
+                        <p>solakeric28@gmail.com</p>
+                    </div>
+                </div>
 
-                    <form class="space-y-4">
-                        <input type="text" placeholder="Your Name" class="w-full px-4 py-3 bg-dark-card border border-dark-border rounded-lg focus:outline-none focus:border-ember-orange">
-                        <input type="email" placeholder="Your Email" class="w-full px-4 py-3 bg-dark-card border border-dark-border rounded-lg focus:outline-none focus:border-ember-orange">
-                        <textarea placeholder="Your Message" rows="4" class="w-full px-4 py-3 bg-dark-card border border-dark-border rounded-lg focus:outline-none focus:border-ember-orange"></textarea>
-                        <button type="submit" class="w-full px-8 py-3 bg-gradient-to-r from-ember-orange to-ember-darkorange rounded-lg text-dark-bg font-semibold hover:shadow-lg hover:shadow-ember-orange/50 transition transform hover:scale-105">
-                            Send Message
-                        </button>
-                    </form>
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-ember-darkred to-ember-yellow flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-dark-bg"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400">Location</p>
+                        <p>Ontario, Canada</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -693,8 +689,8 @@
     <footer class="py-8 border-t border-dark-border">
         <div class="container mx-auto px-6 text-center">
             <div class="mb-4">
-                <a href="https://github.com/eric-solak" class="text-2xl mx-2 hover:text-ember-orange transition"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/ericsolak/" class="text-2xl mx-2 hover:text-ember-darkorange transition"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/eric-solak" target="_blank" class="text-2xl mx-2 hover:text-ember-orange transition"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/ericsolak/" target="_blank" class="text-2xl mx-2 hover:text-ember-darkorange transition"><i class="fab fa-linkedin"></i></a>
             </div>
         </div>
     </footer>
