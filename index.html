@@ -20,13 +20,15 @@
             theme: {
                 extend: {
                     colors: {
-                        'ember-orange': '#ff6a00',
-                        'ember-darkorange': '#ff3d00',
-                        'ember-darkred': '#b30000',
-                        'ember-yellow': '#ffb347',
-                        'dark-bg': '#0a0e1a',
-                        'dark-card': '#1a1f2e',
-                        'dark-border': '#2a2f3e',
+                        'ember-orange': '#f59e0b',
+                        'ember-darkorange': '#d97706',
+                        'ember-darkred': '#b45309',
+                        'ember-yellow': '#fde68a',
+                        'dark-bg': '#0c0a09',
+                        'dark-bg-alt': '#36454f',
+                        'dark-card': '#0d2548',
+                        'dark-border': '#1e4a8a',
+                        'text-mid': '#b0b7c3',
                         'mcmaster': '#79003d'
                     },
                     animation: {
@@ -64,10 +66,10 @@
                         },
                         glow: {
                             '0%, 100%': {
-                                boxShadow: '0 0 6px rgba(255,106,0,0.45), 0 0 24px rgba(255,61,0,0.25)'
+                                boxShadow: '0 0 6px rgba(245,158,11,0.45), 0 0 24px rgba(217,119,6,0.25)'
                             },
                             '50%': {
-                                boxShadow: '0 0 18px rgba(179,0,0,0.8), 0 0 36px rgba(255,179,71,0.36)'
+                                boxShadow: '0 0 18px rgba(180,83,9,0.8), 0 0 36px rgba(253,230,138,0.36)'
                             }
                         }
                     }
@@ -79,12 +81,54 @@
     <style>
         /* Aurora gradient background */
         .aurora-bg {
-            background: linear-gradient(-45deg, #0a0e1a, #1a0033, #002244, #001a33);
-            background-size: 400% 400%;
+            background: linear-gradient(-45deg, #0a1f45, #0a1f45, #103a63);
+            background-size: 400% 800%;
             animation: aurora 10s ease infinite;
         }
 
-        /* Aurora light effect overlay */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 158, 11, 0.3);
+            box-shadow: 0 12px 40px rgba(245, 158, 11, 0.2), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                105deg,
+                transparent 20%,
+                rgba(255, 255, 255, 0.04) 40%,
+                rgba(255, 255, 255, 0.08) 50%,
+                rgba(255, 255, 255, 0.04) 60%,
+                transparent 80%
+            );
+            animation: shimmer 15s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            50% { left: 150%; }
+            100% { left: 150%; }
+        }
+
         .aurora-overlay {
             position: fixed;
             top: 0;
@@ -92,12 +136,18 @@
             right: 0;
             height: 100vh;
             background:
-                radial-gradient(ellipse at top left, rgba(255,106,0,0.18) 0%, transparent 40%),
-                radial-gradient(ellipse at top right, rgba(255,61,0,0.14) 0%, transparent 40%),
-                radial-gradient(ellipse at bottom left, rgba(179,0,0,0.10) 0%, transparent 40%),
-                radial-gradient(ellipse at bottom right, rgba(255,179,71,0.10) 0%, transparent 40%);
+                radial-gradient(ellipse at top left, rgba(255, 162, 0, 0.08) 0%, transparent 55%),
+                radial-gradient(ellipse at top right, rgba(255, 136, 0, 0.05) 0%, transparent 55%),
+                radial-gradient(ellipse at bottom left, rgba(255, 111, 0, 0.05) 0%, transparent 55%),
+                radial-gradient(ellipse at bottom right, rgba(255, 204, 0, 0.03) 0%, transparent 55%);
             pointer-events: none;
-            opacity: 0.7;
+            opacity: 1;
+        }
+
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Smooth scrolling */
@@ -115,14 +165,13 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #ff6a00, #ff3d00);
+            background: linear-gradient(to bottom, #f59e0b, #d97706);
             border-radius: 5px;
         }
 
         /* Gradient text */
         .gradient-text {
-            /* background: linear-gradient(135deg, #00ffaa 0%, #00aaff 50%, #aa00ff 100%); */
-            background: linear-gradient(135deg, #e54d22 0%, #eccc2f 50%, #c78814 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #fde68a 50%, #d97706 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -135,9 +184,9 @@
         }
 
         .card-hover:hover {
-            border-color: #ff6a00;
+            border-color: #f59e0b;
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255,106,0,0.18);
+            box-shadow: 0 10px 30px rgba(245,158,11,0.18);
         }
 
         /* Progress bar animation */
@@ -159,12 +208,12 @@
         }
     </style>
 </head>
-<body class="bg-dark-bg text-gray-200 aurora-bg">
+<body class="text-gray-200 aurora-bg">
     <!-- Aurora overlay effect -->
     <div class="aurora-overlay"></div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full bg-dark-bg/90 backdrop-blur-md border-b border-dark-border z-50">
+    <nav class="fixed top-0 w-full backdrop-blur-md border-b border-dark-border z-50" style="background: rgba(15,12,38,0.85);">
         <div class="container mx-auto px-6 py-3">
             <div class="flex justify-between items-center">
                 <div class="text-2xl font-bold gradient-text">Eric Solak</div>
@@ -205,7 +254,7 @@
                 <h1 class="text-5xl md:text-7xl font-bold mb-4">
                     Hello, I'm <span class="gradient-text">Eric Solak</span>
                 </h1>
-                <p class="text-xl md:text-2xl text-gray-400 mb-8">Bachelor of Engineering - BE, Software Engineering</p>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8">Bachelor of Engineering - BE, Software Engineering</p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="#portfolio" class="px-8 py-3 bg-gradient-to-r from-ember-orange to-ember-darkorange rounded-full text-dark-bg font-semibold hover:shadow-lg hover:shadow-ember-orange/50 transition transform hover:scale-105">
                         View My Work
@@ -249,25 +298,25 @@
         <h2 class="text-4xl font-bold text-center mb-12 gradient-text">About Me</h2>
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div class="space-y-6">
-                <p class="text-gray-400 leading-relaxed">
+                <p class="text-text-grey-300 leading-relaxed">
                     I'm an aspiring Software Engineer and soon-to-be new graduate who loves building clean,
                     intuitive, and meaningful work. I'm passionate about AI, solving problems, and
                     learning new technologies.
                 </p>
 
-                <p class="text-gray-400 leading-relaxed">
+                <p class="text-text-grey-300 leading-relaxed">
                     Outside of engineering, I'm a self-taught piano and guitar player, which has helped
                     shape my creativity and patience, both of which I bring into my work as a developer.
                 </p>
 
                 <div class="grid grid-cols-2 gap-4 pt-4">
-                    <div class="bg-dark-card p-4 rounded-lg border border-dark-border card-hover">
+                    <div class="glass-card p-4 rounded-lg card-hover" style="animation-delay: 0s;">
                         <div class="text-3xl font-bold text-ember-orange">2026</div>
-                        <div class="text-sm text-gray-400">Graduation Year</div>
+                        <div class="text-sm text-text-mid">Graduation Year</div>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg border border-dark-border card-hover">
+                    <div class="glass-card p-4 rounded-lg card-hover" style="animation-delay: 0.8s;">
                         <div class="text-3xl font-bold text-ember-darkorange">3.7</div>
-                        <div class="text-sm text-gray-400">GPA</div>
+                        <div class="text-sm text-text-mid">GPA</div>
                     </div>
                 </div>
             </div>
@@ -301,32 +350,32 @@
 
             <!-- Education Details & Courses -->
             <div class="space-y-6">
-                <div class="bg-dark-card p-6 rounded-lg card-hover border border-dark-border">
+                <div class="glass-card p-4 rounded-lg card-hover">
                     <h3 class="text-1xl font-bold text-ember-orange mb-2">Bachelor of Engineering - BE, Software Engineering</h3>
                     <p class="text-ember-darkorange text-lg font-semibold mb-1">McMaster University</p>
-                    <p class="text-gray-400 mb-4">2022 - Present</p>
-                    <p class="text-gray-400">Specializing in full-stack development, AI, and software architecture with a strong foundation in computer science fundamentals.</p>
+                    <p class="text-text-mid mb-4">2022 - Present</p>
+                    <p class="text-gray-300">Specializing in full-stack development, AI, and software architecture with a strong foundation in computer science fundamentals.</p>
                 </div>
 
                 <div>
                     <h4 class="text-xl font-semibold text-ember-orange mb-4">Key Courses</h4>
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-dark-card p-3 rounded-lg card-hover border border-dark-border text-sm text-gray-300">
+                        <div class="glass-card p-4 rounded-lg card-hover">
                             <i class="fas fa-brain text-ember-orange mr-2"></i>Machine Learning
                         </div>
-                        <div class="bg-dark-card p-3 rounded-lg border border-dark-border text-sm text-gray-300 card-hover">
+                        <div class="glass-card p-4 rounded-lg card-hover">
                             <i class="fas fa-chart-bar text-ember-orange mr-2"></i>Data Mining
                         </div>
-                        <div class="bg-dark-card p-3 rounded-lg border border-dark-border text-sm text-gray-300 card-hover">
+                        <div class="glass-card p-4 rounded-lg card-hover">
                             <i class="fas fa-cube text-ember-orange mr-2"></i>Software Design IV
                         </div>
-                        <div class="bg-dark-card p-3 rounded-lg border border-dark-border text-sm text-gray-300 card-hover">
+                        <div class="glass-card p-4 rounded-lg card-hover">
                             <i class="fas fa-cloud text-ember-orange mr-2"></i>Computer Networks & Security
                         </div>
-                        <div class="bg-dark-card p-3 rounded-lg border border-dark-border text-sm text-gray-300 card-hover">
+                        <div class="glass-card p-4 rounded-lg card-hover">
                             <i class="fas fa-check text-ember-orange mr-2"></i>Performance Analysis
                         </div>
-                        <div class="bg-dark-card p-3 rounded-lg border border-dark-border text-sm text-gray-300 card-hover">
+                        <div class="glass-card p-4 rounded-lg card-hover">
                             <i class="fas fa-check text-ember-orange mr-2"></i>Software Testing & QA
                         </div>
                     </div>
@@ -343,13 +392,13 @@
         <div class="max-w-4xl mx-auto space-y-8">
             <div class="relative pl-8 border-l-2 border-ember-orange">
                 <div class="absolute -left-2 top-0 w-4 h-4 bg-ember-orange rounded-full"></div>
-                <div class="bg-dark-card p-6 rounded-lg card-hover">
+                <div class="glass-card p-6 rounded-lg card-hover">
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="text-xl font-semibold text-ember-orange">Golf Services Lead</h3>
                         <span class="text-sm text-gray-400">2019 - Present</span>
                     </div>
                     <p class="text-gray-300 font-medium mb-2">Brantford Golf and Country Club</p>
-                    <ul class="text-gray-400 space-y-2 list-disc pl-5">
+                    <ul class="text-text-mid space-y-2 list-disc pl-5">
                     <li>Oversee and maintain the golf cart fleet to ensure consistent quality and a strong member/guest experience.</li>
                     <li>Developed a custom digital system using Python to track staff attendance and automate clock-in/clock-out logging.</li>
                     <li>Actively serve as a member of the Health and Safety Committee, helping promote workplace safety and compliance.</li>
@@ -369,35 +418,35 @@
             <div>
                 <h3 class="text-xl font-semibold mb-4 text-ember-orange">Programming Languages</h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-gray-300">
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                             <i class="fab fa-python text-2xl mb-2 text-ember-orange"></i>
                             <p>Python</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                             <i class="fas fa-code text-2xl mb-2 text-ember-orange"></i>
                             <p>C++</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                             <i class="fab fa-java text-2xl mb-2 text-ember-orange"></i>
                             <p>Java</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                             <i class="fab fa-js text-2xl mb-2 text-ember-orange"></i>
                             <p>JavaScript</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                             <i class="fas fa-c text-2xl mb-2 text-ember-orange"></i>
                             <p>C</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                             <i class="fas fa-code text-2xl mb-2 text-ember-orange"></i>
                             <p>Haskell</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                             <i class="fas fa-terminal text-2xl mb-2 text-ember-orange"></i>
                             <p>Bash</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                             <i class="fas fa-chart-line text-2xl mb-2 text-ember-orange"></i>
                             <p>MATLAB</p>
                     </div>
@@ -408,15 +457,15 @@
             <div>
                 <h3 class="text-xl font-semibold mb-4 text-ember-orange">Frontend Development</h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-gray-300">
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fab fa-react text-2xl mb-2 text-ember-orange"></i>
                         <p>React</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fab fa-js text-2xl mb-2 text-ember-orange"></i>
                         <p>Next.js</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fab fa-html5 text-2xl mb-2 text-ember-orange"></i>
                         <p>HTML / CSS</p>
                     </div>
@@ -427,16 +476,16 @@
             <div>
                 <h3 class="text-xl font-semibold mb-4 text-ember-darkorange">Backend Development</h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-gray-300">
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fab fa-node text-2xl mb-2 text-ember-orange"></i>
                         <p>Node.js</p>
                     </div>
 
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fas fa-database text-2xl mb-2 text-ember-orange"></i>
                         <p>SQL / SQLite / PostgreSQL</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fas fa-network-wired text-2xl mb-2 text-ember-orange"></i>
                         <p>REST APIs</p>
                     </div>
@@ -448,35 +497,35 @@
                 <h3 class="text-xl font-semibold mb-4 text-ember-darkred">Tools & Technologies</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-gray-300">
 
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fab fa-git text-2xl mb-2 text-ember-orange"></i>
                         <p>Git</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fab fa-linux text-2xl mb-2 text-ember-orange"></i>
                         <p>Linux / WSL</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fas fa-cogs text-2xl mb-2 text-ember-orange"></i>
                         <p>CI / CD</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fas fa-brain text-2xl mb-2 text-ember-orange"></i>
                         <p>PyTorch</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fas fa-brain text-2xl mb-2 text-ember-orange"></i>
                         <p>TensorFlow</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fab fa-java text-2xl mb-2 text-ember-orange"></i>
                         <p>JUnit / Maven</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fas fa-search text-2xl mb-2 text-ember-orange"></i>
                         <p>SonarQube</p>
                     </div>
-                    <div class="bg-dark-card p-4 rounded-lg text-center card-hover">
+                    <div class="glass-card p-4 rounded-lg text-center card-hover">
                         <i class="fab fa-react text-2xl mb-2 text-ember-orange"></i>
                         <p>Expo</p>
                     </div>
@@ -494,7 +543,7 @@
             <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Services</h2>
             <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
 
-                <div class="bg-dark-card p-6 rounded-lg card-hover text-center">
+                <div class="glass-card p-6 rounded-lg card-hover text-center">
                     <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-ember-darkorange to-ember-darkred flex items-center justify-center">
                         <i class="fas fa-brain text-2xl text-dark-bg"></i>
                     </div>
@@ -504,7 +553,7 @@
                     </p>
                 </div>
 
-                <div class="bg-dark-card p-6 rounded-lg card-hover text-center">
+                <div class="glass-card p-6 rounded-lg card-hover text-center">
                     <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-ember-darkorange to-ember-yellow flex items-center justify-center">
                         <i class="fas fa-cogs text-2xl text-dark-bg"></i>
                     </div>
@@ -514,7 +563,7 @@
                     </p>
                 </div>
 
-                <div class="bg-dark-card p-6 rounded-lg card-hover text-center">
+                <div class="glass-card p-6 rounded-lg card-hover text-center">
                     <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-ember-orange to-ember-darkorange flex items-center justify-center">
                         <i class="fas fa-laptop-code text-2xl text-dark-bg"></i>
                     </div>
@@ -524,7 +573,7 @@
                     </p>
                 </div>
                 
-                <div class="bg-dark-card p-6 rounded-lg card-hover text-center">
+                <div class="glass-card p-6 rounded-lg card-hover text-center">
                     <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-ember-darkorange to-ember-darkred flex items-center justify-center">
                         <i class="fas fa-mobile-alt text-2xl text-dark-bg"></i>
                     </div>
@@ -548,8 +597,8 @@
                     <div class="grid md:grid-cols-3 gap-6">
                         <div class="md:col-span-2">
                             <h3 class="text-2xl font-semibold mb-2 text-ember-orange">Hands-free AI Dictation</h3>
-                            <p class="text-gray-400 text-sm mb-4">Sep 2025 - Present</p>
-                            <p class="text-gray-400 mb-4 leading-relaxed">
+                            <p class="text-text-mid text-sm mb-4">Sep 2025 - Present</p>
+                            <p class="text-text-grey-300 mb-4 leading-relaxed">
                                 Building an end-to-end AI dictation system from the ground up. I'm handling the backend architecture with real-time API endpoints that connect speech-to-text models, setting up data pipelines for efficient processing, and documenting everything so our team can maintain it smoothly.
                             </p>
                             <div class="flex flex-wrap gap-2">
@@ -558,13 +607,13 @@
                                 <span class="px-2 py-1 bg-ember-darkred/20 text-ember-darkred rounded text-xs">AI/ML</span>
                             </div>
                             <div class="mt-4 flex space-x-4">
-                                <p class="text-gray-500 mb-4 leading-relaxed">
+                                <p class="text-gray-400 leading-relaxed">
                                 This project is under an NDA so I can't share code publicly yet, but it's been an incredible learning experience in building scalable AI systems and working with cutting-edge speech recognition technologies.
                                 </p>
                             </div>
                         </div>
                         <div class="flex items-center justify-center">
-                            <i class="fas fa-microphone text-6xl text-ember-orange/30"></i>
+                            <i class="fas fa-microphone text-6xl text-ember-orange/30 mr-7"></i>
                         </div>
                     </div>
                 </div>
@@ -573,9 +622,9 @@
                 <div class="pb-8 border-b border-dark-border/50">
                     <div class="grid md:grid-cols-3 gap-6">
                         <div class="md:col-span-2">
-                            <h3 class="text-2xl font-semibold mb-2 text-ember-darkorange">Neural Network Wildfire Risk Classification</h3>
-                            <p class="text-gray-400 text-sm mb-4">Sep 2025 - Dec 2025</p>
-                            <p class="text-gray-400 mb-4 leading-relaxed">
+                            <h3 class="text-2xl font-semibold mb-2 text-ember-orange">Neural Network Wildfire Risk Classification</h3>
+                            <p class="text-text-mid text-sm mb-4">Sep 2025 - Dec 2025</p>
+                            <p class="text-text-grey-300 mb-4 leading-relaxed">
                                 Trained a neural network on 118k+ NASA satellite and weather samples to predict wildfire risk levels. The model hit 94.3% accuracy on test data, which is very strong in comparison with baseline approaches. This was about combining domain knowledge (wildfire patterns) with solid machine learning fundamentals to create something actually useful.
                             </p>
                             <div class="flex flex-wrap gap-2">
@@ -590,15 +639,18 @@
                                 <a href="https://github.com/eric-solak/wildfire-risk-classifier" target="_blank" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fab fa-github"></i> Code</a>
                             </div>
                         </div>
-                        <a href="nn-classifier/wildfire-risk-map.html" target="_blank" class="flex items-center justify-center overflow-hidden rounded-lg bg-dark-card/50 cursor-pointer relative group" style="width: 275px; height: 200px;">
-                            <img src="nn-classifier/preview.png" alt="Wildfire Risk Classification Interactive Map" class="w-full h-full object-cover rounded-lg">
-                            <div class="absolute inset-0 bg-dark-bg/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
-                                <span class="text-ember-orange font-semibold text-sm"><i class="fas fa-map mr-2"></i>View Live Map</span>
-                            </div>
-                        </a>
-                        <div class="absolute inset-0 bg-dark-bg/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-lg">
-                            <span class="text-ember-orange font-semibold text-sm"><i class="fas fa-map mr-2"></i>View Live Map</span>
-                        </div>
+                        <a href="nn-classifier/wildfire-risk-map.html" target="_blank" 
+                            class="flex items-center justify-center overflow-hidden rounded-lg glass-card cursor-pointer relative group ml-10" 
+                            style="width: 275px; height: 200px;">
+                                <img src="nn-classifier/preview.png" 
+                                    alt="Wildfire Risk Map" 
+                                    class="w-full h-full object-cover rounded-lg transition group-hover:brightness-75">
+                                <div class="absolute inset-0 flex items-end justify-center pb-3">
+                                    <div class="px-3 py-1.5 bg-ember-orange/90 rounded-full flex items-center gap-2 text-dark-bg text-xs font-semibold shadow-lg group-hover:bg-ember-darkorange transition">
+                                        <i class="fas fa-map"></i> View Live Map
+                                    </div>
+                                </div>
+                            </a>
                     </a>
                     </div>
                 </div>
@@ -607,9 +659,9 @@
                 <div class="pb-8 border-b border-dark-border/50">
                     <div class="grid md:grid-cols-3 gap-6">
                         <div class="md:col-span-2">
-                            <h3 class="text-2xl font-semibold mb-2 text-ember-darkred">AI Mobile Application - SneakPeek</h3>
-                            <p class="text-gray-400 text-sm mb-4">Jan 2025 - Mar 2025</p>
-                            <p class="text-gray-400 mb-4 leading-relaxed">
+                            <h3 class="text-2xl font-semibold mb-2 text-ember-orange">AI Mobile Application - SneakPeek</h3>
+                            <p class="text-text-mid text-sm mb-4">Jan 2025 - Mar 2025</p>
+                            <p class="text-text-grey-300 mb-4 leading-relaxed">
                                 Built a mobile app where sneaker enthusiasts can snap a photo and instantly identify shoes. I trained a DenseNet201 model on a custom sneaker dataset, then wired it into the app using a multi-agent backend. It's part AI recognition system, part social forum, a fun intersection of computer vision and community.
                             </p>
                             <div class="flex flex-wrap gap-2">
@@ -623,7 +675,7 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-center">
-                            <i class="fas fa-mobile-alt text-6xl text-ember-darkred/30"></i>
+                            <i class="fas fa-mobile-alt text-6xl text-ember-darkred/30 mr-7"></i>
                         </div>
                     </div>
                 </div>
@@ -632,9 +684,9 @@
                 <div class="pb-8">
                     <div class="grid md:grid-cols-3 gap-6">
                         <div class="md:col-span-2">
-                            <h3 class="text-2xl font-semibold mb-2 text-ember-yellow">Autonomous Drone Rescue</h3>
-                            <p class="text-gray-400 text-sm mb-4">Sep 2023 - Dec 2023</p>
-                            <p class="text-gray-400 mb-4 leading-relaxed">
+                            <h3 class="text-2xl font-semibold mb-2 text-ember-orange">Autonomous Drone Rescue</h3>
+                            <p class="text-text-mid text-sm mb-4">Sep 2023 - Dec 2023</p>
+                            <p class="text-text-grey-300 mb-4 leading-relaxed">
                                 Worked with a team of three to code autonomous flight software for a simulated drone that navigates procedurally generated islands. I designed test suites with JUnit to make sure each component actually worked before integrating everything together. Great project for learning real software engineering practices at scale.
                             </p>
                             <div class="flex flex-wrap gap-2">
@@ -646,11 +698,11 @@
                                 <a href="https://github.com/eric-solak/Drone-Rescue-Mission" target="_blank" class="text-ember-orange hover:text-ember-darkorange transition"><i class="fab fa-github"></i> Code</a>
                             </div>
                         </div>
-                        <div class="flex items-center justify-center overflow-hidden rounded-lg bg-dark-card/50" style="width: 275px; height: 200px;">
+                        <a href="https://github.com/eric-solak/Drone-Rescue-Mission" target="_blank" class="flex items-center justify-center overflow-hidden rounded-lg glass-card ml-10" style="width: 275px; height: 200px;">
                             <img src="https://github.com/user-attachments/assets/4ee11c1e-6b89-4215-977a-64d2f520ab8f" alt="Drone Visualization" class="w-auto h-full max-w-none scale-125" style="min-width: 175%;">
-                        </div>
+                        </a>
                     </div>
-                </div>
+                </div> 
 
             </div>
         </div>
