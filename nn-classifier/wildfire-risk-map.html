@@ -4,13 +4,14 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Global Wildfire Risk Classification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
@@ -85,18 +86,6 @@
     }
     .leaflet-control-zoom a:hover { background: #f1f5f9 !important; border-color: #3b82f6 !important; color: #3b82f6 !important; }
 
-    .badge {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 10px 16px;
-      text-align: center;
-      font-family: 'Inter', system-ui, sans-serif;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    }
-    .badge .num { font-size: 22px; font-weight: 700; color: #1a1a2e; display: block; line-height: 1.1; }
-    .badge .lbl { font-size: 9px; color: #94a3b8; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-top: 3px; font-weight: 500; }
-
     .legend {
       background: #ffffff;
       border: 1px solid #e2e8f0;
@@ -132,19 +121,37 @@
     .info-value { color: #1a1a2e; font-weight: 500; }
     .feat-header { margin: 8px 0 4px; font-size: 9px; color: #cbd5e1; letter-spacing: 0.1em; border-top: 1px solid #f1f5f9; padding-top: 7px; font-weight: 600; text-transform: uppercase; }
     .idle-hint { color: #cbd5e1; font-size: 11px; margin-top: 4px; line-height: 1.6; }
+
+    .filter-panel {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      color: #374151;
+      min-width: 160px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .filter-title { font-size: 9px; letter-spacing: 0.1em; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; font-weight: 600; }
+    .filter-row {
+      display: flex; align-items: center; gap: 8px; margin: 5px 0;
+      cursor: pointer; font-weight: 500; user-select: none;
+    }
+    .filter-row input { cursor: pointer; accent-color: #3b82f6; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>Neural Network Wildfire Risk Classification</h1>
-  <span><strong style="color:#1a1a2e;font-weight:700">Eric Solak</strong>&nbsp;·&nbsp; 118,858 NASA FIRMS + Open-Meteo samples &nbsp;·&nbsp; MLP &nbsp;·&nbsp; PyTorch </span>
+  <span><strong style="color:#1a1a2e;font-weight:700">Eric Solak</strong>&nbsp;·&nbsp; 118,858 NASA FIRMS + Open-Meteo samples &nbsp;·&nbsp; MLP &nbsp;·&nbsp; PyTorch</span>
 </header>
 
 <div id="map">
   <div id="loading">
     <div class="spinner"></div>
-    <p>Loading predictions...</p>
+    <p>Loading 118k predictions...</p>
   </div>
 </div>
 
@@ -153,13 +160,15 @@ window.onload = function () {
 
   const map = L.map('map', { center: [20, 10], zoom: 2 });
 
+  // Canvas renderer — single <canvas> element instead of 118k SVG nodes
+  const renderer = L.canvas({ padding: 0.5 });
+
   L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
     attribution: 'Map: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> | Risk predictions: MLP neural network trained on NASA FIRMS + Open-Meteo data',
     maxZoom: 15,
     opacity: 0.78
   }).addTo(map);
 
-  // Subtle dark overlay so points pop
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
     attribution: '',
     subdomains: 'abcd',
@@ -169,9 +178,20 @@ window.onload = function () {
 
   const RC = { 0: '#22c55e', 1: '#f97316', 2: '#dc2626' };
   const RL = { 0: 'LOW',     1: 'MEDIUM', 2: 'HIGH'    };
-  const RN = { 0: 'low',     1: 'medium', 2: 'high'    };
 
-  // Info Panel
+  // One LayerGroup per risk level for efficient show/hide
+  const riskGroups = { 0: L.layerGroup(), 1: L.layerGroup(), 2: L.layerGroup() };
+
+  const activeFilters = new Set([0, 1, 2]);
+
+  function applyVisibility() {
+    for (const level of [0, 1, 2]) {
+      if (activeFilters.has(level) && !map.hasLayer(riskGroups[level]))  riskGroups[level].addTo(map);
+      else if (!activeFilters.has(level) && map.hasLayer(riskGroups[level])) map.removeLayer(riskGroups[level]);
+    }
+  }
+
+  // Info panel
   const info = L.control({ position: 'topright' });
   info.onAdd = () => {
     info._div = L.DomUtil.create('div', 'info-box');
@@ -204,7 +224,7 @@ window.onload = function () {
   };
   info.addTo(map);
 
-  // Legend (populated after CSV loads)
+  // Legend
   const legend = L.control({ position: 'bottomleft' });
   legend.onAdd = () => {
     legend._div = L.DomUtil.create('div', 'legend');
@@ -223,7 +243,30 @@ window.onload = function () {
   };
   legend.addTo(map);
 
-  // Load CSV + Plot
+  // Risk filter control
+  const filterControl = L.control({ position: 'bottomright' });
+  filterControl.onAdd = function () {
+    const div = L.DomUtil.create('div', 'filter-panel');
+    div.innerHTML = `
+      <div class="filter-title">Risk Filter</div>
+      <label class="filter-row"><input type="checkbox" checked data-level="2"><div class="leg-dot" style="background:#dc2626"></div>High</label>
+      <label class="filter-row"><input type="checkbox" checked data-level="1"><div class="leg-dot" style="background:#f97316"></div>Medium</label>
+      <label class="filter-row"><input type="checkbox" checked data-level="0"><div class="leg-dot" style="background:#22c55e"></div>Low</label>
+    `;
+    L.DomEvent.disableClickPropagation(div);
+    div.querySelectorAll('input').forEach(input => {
+      input.addEventListener('change', function () {
+        const level = parseInt(this.dataset.level);
+        if (this.checked) activeFilters.add(level);
+        else activeFilters.delete(level);
+        applyVisibility();
+      });
+    });
+    return div;
+  };
+  filterControl.addTo(map);
+
+  // Load CSV + plot
   let locked = null;
 
   Papa.parse('wildfire_predictions.csv', {
@@ -242,7 +285,7 @@ window.onload = function () {
         if (isNaN(lat) || isNaN(lon)) return;
 
         counts[pred]++;
-        const radius = pred === 2 ? 8 : pred === 1 ? 6 : 5;
+        const radius      = pred === 2 ? 8 : pred === 1 ? 6 : 5;
         const fillOpacity = pred === 2 ? 0.88 : pred === 1 ? 0.75 : 0.65;
 
         const m = L.circleMarker([lat, lon], {
@@ -251,7 +294,8 @@ window.onload = function () {
           color: 'rgba(0,0,0,0.45)',
           weight: 1,
           fillOpacity,
-        }).addTo(map);
+          renderer,
+        });
 
         m.on('mouseover', function () {
           if (locked) return;
@@ -283,12 +327,16 @@ window.onload = function () {
             this.bringToFront();
           }
         });
+
+        riskGroups[pred].addLayer(m);
       });
 
-      // Update legend counts
-      document.getElementById('leg-high').textContent = `High Risk (${counts[2]})`;
-      document.getElementById('leg-med').textContent  = `Medium Risk (${counts[1]})`;
-      document.getElementById('leg-low').textContent  = `Low Risk (${counts[0]})`;
+      // Apply initial visibility (respects zoom state set before data loaded)
+      applyVisibility();
+
+      document.getElementById('leg-high').textContent = `High Risk (${counts[2].toLocaleString()})`;
+      document.getElementById('leg-med').textContent  = `Medium Risk (${counts[1].toLocaleString()})`;
+      document.getElementById('leg-low').textContent  = `Low Risk (${counts[0].toLocaleString()})`;
     },
 
     error: function () {
