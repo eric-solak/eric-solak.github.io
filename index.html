@@ -593,6 +593,97 @@
   .c-val a { color: var(--t1); transition: color .15s; }
   .c-val a:hover { color: var(--accent2); }
 
+  /* Video Modal */
+  .vid-modal-wrap {
+    position: relative; max-width: 980px; width: 95%;
+    animation: vidIn .25s ease;
+  }
+  @keyframes vidIn {
+    from { opacity: 0; transform: scale(0.96) translateY(12px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .vid-modal-header { text-align: center; margin-bottom: 28px; }
+  .vid-modal-title {
+    font-family: var(--font-display);
+    font-size: 24px; font-weight: 800; color: var(--t1);
+    letter-spacing: -0.03em; margin-bottom: 7px;
+  }
+  .vid-modal-title i { color: var(--accent2); margin-right: 10px; font-size: 20px; }
+  .vid-modal-sub { font-size: 14px; color: var(--t2); }
+  .vid-layout { display: flex; align-items: center; gap: 28px; }
+  .vid-anns { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+  .vid-ann {
+    background: rgba(26,35,64,0.85); border: 1px solid rgba(96,165,250,0.18);
+    border-radius: 14px; padding: 15px 17px; backdrop-filter: blur(8px);
+  }
+  .vid-ann-icon { font-size: 18px; color: var(--accent2); margin-bottom: 7px; }
+  .vid-ann-name { font-size: 14px; font-weight: 700; color: var(--t1); margin-bottom: 3px; }
+  .vid-ann-info { font-size: 12.5px; color: var(--t2); line-height: 1.5; }
+  .vid-phone { flex-shrink: 0; }
+  .vid-phone-shell {
+    background: linear-gradient(160deg, #222 0%, #0a0a0a 100%);
+    border: 1.5px solid rgba(255,255,255,0.13);
+    border-radius: 36px; padding: 8px 5px 7px;
+    box-shadow:
+      0 60px 120px rgba(0,0,0,0.85),
+      inset 0 1px 0 rgba(255,255,255,0.15),
+      inset 0 -1px 0 rgba(255,255,255,0.04);
+    display: inline-flex; flex-direction: column; align-items: center;
+    position: relative;
+  }
+  /* volume buttons */
+  .vid-phone-shell::before {
+    content: '';
+    position: absolute; left: -4px; top: 22%;
+    width: 3px; height: 26px;
+    background: #2a2a2a; border-radius: 2px 0 0 2px;
+    box-shadow: 0 42px 0 #2a2a2a, 0 80px 0 #2a2a2a;
+  }
+  /* power button */
+  .vid-phone-shell::after {
+    content: '';
+    position: absolute; right: -4px; top: 28%;
+    width: 3px; height: 62px;
+    background: #2a2a2a; border-radius: 0 2px 2px 0;
+  }
+  .vid-phone-island {
+    width: 68px; height: 17px; background: #000;
+    border-radius: 10px; margin-bottom: 5px; flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .vid-phone-screen {
+    background: #000; border-radius: 30px;
+    overflow: hidden; aspect-ratio: 9/19.5;
+    height: clamp(280px, calc(100vh - 310px), 560px);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .vid-phone-bar {
+    width: 88px; height: 4px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 3px; margin-top: 5px; flex-shrink: 0;
+  }
+  .vid-stats {
+    display: flex; gap: 10px; justify-content: center; margin-top: 22px; flex-wrap: wrap;
+  }
+  .vid-stat {
+    background: rgba(26,35,64,0.8); border: 1px solid rgba(96,165,250,0.14);
+    border-radius: 12px; padding: 11px 22px; text-align: center;
+  }
+  .vid-stat-n {
+    font-family: var(--font-display);
+    font-size: 20px; font-weight: 800; color: var(--accent2);
+  }
+  .vid-stat-l {
+    font-size: 11px; color: var(--t3); font-weight: 600;
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  @media (max-width: 640px) {
+    .vid-anns { display: none; }
+    .vid-layout { justify-content: center; }
+    .vid-modal-title { font-size: 18px; }
+    .vid-modal-wrap { max-width: 380px; }
+  }
+
   footer {
     padding: 22px 40px;
     border-top: 1px solid var(--line);
@@ -1041,32 +1132,103 @@
 <!-- Video Modal -->
 <div id="video-modal" onclick="closeVideoModal()" style="
   display:none; position:fixed; inset:0; z-index:1000;
-  background:rgba(0,0,0,0.92); backdrop-filter:blur(8px);
+  background:rgba(0,0,0,0.94); backdrop-filter:blur(12px);
   align-items:center; justify-content:center; cursor:pointer;
+  padding:24px 16px; overflow-y:auto;
 ">
-  <div onclick="event.stopPropagation()" style="position:relative; max-width:380px; width:90%;">
+  <div onclick="event.stopPropagation()" class="vid-modal-wrap">
+
+    <!-- Close button -->
     <button onclick="closeVideoModal()" style="
-      position:absolute; top:-44px; right:0;
-      background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
-      color:#fff; font-size:20px; width:36px; height:36px; border-radius:50%;
+      position:absolute; top:-10px; right:-10px; z-index:10;
+      background:var(--bg3); border:1px solid rgba(255,255,255,0.15);
+      color:var(--t2); font-size:15px; width:32px; height:32px; border-radius:50%;
       cursor:pointer; display:flex; align-items:center; justify-content:center;
-      transition:background .15s;
-    ">×</button>
-    <div style="
-      background:#0a0e18; border:1.5px solid #1e2a48;
-      border-radius:36px; padding:14px 10px;
-      box-shadow:0 40px 100px rgba(0,0,0,.8);
-    ">
-      <div style="width:50px;height:12px;background:#060910;border-radius:6px;margin:0 auto 8px;"></div>
-      <div style="background:#060910;border-radius:22px;overflow:hidden;aspect-ratio:9/19.5;">
-        <video id="modal-video" src="assets/pocket-ai.mp4" autoplay muted loop playsinline
-          style="width:100%;height:100%;object-fit:cover;"></video>
-      </div>
-      <div style="width:44px;height:4px;background:#1e2a48;border-radius:2px;margin:10px auto 0;"></div>
+      transition:all .15s;
+    " onmouseover="this.style.background='rgba(96,165,250,0.15)';this.style.color='#fff'"
+       onmouseout="this.style.background='var(--bg3)';this.style.color='var(--t2)'">×</button>
+
+    <!-- Header -->
+    <div class="vid-modal-header">
+      <div class="vid-modal-title"><i class="fas fa-microphone"></i>Pocket AI &middot; Live Demo</div>
+      <div class="vid-modal-sub">Voice-to-task system &mdash; CATTLElytics Inc. &middot; Sep 2025 – Apr 2026</div>
     </div>
-    <p style="text-align:center;color:var(--t3);font-size:12px;margin-top:12px;">
-      Click outside to close
+
+    <!-- Layout: annotations | phone | annotations -->
+    <div class="vid-layout">
+
+      <!-- Left annotations -->
+      <div class="vid-anns">
+        <div class="vid-ann">
+          <div class="vid-ann-icon"><i class="fas fa-microphone"></i></div>
+          <div class="vid-ann-name">Voice Capture</div>
+          <div class="vid-ann-info">One-tap recording with real-time speech feedback</div>
+        </div>
+        <div class="vid-ann">
+          <div class="vid-ann-icon"><i class="fas fa-robot"></i></div>
+          <div class="vid-ann-name">OpenAI Whisper</div>
+          <div class="vid-ann-info">Transcription tested under simulated barn noise</div>
+        </div>
+        <div class="vid-ann">
+          <div class="vid-ann-icon"><i class="fas fa-database"></i></div>
+          <div class="vid-ann-name">Offline-First</div>
+          <div class="vid-ann-info">SQLite local storage with automatic background sync</div>
+        </div>
+      </div>
+
+      <!-- Phone shell -->
+      <div class="vid-phone">
+        <div class="vid-phone-shell">
+          <div class="vid-phone-island"></div>
+          <div class="vid-phone-screen">
+            <video id="modal-video" src="assets/pocket-ai.mp4" autoplay muted loop playsinline
+              style="width:100%;height:100%;object-fit:cover;"></video>
+          </div>
+          <div class="vid-phone-bar"></div>
+        </div>
+      </div>
+
+      <!-- Right annotations -->
+      <div class="vid-anns">
+        <div class="vid-ann">
+          <div class="vid-ann-icon"><i class="fas fa-brain"></i></div>
+          <div class="vid-ann-name">LLM Pipeline</div>
+          <div class="vid-ann-info">Transcript parsed into structured tasks with priority &amp; deadlines</div>
+        </div>
+        <div class="vid-ann">
+          <div class="vid-ann-icon"><i class="fas fa-clipboard-list"></i></div>
+          <div class="vid-ann-name">Task Management</div>
+          <div class="vid-ann-info">Full lifecycle: create, assign, complete, and track</div>
+        </div>
+        <div class="vid-ann">
+          <div class="vid-ann-icon"><i class="fas fa-sync-alt"></i></div>
+          <div class="vid-ann-name">Flask REST API</div>
+          <div class="vid-ann-info">Syncs with CATTLElytics' proprietary platform</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stats strip -->
+    <div class="vid-stats">
+      <div class="vid-stat">
+        <div class="vid-stat-n">100%</div>
+        <div class="vid-stat-l">Voice Accuracy</div>
+      </div>
+      <div class="vid-stat">
+        <div class="vid-stat-n">4.4/5</div>
+        <div class="vid-stat-l">UX Satisfaction</div>
+      </div>
+<div class="vid-stat">
+        <div class="vid-stat-n">95%+</div>
+        <div class="vid-stat-l">Target Exceeded</div>
+      </div>
+    </div>
+
+    <p style="text-align:center;color:var(--t3);font-size:11px;margin-top:12px;">
+      Press <kbd style="padding:1px 6px;background:rgba(255,255,255,0.07);border-radius:4px;border:1px solid rgba(255,255,255,0.13);font-size:10px;">Esc</kbd> or click outside to close
     </p>
+
   </div>
 </div>
 
