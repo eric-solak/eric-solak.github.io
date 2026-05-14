@@ -86,6 +86,13 @@
     0%   { left: -100%; }
     100% { left: 150%; }
   }
+  @keyframes jump {
+    0%, 100% { transform: translateY(0); }
+    30%      { transform: translateY(-7px); }
+    50%      { transform: translateY(-3px); }
+    65%      { transform: translateY(-6px); }
+    80%      { transform: translateY(0); }
+  }
   @keyframes vidIn {
     from { opacity: 0; transform: scale(0.95) translateY(16px); }
     to   { opacity: 1; transform: none; }
@@ -201,6 +208,7 @@
     background: linear-gradient(135deg, var(--accent) 0%, #4f46e5 100%);
     color: #fff;
     box-shadow: 0 4px 24px rgba(59,130,246,0.38);
+    animation: jump 2.8s ease-in-out 1.5s infinite;
   }
   .btn-accent::before {
     content: '';
@@ -208,7 +216,7 @@
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     transition: left 0.5s;
   }
-  .btn-accent:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(59,130,246,0.55); }
+  .btn-accent:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(59,130,246,0.55); animation-play-state: paused; }
   .btn-accent:hover::before { left: 150%; }
   .btn-outline {
     background: rgba(255,255,255,0.04); color: var(--t1);
@@ -328,7 +336,7 @@
   .hero-photo-col {
     position: relative; display: flex;
     align-items: flex-end; justify-content: center;
-    height: 540px;
+    height: 540px; overflow: visible;
   }
   @media (max-width: 960px) { .hero-photo-col { height: 380px; } }
 
@@ -351,54 +359,27 @@
   }
   @media (max-width: 960px) { .hero-photo { width: 240px; height: 300px; animation: none; } }
 
-  .callout {
-    position: absolute; z-index: 3;
-    white-space: nowrap;
-  }
-  .callout-bubble {
-    background: rgba(18,25,46,0.88);
-    border: 1px solid rgba(96,165,250,0.2);
-    border-radius: 12px;
-    padding: 10px 14px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    transition: transform 0.3s var(--ease-spring), box-shadow 0.3s;
-  }
-  .callout:hover .callout-bubble {
-    transform: scale(1.05);
-    box-shadow: 0 14px 44px rgba(0,0,0,0.5), 0 0 0 1px rgba(96,165,250,0.3);
-  }
-  .callout-val {
-    font-family: var(--font-display);
-    font-size: 14px; font-weight: 800;
-    background: linear-gradient(135deg, var(--accent2), var(--cyan));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 2px;
-  }
-  .callout-lbl { font-size: 11.5px; color: var(--t2); font-weight: 500; }
-  .callout-lbl em { font-style: italic; color: var(--t3); font-weight: 400; }
+  .hero-chip-row { display: none; }
+  .proof-strip-mobile { display: none; }
 
-  .callout-1 { top: 40px; left: -50px; }
-  .callout-2 { top: 50px; right: -60px; }
-  .callout-3 { bottom: 120px; left: -60px; }
-  .callout-4 { bottom: 50px; right: -50px; }
-  @media (max-width: 960px) {
-    .callout-1 { top: 10px; left: 0; }
-    .callout-2 { top: 10px; right: 0; }
-    .callout-3 { bottom: 60px; left: 0; }
-    .callout-4 { bottom: 0; right: 0; }
+  .orbit-stat {
+    position: absolute; z-index: 5; pointer-events: none;
+    background: rgba(10,15,30,0.92);
+    border: 1px solid rgba(96,165,250,0.22);
+    border-radius: 12px; padding: 9px 14px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.45), 0 0 0 1px rgba(96,165,250,0.06);
+    white-space: nowrap; text-align: center;
+    transform: translate(-50%, -50%);
+    will-change: opacity, left, top;
   }
-  .callout svg {
-    position: absolute;
-    stroke: rgba(96,165,250,0.3);
-    fill: none; stroke-width: 1.5;
+  .orbit-val {
+    font-family: var(--font-display);
+    font-size: 14px; font-weight: 800; margin-bottom: 2px;
+    background: linear-gradient(135deg, var(--accent2), var(--cyan));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   }
-  .callout-1 svg { right: -20px; bottom: -10px; }
-  .callout-2 svg { left: -20px; bottom: -10px; }
-  .callout-3 svg { right: -20px; top: -10px; }
-  .callout-4 svg { left: -20px; top: -10px; }
+  .orbit-lbl { font-size: 11px; color: var(--t2); font-weight: 500; }
 
   /* PITCH */
   #pitch {
@@ -819,7 +800,9 @@
     transition: opacity .2s;
   }
   .exp-item:hover .exp-dot { opacity: 1; }
-  .exp-item-text { padding: 12px 15px; }
+  .exp-item-text { padding: 12px 15px; color: var(--t2); font-size: 14px; line-height: 1.6; }
+  .exp-item-text .hl { color: var(--t1); font-weight: 600; }
+  .exp-item-text .hl-stat { color: var(--accent2); font-weight: 700; }
 
   .lead-card {
     background: var(--bg3); border: 1px solid var(--line);
@@ -929,7 +912,7 @@
     transition: all .2s var(--ease-spring); font-family: var(--font-body);
   }
   .vid-close-btn:hover { background: rgba(96,165,250,0.12); border-color: rgba(96,165,250,0.3); color: #fff; transform: scale(1.08); }
-  .vid-modal-header { text-align: center; margin-bottom: 32px; }
+  .vid-modal-header { text-align: center; margin-bottom: 18px; }
   .vid-modal-eyebrow {
     font-size: 11px; font-weight: 700; letter-spacing: .15em;
     text-transform: uppercase; color: var(--accent2); margin-bottom: 10px;
@@ -949,27 +932,27 @@
   .vid-modal-sub { font-size: 13px; color: var(--t3); font-style: italic; }
   .vid-layout { display: flex; justify-content: center; }
   .vid-pipeline {
-    display: flex; align-items: stretch; gap: 0; margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; margin-bottom: 16px; flex-wrap: wrap;
   }
   .vid-pipe-step {
-    flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center;
-    background: rgba(255,255,255,0.03); border: 1px solid rgba(96,165,250,0.09);
-    border-radius: 14px; padding: 18px 14px;
-    transition: border-color 0.2s, background 0.2s, transform 0.22s var(--ease-spring);
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(96,165,250,0.11);
+    border-radius: 999px; padding: 7px 14px;
+    transition: border-color 0.2s, background 0.2s;
   }
-  .vid-pipe-step:hover { border-color: rgba(96,165,250,0.28); background: rgba(96,165,250,0.05); transform: translateY(-4px); }
+  .vid-pipe-step:hover { border-color: rgba(96,165,250,0.28); background: rgba(96,165,250,0.05); }
   .vid-pipe-num {
-    width: 42px; height: 42px; border-radius: 12px; margin-bottom: 11px; flex-shrink: 0;
-    background: linear-gradient(135deg, rgba(59,130,246,0.25), rgba(34,211,238,0.12));
-    border: 1px solid rgba(96,165,250,0.25);
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(59,130,246,0.3), rgba(34,211,238,0.15));
+    border: 1px solid rgba(96,165,250,0.3);
     display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display); font-size: 15px; font-weight: 900; color: var(--accent2);
+    font-family: var(--font-display); font-size: 11px; font-weight: 900; color: var(--accent2);
   }
-  .vid-pipe-name { font-size: 14px; font-weight: 700; color: var(--t1); margin-bottom: 6px; }
-  .vid-pipe-info { font-size: 12.5px; color: var(--t2); line-height: 1.55; }
+  .vid-pipe-name { font-size: 12.5px; font-weight: 600; color: var(--t1); }
+  .vid-pipe-info { display: none; }
   .vid-pipe-arrow {
-    display: flex; align-items: center; padding: 0 10px;
-    color: rgba(96,165,250,0.28); font-size: 14px; flex-shrink: 0; align-self: center;
+    color: rgba(96,165,250,0.28); font-size: 11px; flex-shrink: 0;
   }
   .vid-phone { flex-shrink: 0; position: relative; }
   .vid-phone-glow {
@@ -1007,7 +990,7 @@
   .vid-phone-screen {
     background: #000; border-radius: 30px;
     overflow: hidden; aspect-ratio: 9/19.5;
-    height: clamp(260px, calc(100vh - 320px), 520px);
+    height: clamp(280px, calc(100vh - 340px), 560px);
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
   }
   .vid-phone-bar {
@@ -1016,7 +999,7 @@
     border-radius: 3px; margin-top: 6px; flex-shrink: 0;
   }
   .vid-stats {
-    display: flex; justify-content: center; gap: 0; margin-top: 28px;
+    display: flex; justify-content: center; gap: 0; margin-top: 16px;
     border: 1px solid rgba(96,165,250,0.12); border-radius: 16px; overflow: hidden;
   }
   .vid-stat {
@@ -1058,6 +1041,99 @@
     transition: all .2s var(--ease-spring);
   }
   .foot-ic:hover { background: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.25); color: var(--accent2); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+
+  /* ── MOBILE ──────────────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    /* Global spacing */
+    .wrap { padding: 0 16px; }
+
+    /* Sections */
+    #hero     { min-height: 0; display: block; padding-top: 64px; padding-bottom: 40px; }
+    #pitch, #skills, #background { padding: 56px 0; }
+    #projects { padding: 56px 0 64px; }
+    #contact  { padding: 56px 0 48px; }
+    .sec-eyebrow { font-size: 10px; margin-bottom: 8px; }
+    .sec-title { font-size: clamp(1.5rem, 6.5vw, 2rem); margin-bottom: 28px; line-height: 1.15; }
+
+    /* Hero grid — kill desktop padding that creates the gap */
+    .hero-grid { padding: 12px 0 0; gap: 20px; }
+
+    /* Hero photo col — hidden on mobile */
+    .hero-photo-col { display: none !important; }
+
+    .hero-status { margin-bottom: 16px; padding: 5px 14px; font-size: 12px; }
+    .hero-headline { font-size: clamp(1.9rem, 9vw, 2.6rem); }
+    .hero-tagline  { font-size: 13.5px; margin-bottom: 22px; }
+    .hero-actions  { flex-direction: column; align-items: center; gap: 10px; }
+    .hero-actions .btn { width: 100%; max-width: 280px; justify-content: center; padding: 13px 20px; font-size: 14px; }
+    .proof-strip { flex-wrap: wrap; justify-content: center; gap: 16px; }
+    .proof-divider { display: none; }
+
+    /* Pitch */
+    .pitch-lead { font-size: clamp(1.15rem, 5vw, 1.5rem); }
+    .pitch-sub  { font-size: 14px; }
+
+    /* What I Bring — horizontal card layout */
+    .wid-card { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 16px; }
+    .wid-icon { width: 36px; height: 36px; border-radius: 11px; margin-bottom: 0; flex-shrink: 0; font-size: 14px; }
+    .wid-name { font-size: 14px; margin-bottom: 0; white-space: nowrap; flex: 1; }
+    .wid-desc { font-size: 12.5px; line-height: 1.55; width: 100%; margin-top: 2px; }
+
+    /* Skills */
+    .sk { font-size: 12px; padding: 7px 11px; }
+    .sg-label { font-size: 10px; }
+
+    /* Projects */
+    .proj-tile-phone { display: none; }
+    .proj-content { padding: 16px 14px; }
+    .proj-title   { font-size: 16px; }
+    .proj-date    { font-size: 11px; }
+    .proj-hook    { font-size: 13px; line-height: 1.55; margin-bottom: 10px; }
+    .pill         { font-size: 11px; padding: 4px 9px; }
+    .proj-footer  { gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+    .proj-toggle  { width: auto; font-size: 12px; }
+    .proj-detail-item { font-size: 12px; line-height: 1.55; }
+
+    /* Education */
+    .bg-grid    { gap: 14px; }
+    .edu-card   { padding: 16px 14px; }
+    .edu-logo   { width: 40px; height: 40px; }
+    .edu-school { font-size: 15px; }
+    .edu-location { font-size: 11.5px; }
+    .edu-detail-grid { grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+    .edu-detail-item { padding: 8px 10px; }
+    .edu-detail-label { font-size: 9px; }
+    .edu-detail-value { font-size: 12.5px; }
+    .edu-courses-label { font-size: 9px; margin-bottom: 6px; }
+    .cc { font-size: 11px; padding: 4px 9px; }
+
+    /* Experience */
+    .exp-card  { padding: 16px 14px; }
+    .exp-role  { font-size: 15px; }
+    .exp-badge { font-size: 10px; padding: 3px 9px; }
+    .exp-co    { font-size: 12px; margin-bottom: 10px; }
+    .exp-items { gap: 5px; }
+    .exp-item-text { font-size: 11px; padding: 7px 9px; line-height: 1.4; }
+    .lead-card { padding: 14px; gap: 10px; }
+    .lead-icon { width: 30px; height: 30px; font-size: 11px; }
+    .lead-role { font-size: 13px; }
+    .lead-desc { font-size: 11.5px; }
+
+    /* Contact */
+    .contact-headline { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+    .contact-sub { font-size: 14px; }
+    .contact-tiles { flex-direction: column; align-items: center; }
+    .c-tile { width: 100%; max-width: 300px; }
+
+    /* Footer */
+    footer { flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 20px; }
+  }
+
+  @media (max-width: 400px) {
+    .edu-detail-grid { grid-template-columns: 1fr; }
+    .hero-photo { width: 190px; height: 238px; }
+    .vid-modal-wrap { padding: 20px 14px 18px; }
+  }
   </style>
 </head>
 <body>
@@ -1118,30 +1194,24 @@
         </div>
       </div>
 
-      <div class="hero-photo-col rv d2">
+      <div class="hero-photo-col rv d2" id="orbit-col">
         <div class="photo-glow"></div>
-        <img src="assets/me.jpg" alt="Eric Solak" class="hero-photo">
-
-        <div class="callout callout-1">
-          <div class="callout-bubble">
-            <div class="callout-val">3.70 cGPA</div>
-            <div class="callout-lbl">McMaster Engineering</div>
-          </div>
-          <svg width="30" height="25" viewBox="0 0 30 25"><path d="M28 2 C20 2, 15 10, 15 23"/></svg>
+        <img src="assets/me.jpg" alt="Eric Solak" class="hero-photo" id="orbit-photo">
+        <div class="hero-chip-row">
+          <div class="hero-chip"><div class="hc-val">94.3%</div><div class="hc-lbl">Wildfire Acc.</div></div>
+          <div class="hero-chip"><div class="hc-val">100%</div><div class="hc-lbl">Voice Recog.</div></div>
+          <div class="hero-chip"><div class="hc-val">118k+</div><div class="hc-lbl">NASA Samples</div></div>
         </div>
-        <div class="callout callout-2">
-          <div class="callout-bubble">
-            <div class="callout-val">94.3% accuracy</div>
-            <div class="callout-lbl"><em>Wildfire Neural Network</em></div>
+        <div class="proof-strip-mobile">
+          <div class="proof-item">
+            <div class="proof-num">3.70</div>
+            <div class="proof-lbl">cGPA<br>McMaster</div>
           </div>
-          <svg width="30" height="25" viewBox="0 0 30 25"><path d="M2 2 C10 2, 15 10, 15 23"/></svg>
-        </div>
-        <div class="callout callout-4">
-          <div class="callout-bubble">
-            <div class="callout-val">Full-stack</div>
-            <div class="callout-lbl"><em>AI to UI</em></div>
+          <div class="proof-divider"></div>
+          <div class="proof-item">
+            <div class="proof-num">4+</div>
+            <div class="proof-lbl">Projects</div>
           </div>
-          <svg width="30" height="25" viewBox="0 0 30 25"><path d="M2 23 C10 23, 15 15, 15 2"/></svg>
         </div>
       </div>
     </div>
@@ -1153,8 +1223,7 @@
   <div class="wrap">
     <div class="pitch-inner rv">
       <p class="pitch-lead">
-        Looking for someone who can <strong>build the model</strong>,<br>
-        <strong>write the API</strong>, and <strong>design the interface</strong>?
+        Looking for someone who can <strong>build the model</strong>, <strong>write the API</strong>, and <strong>design the interface</strong>?
       </p>
       <p class="pitch-sub">
         Most software engineers pick a lane. I work across the entire stack, from training neural networks on 100k+ samples to designing the interface that delivers the result.
@@ -1432,11 +1501,11 @@
           </div>
           <div class="exp-co">CATTLElytics Inc. · Hamilton, ON</div>
           <div class="exp-items">
-            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Led AI development for Pocket AI, a voice-driven task management app built for a platform supporting dairy operations for 1 in 50 cows across North America.</div></div>
-            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Directed a team of 5 engineers through the full product lifecycle — from requirements and architecture to production handoff, delivering an app now integrated into CATTLElytics' platform.</div></div>
-            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Integrated OpenAI Whisper for real-time audio transcription, achieving 100% voice recognition accuracy under simulated barn noise, exceeding the 95% project target.</div></div>
-            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Built a Flask backend with REST APIs for authentication, task lifecycle management, and sync with CATTLElytics' proprietary storage system.</div></div>
-            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Implemented an offline-first architecture with local SQLite storage and background syncing for reliable performance in low-connectivity farm environments.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Led AI development for <span class="hl">Pocket AI</span>, a voice-driven task management app supporting dairy operations for <span class="hl-stat">1 in 50 cows</span> across North America.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Directed a team of <span class="hl-stat">5 engineers</span> through the full product lifecycle — from requirements and architecture to production handoff, delivering an app <span class="hl">now integrated into CATTLElytics' platform</span>.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Integrated <span class="hl">OpenAI Whisper</span> for real-time audio transcription, achieving <span class="hl-stat">100% voice recognition accuracy</span> under simulated barn noise, exceeding the 95% project target.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Built a <span class="hl">Flask backend</span> with <span class="hl">REST APIs</span> for authentication, task lifecycle management, and sync with CATTLElytics' proprietary storage system.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Implemented an <span class="hl">offline-first architecture</span> with local SQLite storage and background syncing for reliable performance in low-connectivity farm environments.</div></div>
           </div>
         </div>
         <div class="lead-card rv d2">
@@ -1644,6 +1713,119 @@
     document.getElementById('modal-video').pause();
   }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeVideoModal(); });
+
+  /* Orbiting stats around profile photo */
+  (function () {
+    const STATS = [
+      { val: '3.70 cGPA',       lbl: 'McMaster Engineering' },
+      { val: '4 Engineers',     lbl: 'Led at CATTLElytics' },
+      { val: '94.3% Accuracy',  lbl: 'Wildfire Neural Network' },
+      { val: '100% Voice Acc.', lbl: 'Pocket AI' },
+      { val: '4.4 / 5 UX',     lbl: 'Usability Testing' },
+      { val: '118k+ Samples',   lbl: 'NASA Training Data' },
+      { val: 'Full-Stack',      lbl: 'AI · API · UI' },
+      { val: '2026',        lbl: 'B.Eng Graduate' },
+      
+    ];
+
+    const START     = 300;
+    const ARC       = 210;
+    const mobile    = window.innerWidth < 960;
+    const R         = mobile ? 148 : 305;
+    const LINE_GAP  = mobile ? 10  : 14;
+    const SPEED     = 9;
+    const N         = mobile ? 2   : 4;
+    const FADE      = 26;
+
+    const col   = document.getElementById('orbit-col');
+    const photo = document.getElementById('orbit-photo');
+    if (!col || !photo) return;
+
+    // SVG overlay for connector lines
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;overflow:visible;';
+    col.appendChild(svg);
+
+    // Create bubble elements + SVG lines
+    const particles = Array.from({ length: N }, (_, i) => {
+      const el = document.createElement('div');
+      el.className = 'orbit-stat';
+      el.innerHTML = `<div class="orbit-val"></div><div class="orbit-lbl"></div>`;
+      col.appendChild(el);
+
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('stroke', 'rgba(96,165,250,0.4)');
+      line.setAttribute('stroke-width', '1');
+      svg.appendChild(line);
+
+      const statIdx = i % STATS.length;
+      return { el, line, arcPos: i * (ARC / N), statIdx, nextIdx: (i + N) % STATS.length };
+    });
+
+    // Set initial text
+    particles.forEach(p => {
+      p.el.querySelector('.orbit-val').textContent = STATS[p.statIdx].val;
+      p.el.querySelector('.orbit-lbl').textContent = STATS[p.statIdx].lbl;
+    });
+
+    function photoCenter() {
+      const pr = photo.getBoundingClientRect();
+      const cr = col.getBoundingClientRect();
+      return { cx: pr.left - cr.left + pr.width / 2, cy: pr.top - cr.top + pr.height / 2 };
+    }
+
+    let last = null;
+    function tick(ts) {
+      if (!last) last = ts;
+      const dt = Math.min((ts - last) / 1000, 0.05);
+      last = ts;
+
+      const { cx, cy } = photoCenter();
+
+      for (const p of particles) {
+        p.arcPos += SPEED * dt;
+        if (p.arcPos >= ARC) {
+          p.arcPos -= ARC;
+          p.statIdx = p.nextIdx;
+          p.nextIdx = (p.nextIdx + N) % STATS.length;
+          p.el.querySelector('.orbit-val').textContent = STATS[p.statIdx].val;
+          p.el.querySelector('.orbit-lbl').textContent = STATS[p.statIdx].lbl;
+        }
+
+        const deg = (START + p.arcPos) % 360;
+        const rad = deg * Math.PI / 180;
+        const x = cx + R * Math.sin(rad);
+        const y = cy - R * Math.cos(rad);
+
+        const opacity = p.arcPos < FADE
+          ? p.arcPos / FADE
+          : p.arcPos > ARC - FADE
+            ? (ARC - p.arcPos) / FADE
+            : 1;
+
+        // Bubble position
+        p.el.style.left    = x + 'px';
+        p.el.style.top     = y + 'px';
+        p.el.style.opacity = opacity;
+
+        // Connector line: just outside photo edge → stat
+        const hw = photo.offsetWidth / 2;
+        const hh = photo.offsetHeight / 2;
+        const sx = Math.abs(Math.sin(rad));
+        const sy = Math.abs(Math.cos(rad));
+        const t = (sx < 1e-6 ? hh / sy : sy < 1e-6 ? hw / sx : Math.min(hw / sx, hh / sy)) + LINE_GAP;
+        const x1 = cx + Math.sin(rad) * t;
+        const y1 = cy - Math.cos(rad) * t;
+        p.line.setAttribute('x1', x1);
+        p.line.setAttribute('y1', y1);
+        p.line.setAttribute('x2', x);
+        p.line.setAttribute('y2', y);
+        p.line.setAttribute('stroke-opacity', opacity * 0.55);
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
 </script>
 </body>
 </html>
