@@ -1042,6 +1042,13 @@
   }
   .foot-ic:hover { background: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.25); color: var(--accent2); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
 
+  /* background-attachment:fixed is broken on iOS/mobile — images won't render or blur */
+  @media (max-width: 1024px) {
+    #pitch::before    { background: url('assets/bg.jpg?v=2') center 40%/cover scroll; }
+    #projects::before { background: url('assets/bg-1.jpg') center/cover scroll; }
+    #contact::before  { background: url('assets/footer.jpg') center/cover scroll; }
+  }
+
   /* ── MOBILE ──────────────────────────────────────────────────────── */
   @media (max-width: 600px) {
     /* Global spacing */
