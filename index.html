@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  <link rel="preload" as="image" href="assets/me.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/img/me.jpg" fetchpriority="high">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
 
@@ -393,6 +393,7 @@
     background: radial-gradient(ellipse, rgba(59,130,246,0.2) 0%, rgba(34,211,238,0.08) 40%, transparent 70%);
     filter: blur(44px); pointer-events: none;
     animation: pulse-glow 4.5s ease-in-out infinite;
+    will-change: transform, opacity;
   }
   .hero-photo {
     position: relative; z-index: 2;
@@ -435,7 +436,7 @@
   #pitch::before {
     content: '';
     position: absolute; inset: -160px 0;
-    background: url('assets/bg.jpg?v=2') center 40%/cover scroll;
+    background: url('assets/bg/bg.webp') center 40%/cover scroll;
     filter: brightness(0.42) saturate(1);
     z-index: 0;
     transform: translateY(var(--py, 0px));
@@ -614,7 +615,7 @@
   #projects::before {
     content: '';
     position: absolute; inset: -160px 0;
-    background: url('assets/bg-1.jpg') center/cover scroll;
+    background: url('assets/bg/bg-1.webp') center/cover scroll;
     filter: brightness(0.42) saturate(1);
     z-index: 0;
     transform: translateY(var(--py, 0px));
@@ -794,7 +795,7 @@
 
   .edu-card {
     background: linear-gradient(rgba(8,12,22,0.55), rgba(8,12,22,0.55)),
-                url('assets/bg-edu-1.jpg') center/cover no-repeat;
+                url('assets/bg/bg-edu-1.jpg') center/cover no-repeat;
     border: 1px solid rgba(122,0,60,0.5);
     border-radius: 22px; padding: 34px 32px; height: 100%;
     position: relative; overflow: hidden;
@@ -862,7 +863,7 @@
 
   .exp-card {
     background: linear-gradient(rgba(8,12,22,0.55), rgba(8,12,22,0.55)),
-                url('assets/bg-exp-1.jpg') center/cover no-repeat;
+                url('assets/bg/bg-exp-1.jpg') center/cover no-repeat;
     border: 1px solid var(--line);
     border-radius: 22px; padding: 34px 32px; height: auto;
     position: relative; overflow: hidden;
@@ -907,7 +908,7 @@
 
   .lead-card {
     background: linear-gradient(rgba(8,12,22,0.72), rgba(8,12,22,0.72)),
-                url('assets/bg-edu-2.jpg') center/cover no-repeat;
+                url('assets/bg/bg-edu-2.jpg') center/cover no-repeat;
     border: 1px solid rgba(122,0,60,0.28);
     border-radius: 22px; padding: 24px 28px; margin-top: 16px;
     display: flex; gap: 16px; align-items: flex-start;
@@ -980,7 +981,7 @@
   #contact::before {
     content: '';
     position: absolute; inset: -160px 0;
-    background: url('assets/footer.jpg') center/cover scroll;
+    background: url('assets/bg/footer.webp') center/cover scroll;
     filter: brightness(0.27) saturate(1);
     z-index: 0;
     transform: translateY(var(--py, 0px));
@@ -1285,6 +1286,11 @@
     .hero-photo { width: 190px; height: 238px; }
     .vid-modal-wrap { padding: 20px 14px 18px; }
   }
+  /* ── Style/layout/paint containment (scopes recalcs to each section) ── */
+  #whatido, #skills, #background {
+    contain: layout style paint;
+  }
+
   </style>
 </head>
 <body>
@@ -1346,7 +1352,7 @@
 
       <div class="hero-photo-col rv d2" id="orbit-col">
         <div class="photo-glow"></div>
-        <img src="assets/me.jpg" alt="Eric Solak" class="hero-photo" id="orbit-photo">
+        <img src="assets/img/me.jpg" alt="Eric Solak" class="hero-photo" id="orbit-photo">
         <div class="hero-chip-row">
           <div class="hero-chip"><div class="hc-val">94.3%</div><div class="hc-lbl">Wildfire Acc.</div></div>
           <div class="hero-chip"><div class="hc-val">100%</div><div class="hc-lbl">Voice Recog.</div></div>
@@ -1489,7 +1495,7 @@
             <div class="phone-shell">
               <div class="p-island"></div>
               <div class="p-screen">
-                <img src="assets/pocket-ai-preview.jpg" alt="Pocket AI Demo" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+                <img src="assets/img/pocket-ai-preview.jpg" alt="Pocket AI Demo" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
                 <!-- Blur overlay -->
                 <div style="
                   position:absolute; inset:0; border-radius:14px;
@@ -1603,7 +1609,7 @@
       <div class="edu-card rv">
         <div class="card-stripe"></div>
         <div class="edu-header">
-          <div class="edu-logo"><img src="assets/mcmaster-logo.jpg" alt="McMaster" loading="lazy"></div>
+          <div class="edu-logo"><img src="assets/img/mcmaster-logo.jpg" alt="McMaster" loading="lazy"></div>
           <div class="edu-header-text">
             <div class="edu-school">McMaster University</div>
             <div class="edu-location">Hamilton, ON</div>
@@ -1769,7 +1775,7 @@
         <div class="vid-phone-shell">
           <div class="vid-phone-island"></div>
           <div class="vid-phone-screen">
-            <video id="modal-video" src="assets/pocket-ai.mp4" autoplay muted loop playsinline
+            <video id="modal-video" src="assets/video/pocket-ai.mp4" autoplay muted loop playsinline
               style="width:100%;height:100%;object-fit:cover;"></video>
           </div>
           <div class="vid-phone-bar"></div>
@@ -2121,9 +2127,17 @@
         p.line.setAttribute('y2', y);
         p.line.setAttribute('stroke-opacity', opacity * 0.55);
       }
-      requestAnimationFrame(tick);
+      rafId = requestAnimationFrame(tick);
     }
-    requestAnimationFrame(tick);
+    let rafId = null;
+    const heroSect = document.getElementById('hero');
+    if (heroSect) {
+      new IntersectionObserver(entries => {
+        const visible = entries[0].isIntersecting;
+        if (visible && !rafId) { last = null; rafId = requestAnimationFrame(tick); }
+        else if (!visible && rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      }, { threshold: 0 }).observe(heroSect);
+    }
   })();
 </script>
 </body>
