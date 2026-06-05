@@ -852,11 +852,16 @@
     text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 11px;
     position: relative; z-index: 1;
   }
-  .course-chips { display: flex; flex-wrap: wrap; gap: 7px; position: relative; z-index: 1; }
+  .course-chips { display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; }
+  .course-cat-label {
+    font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(255,255,255,0.35); margin-bottom: 6px;
+  }
+  .course-cat-chips { display: flex; flex-wrap: wrap; gap: 7px; }
   .cc {
-    padding: 7px 14px; border-radius: 9px;
+    padding: 6px 13px; border-radius: 9px;
     background: rgba(8,12,22,0.7); border: 1px solid rgba(255,255,255,0.1);
-    font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,0.75);
+    font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.75);
     transition: border-color .15s, color .15s, background .15s;
   }
   .cc:hover { border-color: rgba(122,0,60,0.35); color: var(--t1); background: rgba(122,0,60,0.08); }
@@ -1637,10 +1642,30 @@
 
         <div class="edu-courses-label">Relevant Courses</div>
         <div class="course-chips">
-          <span class="cc">Applications of Machine Learning</span>
-          <span class="cc">Real-Time Systems</span>
-          <span class="cc">Databases</span>
-          <span class="cc">Data Mining</span>
+          <div class="course-cat">
+            <div class="course-cat-label">AI / Machine Learning</div>
+            <div class="course-cat-chips">
+              <span class="cc">Applications of Machine Learning</span>
+              <span class="cc">Data Mining</span>
+              <span class="cc">Probability &amp; Statistics</span>
+            </div>
+          </div>
+          <div class="course-cat">
+            <div class="course-cat-label">Software Engineering</div>
+            <div class="course-cat-chips">
+              <span class="cc">Software Design IV</span>
+              <span class="cc">Software Testing</span>
+              <span class="cc">Human-Computer Interfaces</span>
+            </div>
+          </div>
+          <div class="course-cat">
+            <div class="course-cat-label">Systems</div>
+            <div class="course-cat-chips">
+              <span class="cc">Signals and Systems</span>
+              <span class="cc">Computer Networks &amp; Security</span>
+              <span class="cc">Linear Optimization</span>
+            </div>
+          </div>
         </div>
       </div>
 
