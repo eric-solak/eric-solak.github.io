@@ -1440,16 +1440,19 @@
           <div class="sg-label">Frameworks & Libraries</div>
           <div class="sk-wrap">
             <div class="sk" style="--sk-color:238,76,44"><i class="fas fa-brain"></i>PyTorch</div>
-            <div class="sk" style="--sk-color:97,218,251"><i class="fab fa-react"></i>React Native</div>
+            <div class="sk" style="--sk-color:0,150,136"><i class="fas fa-bolt"></i>FastAPI</div>
             <div class="sk" style="--sk-color:96,165,250"><i class="fas fa-flask"></i>Flask</div>
+            <div class="sk" style="--sk-color:97,218,251"><i class="fab fa-react"></i>React Native</div>
             <div class="sk" style="--sk-color:74,171,207"><i class="fas fa-calculator"></i>NumPy</div>
             <div class="sk" style="--sk-color:232,80,150"><i class="fas fa-table"></i>Pandas</div>
             <div class="sk" style="--sk-color:248,153,57"><i class="fas fa-chart-line"></i>scikit-learn</div>
           </div>
         </div>
         <div>
-          <div class="sg-label">Tools & Platforms</div>
+          <div class="sg-label">Tools</div>
           <div class="sk-wrap">
+            <div class="sk" style="--sk-color:29,99,237"><i class="fab fa-docker"></i>Docker</div>
+            <div class="sk" style="--sk-color:70,130,180"><i class="fas fa-cloud"></i>Render</div>
             <div class="sk" style="--sk-color:139,92,246"><i class="fas fa-terminal"></i>Claude Code</div>
             <div class="sk" style="--sk-color:32,136,255"><i class="fab fa-github"></i>GitHub Actions</div>
             <div class="sk" style="--sk-color:166,200,68"><i class="fab fa-java"></i>JUnit</div>
@@ -1493,6 +1496,7 @@
               <button class="proj-toggle" id="t-pocket" onclick="event.stopPropagation(); toggleDetail('pocket')">
                 <i class="fas fa-chevron-down"></i> More details
               </button>
+              <a href="https://github.com/MithunPara/pocket-ai" target="_blank" class="proj-link" onclick="event.stopPropagation()"><i class="fab fa-github"></i> Code</a>
             </div>
           </div>
           <!-- Pocket AI phone tile — click to open video modal -->
@@ -1524,18 +1528,20 @@
           <div class="proj-stripe"></div>
           <div class="proj-content">
             <div class="proj-top-row"><div class="proj-title">Wildfire Risk Classifier</div></div>
-            <div class="proj-date">Sep 2025 - Dec 2025</div>
-            <div class="proj-hook">Neural network trained on 118,000+ NASA satellite samples. Classifies wildfire risk with 94.3% accuracy, beating every baseline we tested.</div>
+            <div class="proj-date">Sep 2025 - Jun 2026</div>
+            <div class="proj-hook">Neural network trained on 118,000+ NASA satellite samples. Classifies wildfire risk with 94.3% accuracy, beating every baseline we tested — now deployed as a live REST API.</div>
             <div class="pill-row">
-              <span class="pill">Python</span><span class="pill">PyTorch</span><span class="pill">Machine Learning</span>
+              <span class="pill">Python</span><span class="pill">PyTorch</span><span class="pill">FastAPI</span><span class="pill">Docker</span>
             </div>
             <div class="proj-detail" id="d-fire">
+              <div class="proj-detail-item"><div class="pd-dot"></div>Deployed a production REST API using FastAPI and Docker, serving real-time wildfire risk predictions via containerized cloud infrastructure on Render.</div>
               <div class="proj-detail-item"><div class="pd-dot"></div>Developed a neural network to classify regions into low, medium, and high wildfire risk using 118,000+ samples from NASA FIRMS and Open-Meteo datasets.</div>
               <div class="proj-detail-item"><div class="pd-dot"></div>Designed a 4-layer MLP with batch normalization, dropout regularization, and weighted cross-entropy loss to address class imbalance across risk categories.</div>
               <div class="proj-detail-item"><div class="pd-dot"></div>Achieved 94.3% test accuracy with high F1-scores across all classes, outperforming Random Forest and SVM baselines by 15%.</div>
             </div>
             <div class="proj-footer">
               <button class="proj-toggle" id="t-fire" onclick="event.stopPropagation(); toggleDetail('fire')"><i class="fas fa-chevron-down"></i> More details</button>
+              <a href="https://wildfire-risk-classifier.onrender.com/docs" target="_blank" class="proj-link" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i> Live API</a>
               <a href="nn-classifier/wildfire-risk-map.html" target="_blank" class="proj-link" onclick="event.stopPropagation()"><i class="fas fa-map"></i> Interactive Map</a>
               <a href="https://github.com/eric-solak/wildfire-risk-classifier/blob/main/docs/Report/Proposal%20LaTeX/main.pdf" target="_blank" class="proj-link" onclick="event.stopPropagation()"><i class="fas fa-file-alt"></i> Report</a>
               <a href="https://github.com/eric-solak/wildfire-risk-classifier" target="_blank" class="proj-link" onclick="event.stopPropagation()"><i class="fab fa-github"></i> Code</a>
