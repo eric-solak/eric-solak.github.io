@@ -1,0 +1,12 @@
+# Local Claude Code settings (machine-specific)
+.claude/settings.local.json
+
+# OS & editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+
+# Scratch / build artifacts (repo root)
+/_*
+*.bak

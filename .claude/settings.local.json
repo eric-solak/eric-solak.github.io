@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(Select-String -Path \"c:\\\\Users\\\\chill\\\\OneDrive\\\\Desktop\\\\eric-solak.github.io\\\\index.html\" -Pattern \"ease-spring|gradient-shift|pulse-ring|pulse-glow|float|scrolled|shimmer|data-count|callout-bubble|sec-eyebrow::before\")",
-      "Bash(Select-Object LineNumber, Line)",
-      "Bash(Format-Table -AutoSize)"
-    ]
-  }
-}
