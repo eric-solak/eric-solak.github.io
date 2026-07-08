@@ -3,57 +3,96 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Global Wildfire Risk Classification</title>
+  <title>Wildfire Risk Classification | Eric Solak</title>
+  <meta name="description" content="Interactive map of wildfire risk predictions from a PyTorch MLP neural network trained on NASA FIRMS + Open-Meteo data.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b0f19'/><text x='50' y='68' font-size='46' font-family='-apple-system,sans-serif' font-weight='800' text-anchor='middle' fill='%2360a5fa'>ES</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <style>
+    :root {
+      --bg:      #080c16;
+      --panel:   rgba(13, 19, 34, 0.94);
+      --line:    rgba(255,255,255,0.09);
+      --line-a:  rgba(96,165,250,0.35);
+      --t1:      #eef2ff;
+      --t2:      #8b97bf;
+      --t3:      #5b6486;
+      --accent:  #60a5fa;
+      --low:     #22c55e;
+      --med:     #f97316;
+      --high:    #ef4444;
+      --font:    'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: #f8f9fa;
-      color: #1a1a2e;
-      height: 100vh;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--t1);
+      height: 100vh; height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* ── Header ─────────────────────────────────────────────── */
     header {
-      padding: 12px 24px;
-      background: #ffffff;
-      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 22px;
+      background: rgba(8,12,22,0.97);
+      border-bottom: 1px solid var(--line);
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 18px;
       flex-shrink: 0;
-      z-index: 1000;
+      z-index: 1100;
       position: relative;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12.5px; font-weight: 600; color: var(--t2);
+      text-decoration: none; white-space: nowrap;
+      padding: 7px 13px; border-radius: 9px;
+      border: 1px solid var(--line);
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .back-link:hover { color: var(--t1); border-color: var(--line-a); background: rgba(96,165,250,0.07); }
+
+    .head-titles { min-width: 0; }
     header h1 {
-      font-size: 16px;
-      letter-spacing: 0.02em;
-      color: #ff6a00;
-      font-weight: 600;
-      white-space: nowrap;
+      font-size: 15px; font-weight: 700; letter-spacing: -0.01em;
+      color: var(--t1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    header span {
-      font-size: 14px;
-      color: #94a3b8;
-      font-weight: 400;
+    header h1 .flame { color: var(--med); }
+    .head-sub { font-size: 11.5px; color: var(--t2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .head-sub strong { color: var(--t1); font-weight: 600; }
+
+    .head-chips { display: flex; gap: 8px; margin-left: auto; align-items: center; }
+    .chip {
+      font-size: 11px; font-weight: 600; color: var(--t2); white-space: nowrap;
+      padding: 5px 12px; border-radius: 999px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--line);
+    }
+    .chip b { color: var(--accent); font-weight: 700; }
+    .chip--link { color: var(--t2); text-decoration: none; transition: color .15s, border-color .15s; }
+    .chip--link:hover { color: var(--t1); border-color: var(--line-a); }
+
+    @media (max-width: 860px) {
+      .head-chips .chip--stat { display: none; }
+      .head-sub { display: none; }
     }
 
-    #map { flex: 1; width: 100%; }
+    /* ── Map ────────────────────────────────────────────────── */
+    #map { flex: 1; width: 100%; background: #071f36; }
 
     #loading {
       position: absolute;
       inset: 0;
-      background: rgba(248,249,250,0.94);
+      background: rgba(8,12,22,0.93);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -61,202 +100,355 @@
       z-index: 2000;
       gap: 14px;
     }
-    #loading p { font-size: 11px; color: #94a3b8; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+    #loading p { font-size: 11px; color: var(--t2); letter-spacing: 0.09em; text-transform: uppercase; font-weight: 600; }
     .spinner {
       width: 28px; height: 28px;
-      border: 2px solid #e2e8f0;
-      border-top-color: #3b82f6;
+      border: 2px solid rgba(255,255,255,0.12);
+      border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* ── Leaflet chrome ─────────────────────────────────────── */
     .leaflet-control-attribution {
-      background: rgba(255,255,255,0.9) !important;
-      color: #94a3b8 !important;
-      font-family: 'Inter', system-ui, sans-serif !important;
+      background: rgba(8,12,22,0.8) !important;
+      color: var(--t3) !important;
+      font-family: var(--font) !important;
       font-size: 9px !important;
     }
-    .leaflet-control-attribution a { color: #64748b !important; }
+    .leaflet-control-attribution a { color: var(--t2) !important; }
     .leaflet-control-zoom a {
-      background: #ffffff !important;
-      color: #374151 !important;
-      border-color: #e2e8f0 !important;
-      font-family: 'Inter', system-ui, sans-serif !important;
+      background: var(--panel) !important;
+      color: var(--t1) !important;
+      border-color: var(--line) !important;
+      font-family: var(--font) !important;
     }
-    .leaflet-control-zoom a:hover { background: #f1f5f9 !important; border-color: #3b82f6 !important; color: #3b82f6 !important; }
+    .leaflet-control-zoom a:hover { background: rgba(96,165,250,0.12) !important; border-color: var(--line-a) !important; color: var(--accent) !important; }
 
-    .legend {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 13px;
-      color: #374151;
-      line-height: 1.7;
-      min-width: 190px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-family: var(--font);
+      color: var(--t1);
+      box-shadow: 0 10px 36px rgba(0,0,0,0.5);
     }
-    .legend-title { font-size: 9px; letter-spacing: 0.1em; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; font-weight: 600; }
-    .leg-row { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-weight: 500; }
-    .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .legend-foot { margin-top: 8px; padding-top: 7px; border-top: 1px solid #f1f5f9; font-size: 10px; color: #cbd5e1; line-height: 1.7; }
+    .panel-title {
+      font-size: 9.5px; letter-spacing: 0.11em; color: var(--t2);
+      text-transform: uppercase; font-weight: 700;
+      padding-bottom: 7px; margin-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
 
-    .info-box {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 16px 18px;
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 14px;
-      color: #374151;
-      min-width: 300px;
-      pointer-events: none;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .info-box h4 { font-size: 10px; letter-spacing: 0.1em; color: #94a3b8; text-transform: uppercase; margin-bottom: 9px; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; font-weight: 600; }
-    .info-row { display: flex; justify-content: space-between; gap: 14px; margin: 4px 0; }
-    .info-label { color: #94a3b8; font-weight: 400; }
-    .info-value { color: #1a1a2e; font-weight: 500; }
-    .feat-header { margin: 8px 0 4px; font-size: 9px; color: #cbd5e1; letter-spacing: 0.1em; border-top: 1px solid #f1f5f9; padding-top: 7px; font-weight: 600; text-transform: uppercase; }
-    .idle-hint { color: #cbd5e1; font-size: 11px; margin-top: 4px; line-height: 1.6; }
-
-    .filter-panel {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 13px;
-      color: #374151;
-      min-width: 160px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    }
-    .filter-title { font-size: 9px; letter-spacing: 0.1em; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; font-weight: 600; }
+    /* Filter / legend panel */
+    .filter-panel { padding: 13px 16px; min-width: 200px; }
     .filter-row {
-      display: flex; align-items: center; gap: 8px; margin: 5px 0;
-      cursor: pointer; font-weight: 500; user-select: none;
+      display: flex; align-items: center; gap: 9px; margin: 6px 0;
+      cursor: pointer; font-weight: 600; font-size: 12.5px; user-select: none;
+      color: var(--t1);
     }
     .filter-row input { cursor: pointer; accent-color: #3b82f6; }
+    .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .leg-dot--high { background: var(--high); box-shadow: 0 0 8px rgba(239,68,68,0.7); }
+    .leg-dot--med  { background: var(--med);  box-shadow: 0 0 8px rgba(249,115,22,0.6); }
+    .leg-dot--low  { background: var(--low);  box-shadow: 0 0 8px rgba(34,197,94,0.55); }
+    .filter-count { margin-left: auto; font-size: 11px; font-weight: 500; color: var(--t2); }
+    .legend-foot {
+      margin-top: 9px; padding-top: 8px; border-top: 1px solid var(--line);
+      font-size: 10px; color: var(--t3); line-height: 1.75;
+    }
+
+    /* Info panel */
+    .info-box { padding: 15px 17px; min-width: 280px; pointer-events: none; }
+    .info-row { display: flex; justify-content: space-between; gap: 14px; margin: 4px 0; font-size: 12.5px; }
+    .info-label { color: var(--t2); font-weight: 400; }
+    .info-value { color: var(--t1); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .feat-header {
+      margin: 9px 0 4px; font-size: 9px; color: var(--t3); letter-spacing: 0.11em;
+      border-top: 1px solid var(--line); padding-top: 8px; font-weight: 700; text-transform: uppercase;
+    }
+    .idle-hint { color: var(--t3); font-size: 11px; margin-top: 2px; line-height: 1.7; }
+    .risk-tag {
+      display: inline-block; padding: 2px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+    }
+    .risk-tag--0 { color: var(--low);  background: rgba(34,197,94,0.12);  border: 1px solid rgba(34,197,94,0.35); }
+    .risk-tag--1 { color: var(--med);  background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.35); }
+    .risk-tag--2 { color: var(--high); background: rgba(239,68,68,0.12);  border: 1px solid rgba(239,68,68,0.4); }
+
+    @media (max-width: 640px) {
+      .info-box { min-width: 220px; padding: 12px 13px; }
+      .filter-panel { min-width: 165px; padding: 11px 13px; }
+      .legend-foot { display: none; }
+    }
+
+    /* ── About-this-model overlay ───────────────────────────── */
+    #model-modal {
+      display: none; position: fixed; inset: 0; z-index: 3000;
+      background: rgba(4,7,14,0.78);
+      align-items: center; justify-content: center;
+      padding: 24px 16px; overflow-y: auto;
+    }
+    #model-modal.open { display: flex; }
+    .model-card {
+      position: relative; width: min(520px, 94vw);
+      background: linear-gradient(170deg, #121a30 0%, #0b101f 100%);
+      border: 1px solid rgba(96,165,250,0.22);
+      border-radius: 18px; padding: 28px 30px 26px;
+      box-shadow: 0 32px 90px rgba(0,0,0,0.7);
+      font-family: var(--font); color: var(--t1);
+    }
+    .model-close {
+      position: absolute; top: 12px; right: 12px;
+      width: 30px; height: 30px; border-radius: 9px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--line);
+      color: var(--t2); font-size: 16px; cursor: pointer; font-family: var(--font);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .model-close:hover { color: #fff; border-color: var(--line-a); }
+    .model-title { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+    .model-sub { font-size: 12px; color: var(--t2); margin: 3px 0 18px; }
+    .model-metrics { display: flex; gap: 10px; margin-bottom: 18px; }
+    .mm {
+      flex: 1; text-align: center; padding: 12px 8px; border-radius: 12px;
+      background: rgba(255,255,255,0.035); border: 1px solid rgba(96,165,250,0.18);
+    }
+    .mm-n { font-size: 19px; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+    .mm-l { font-size: 10px; color: var(--t2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
+    .model-sec {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase;
+      color: var(--t2); margin: 14px 0 7px; padding-bottom: 5px; border-bottom: 1px solid var(--line);
+    }
+    .model-list { list-style: none; }
+    .model-list li {
+      font-size: 12.5px; color: rgba(255,255,255,0.82); line-height: 1.65;
+      padding: 3px 0 3px 16px; position: relative;
+    }
+    .model-list li::before {
+      content: ''; position: absolute; left: 2px; top: 11px;
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent);
+    }
+    .model-links { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+    .model-links a {
+      font-size: 12px; font-weight: 600; color: var(--t2); text-decoration: none;
+      padding: 8px 14px; border-radius: 9px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--line);
+      transition: color .15s, border-color .15s;
+    }
+    .model-links a:hover { color: var(--t1); border-color: var(--line-a); }
+    button.chip { cursor: pointer; font-family: var(--font); }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Neural Network Wildfire Risk Classification</h1>
-  <span><strong style="color:#1a1a2e;font-weight:700">Eric Solak</strong>&nbsp;·&nbsp; 118,858 NASA FIRMS + Open-Meteo samples &nbsp;·&nbsp; MLP &nbsp;·&nbsp; PyTorch</span>
+  <a class="back-link" href="../index.html" aria-label="Back to portfolio">&larr; Portfolio</a>
+  <div class="head-titles">
+    <h1><span class="flame">&#9650;</span> Neural Network Wildfire Risk Classification</h1>
+    <div class="head-sub"><strong>Eric Solak</strong> &middot; MLP trained on NASA FIRMS + Open-Meteo data &middot; PyTorch</div>
+  </div>
+  <div class="head-chips">
+    <span class="chip chip--stat"><b>118,858</b> training samples</span>
+    <span class="chip chip--stat"><b>94.3%</b> test accuracy</span>
+    <button class="chip chip--link" id="model-btn" type="button">&#9432; Model details</button>
+    <a class="chip chip--link" href="https://github.com/eric-solak/wildfire-risk-classifier" target="_blank" rel="noopener">Code &nearr;</a>
+  </div>
 </header>
+
+<!-- About-this-model overlay -->
+<div id="model-modal">
+  <div class="model-card">
+    <button class="model-close" id="model-close" aria-label="Close">&times;</button>
+    <div class="model-title">About this model</div>
+    <div class="model-sub">Multi-layer perceptron &middot; PyTorch</div>
+
+    <div class="model-metrics">
+      <div class="mm"><div class="mm-n">94.3%</div><div class="mm-l">Test accuracy</div></div>
+      <div class="mm"><div class="mm-n">0.939</div><div class="mm-l">Macro F1-score</div></div>
+      <div class="mm"><div class="mm-n">118,858</div><div class="mm-l">Observations</div></div>
+    </div>
+
+    <div class="model-sec">Architecture &amp; training</div>
+    <ul class="model-list">
+      <li>4-layer feed-forward network with batch normalization and dropout regularization</li>
+      <li>Weighted cross-entropy loss to handle class imbalance across risk categories</li>
+      <li>L2 weight decay and early stopping against overfitting</li>
+    </ul>
+
+    <div class="model-sec">Data &amp; features</div>
+    <ul class="model-list">
+      <li>NASA FIRMS fire detections joined with Open-Meteo weather history</li>
+      <li>17 engineered environmental features, including temperature&ndash;humidity and wind&ndash;FWI interactions</li>
+      <li>Outputs one of three risk classes with a confidence score &mdash; this map shows a 2,001-point sample of predictions</li>
+    </ul>
+
+    <div class="model-links">
+      <a href="https://github.com/eric-solak/wildfire-risk-classifier" target="_blank" rel="noopener">GitHub &nearr;</a>
+      <a href="https://github.com/eric-solak/wildfire-risk-classifier/blob/main/docs/Report/Proposal%20LaTeX/main.pdf" target="_blank" rel="noopener">Technical report &nearr;</a>
+      <a href="https://wildfire-risk-classifier.onrender.com/docs" target="_blank" rel="noopener">Live API &nearr;</a>
+    </div>
+  </div>
+</div>
 
 <div id="map">
   <div id="loading">
     <div class="spinner"></div>
-    <p>Loading 118k predictions...</p>
+    <p>Loading model predictions&hellip;</p>
   </div>
 </div>
 
 <script>
-window.onload = function () {
+(function () {
+  const WORLD = L.latLngBounds([[-85, -180], [85, 180]]);
 
-  const map = L.map('map', { center: [20, 10], zoom: 2 });
+  const map = L.map('map', {
+    center: [22, 10],
+    zoom: 2,
+    minZoom: 2,
+    maxZoom: 12,
+    zoomSnap: 0.25,
+    maxBounds: WORLD,           // can't pan past the poles / antimeridian
+    maxBoundsViscosity: 1.0,
+    zoomControl: true,
+    attributionControl: true
+  });
 
-  // Canvas renderer — single <canvas> element instead of 118k SVG nodes
-  const renderer = L.canvas({ padding: 0.5 });
+  // Keep the world at least as large as the viewport, so no gray void
+  // ever shows past the map edges — even on wide screens.
+  function clampMinZoom() {
+    const size = map.getSize();
+    if (!size.x || !size.y) return;
+    const needed = Math.log2(Math.max(size.x, size.y) / 256);
+    const minZ = Math.max(2, Math.ceil(needed * 4) / 4);
+    map.setMinZoom(minZ);
+    if (map.getZoom() < minZ) map.setZoom(minZ, { animate: false });
+  }
+  clampMinZoom();
+  map.on('resize', clampMinZoom);
 
-  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> | Risk predictions: MLP neural network trained on NASA FIRMS + Open-Meteo data',
-    maxZoom: 15,
-    opacity: 0.78
+  // Real satellite imagery of Earth (Esri World Imagery)
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics &amp; the GIS User Community | Predictions: MLP neural network &middot; NASA FIRMS + Open-Meteo',
+    maxZoom: 12,
+    noWrap: true,               // no duplicate worlds / gray void
+    bounds: WORLD
   }).addTo(map);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
-    attribution: '',
-    subdomains: 'abcd',
-    opacity: 0.3,
-    maxZoom: 19
+  // Country borders + place labels designed for satellite imagery
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 12,
+    noWrap: true,
+    bounds: WORLD,
+    opacity: 0.9
   }).addTo(map);
 
-  const RC = { 0: '#22c55e', 1: '#f97316', 2: '#dc2626' };
-  const RL = { 0: 'LOW',     1: 'MEDIUM', 2: 'HIGH'    };
+  const RC = { 0: '#22c55e', 1: '#f97316', 2: '#ef4444' };
+  const RL = { 0: 'LOW', 1: 'MEDIUM', 2: 'HIGH' };
+  const RADIUS = { 0: 4.5, 1: 5.5, 2: 7 };
+  const FILL   = { 0: 0.6, 1: 0.72, 2: 0.85 };
 
-  // One LayerGroup per risk level for efficient show/hide
+  // All 2k points share one canvas; the hover highlight lives on its OWN
+  // canvas so hovering never forces a redraw of every point.
+  const pointRenderer = L.canvas({ padding: 0.5 });
+  const hoverRenderer = L.canvas({ padding: 0 });
+
+  const highlight = L.circleMarker([0, 0], {
+    renderer: hoverRenderer,
+    interactive: false,
+    radius: 9,
+    color: '#ffffff',
+    weight: 2.5,
+    opacity: 0,
+    fillColor: '#facc15',
+    fillOpacity: 0
+  }).addTo(map);
+
+  function showHighlight(latlng, pred) {
+    highlight.setLatLng(latlng);
+    highlight.setRadius(RADIUS[pred] * radiusScale + 3.5);
+    highlight.setStyle({ opacity: 1, fillOpacity: 0.2 });
+  }
+  function hideHighlight() {
+    highlight.setStyle({ opacity: 0, fillOpacity: 0 });
+  }
+
+  // One LayerGroup per risk level for cheap show/hide
   const riskGroups = { 0: L.layerGroup(), 1: L.layerGroup(), 2: L.layerGroup() };
-
   const activeFilters = new Set([0, 1, 2]);
+
+  // Zoom-dependent point size: smaller when the whole world is visible
+  // (dense clusters stay legible), larger when zoomed in.
+  const allMarkers = [];   // { m, pred }
+  function scaleForZoom(z) {
+    return z < 3.5 ? 0.7 : z < 5.5 ? 0.9 : z < 8 ? 1.1 : 1.4;
+  }
+  let radiusScale = scaleForZoom(map.getZoom());
+  map.on('zoomend', () => {
+    const s = scaleForZoom(map.getZoom());
+    if (s === radiusScale) return;
+    radiusScale = s;
+    // setRadius calls are batched by Leaflet into a single canvas redraw
+    for (const { m, pred } of allMarkers) m.setRadius(RADIUS[pred] * s);
+  });
 
   function applyVisibility() {
     for (const level of [0, 1, 2]) {
-      if (activeFilters.has(level) && !map.hasLayer(riskGroups[level]))  riskGroups[level].addTo(map);
+      if (activeFilters.has(level) && !map.hasLayer(riskGroups[level])) riskGroups[level].addTo(map);
       else if (!activeFilters.has(level) && map.hasLayer(riskGroups[level])) map.removeLayer(riskGroups[level]);
     }
   }
 
-  // Info panel
+  // ── Info panel ────────────────────────────────────────────
   const info = L.control({ position: 'topright' });
   info.onAdd = () => {
-    info._div = L.DomUtil.create('div', 'info-box');
+    info._div = L.DomUtil.create('div', 'panel info-box');
     info.reset();
     return info._div;
   };
   info.reset = function () {
-    this._div.innerHTML = `<h4>Hover a point</h4><p class="idle-hint">Click to lock · Inspect<br>model input features</p>`;
+    this._div.innerHTML =
+      '<div class="panel-title">Model prediction</div>' +
+      '<p class="idle-hint">Hover a point to inspect its<br>input features &middot; click to lock</p>';
   };
   info.show = function (p) {
-    const pred = parseInt(p.predicted);
     this._div.innerHTML = `
-      <h4>Model Prediction</h4>
+      <div class="panel-title">Model prediction</div>
       <div class="info-row">
         <span class="info-label">Risk Level</span>
-        <span class="info-value" style="color:${RC[pred]};font-weight:bold">${RL[pred]}</span>
+        <span class="risk-tag risk-tag--${p.pred}">${RL[p.pred]}</span>
       </div>
       <div class="info-row">
         <span class="info-label">Confidence</span>
-        <span class="info-value">${(parseFloat(p.confidence) * 100).toFixed(1)}%</span>
+        <span class="info-value">${(p.confidence * 100).toFixed(1)}%</span>
       </div>
-      <div class="feat-header">INPUT FEATURES</div>
-      <div class="info-row"><span class="info-label">Temp (°C)</span><span class="info-value">${parseFloat(p.temp_mean).toFixed(1)}</span></div>
-      <div class="info-row"><span class="info-label">Humidity (%)</span><span class="info-value">${parseFloat(p.humidity_min).toFixed(1)}</span></div>
-      <div class="info-row"><span class="info-label">FWI</span><span class="info-value">${parseFloat(p.fire_weather_index).toFixed(2)}</span></div>
-      <div class="info-row"><span class="info-label">Wind (km/h)</span><span class="info-value">${parseFloat(p.wind_speed_max).toFixed(1)}</span></div>
-      <div class="info-row"><span class="info-label">Pressure (hPa)</span><span class="info-value">${parseFloat(p.pressure_mean).toFixed(1)}</span></div>
-      <div class="info-row"><span class="info-label">Coords</span><span class="info-value">${parseFloat(p.lat).toFixed(2)}°, ${parseFloat(p.lon).toFixed(2)}°</span></div>
+      <div class="feat-header">Input features</div>
+      <div class="info-row"><span class="info-label">Temp (&deg;C)</span><span class="info-value">${p.temp.toFixed(1)}</span></div>
+      <div class="info-row"><span class="info-label">Humidity (%)</span><span class="info-value">${p.humidity.toFixed(1)}</span></div>
+      <div class="info-row"><span class="info-label">Fire Weather Index</span><span class="info-value">${p.fwi.toFixed(2)}</span></div>
+      <div class="info-row"><span class="info-label">Wind (km/h)</span><span class="info-value">${p.wind.toFixed(1)}</span></div>
+      <div class="info-row"><span class="info-label">Pressure (hPa)</span><span class="info-value">${p.pressure.toFixed(1)}</span></div>
+      <div class="info-row"><span class="info-label">Coords</span><span class="info-value">${p.lat.toFixed(2)}&deg;, ${p.lon.toFixed(2)}&deg;</span></div>
     `;
   };
   info.addTo(map);
 
-  // Legend
-  const legend = L.control({ position: 'bottomleft' });
-  legend.onAdd = () => {
-    legend._div = L.DomUtil.create('div', 'legend');
-    legend._div.innerHTML = `
-      <div class="legend-title">Risk Classification</div>
-      <div class="leg-row"><div class="leg-dot" style="background:#dc2626"></div><span id="leg-high">High Risk</span></div>
-      <div class="leg-row"><div class="leg-dot" style="background:#f97316"></div><span id="leg-med">Medium Risk</span></div>
-      <div class="leg-row"><div class="leg-dot" style="background:#22c55e"></div><span id="leg-low">Low Risk</span></div>
-      <div class="legend-foot">
-        MLP · 4 layers · PyTorch<br>
-        NASA FIRMS + Open-Meteo<br>
-        118,858 training samples
-      </div>
-    `;
-    return legend._div;
-  };
-  legend.addTo(map);
-
-  // Risk filter control
-  const filterControl = L.control({ position: 'bottomright' });
+  // ── Combined legend + filter panel ────────────────────────
+  const filterControl = L.control({ position: 'bottomleft' });
   filterControl.onAdd = function () {
-    const div = L.DomUtil.create('div', 'filter-panel');
+    const div = L.DomUtil.create('div', 'panel filter-panel');
     div.innerHTML = `
-      <div class="filter-title">Risk Filter</div>
-      <label class="filter-row"><input type="checkbox" checked data-level="2"><div class="leg-dot" style="background:#dc2626"></div>High</label>
-      <label class="filter-row"><input type="checkbox" checked data-level="1"><div class="leg-dot" style="background:#f97316"></div>Medium</label>
-      <label class="filter-row"><input type="checkbox" checked data-level="0"><div class="leg-dot" style="background:#22c55e"></div>Low</label>
+      <div class="panel-title">Risk classification</div>
+      <label class="filter-row"><input type="checkbox" checked data-level="2"><span class="leg-dot leg-dot--high"></span>High<span class="filter-count" id="cnt-2"></span></label>
+      <label class="filter-row"><input type="checkbox" checked data-level="1"><span class="leg-dot leg-dot--med"></span>Medium<span class="filter-count" id="cnt-1"></span></label>
+      <label class="filter-row"><input type="checkbox" checked data-level="0"><span class="leg-dot leg-dot--low"></span>Low<span class="filter-count" id="cnt-0"></span></label>
+      <div class="legend-foot">4-layer MLP &middot; PyTorch<br>NASA FIRMS + Open-Meteo<br>118,858 training samples</div>
     `;
     L.DomEvent.disableClickPropagation(div);
     div.querySelectorAll('input').forEach(input => {
       input.addEventListener('change', function () {
-        const level = parseInt(this.dataset.level);
+        const level = parseInt(this.dataset.level, 10);
         if (this.checked) activeFilters.add(level);
         else activeFilters.delete(level);
         applyVisibility();
@@ -266,88 +458,98 @@ window.onload = function () {
   };
   filterControl.addTo(map);
 
-  // Load CSV + plot
-  let locked = null;
+  // ── Hover / lock state ────────────────────────────────────
+  let locked = null;          // the locked point's data, or null
+  let markerClicked = false;  // suppress the map-click that follows a marker click
 
-  Papa.parse('wildfire_predictions.csv', {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: function (results) {
-      document.getElementById('loading').style.display = 'none';
+  function focusPoint(p, latlng) {
+    info.show(p);
+    showHighlight(latlng, p.pred);
+  }
+  function unfocus() {
+    info.reset();
+    hideHighlight();
+  }
+
+  map.on('click', () => {
+    if (markerClicked) { markerClicked = false; return; }
+    if (locked) { locked = null; unfocus(); }
+  });
+
+  // ── About-this-model overlay ──────────────────────────────
+  const modelModal = document.getElementById('model-modal');
+  document.getElementById('model-btn').addEventListener('click', () => modelModal.classList.add('open'));
+  document.getElementById('model-close').addEventListener('click', () => modelModal.classList.remove('open'));
+  modelModal.addEventListener('click', (e) => { if (e.target === modelModal) modelModal.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') modelModal.classList.remove('open'); });
+
+  // ── Load + plot data ──────────────────────────────────────
+  fetch('wildfire_predictions.csv')
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(text => {
+      const lines = text.trim().split('\n');
+      const cols = lines[0].split(',');
+      const idx = {};
+      cols.forEach((c, i) => { idx[c.trim()] = i; });
 
       const counts = { 0: 0, 1: 0, 2: 0 };
 
-      results.data.forEach(p => {
-        const lat  = parseFloat(p.lat);
-        const lon  = parseFloat(p.lon);
-        const pred = parseInt(p.predicted);
-        if (isNaN(lat) || isNaN(lon)) return;
+      for (let i = 1; i < lines.length; i++) {
+        const f = lines[i].split(',');
+        const lat = parseFloat(f[idx.lat]);
+        const lon = parseFloat(f[idx.lon]);
+        const pred = parseInt(f[idx.predicted], 10);
+        if (isNaN(lat) || isNaN(lon) || isNaN(pred)) continue;
 
+        const p = {
+          lat, lon, pred,
+          confidence: parseFloat(f[idx.confidence]),
+          temp:       parseFloat(f[idx.temp_mean]),
+          humidity:   parseFloat(f[idx.humidity_min]),
+          fwi:        parseFloat(f[idx.fire_weather_index]),
+          wind:       parseFloat(f[idx.wind_speed_max]),
+          pressure:   parseFloat(f[idx.pressure_mean])
+        };
         counts[pred]++;
-        const radius      = pred === 2 ? 8 : pred === 1 ? 6 : 5;
-        const fillOpacity = pred === 2 ? 0.88 : pred === 1 ? 0.75 : 0.65;
 
         const m = L.circleMarker([lat, lon], {
-          radius,
+          renderer: pointRenderer,
+          radius: RADIUS[pred] * radiusScale,
           fillColor: RC[pred],
-          color: 'rgba(0,0,0,0.45)',
+          color: 'rgba(255,255,255,0.5)',
           weight: 1,
-          fillOpacity,
-          renderer,
+          fillOpacity: FILL[pred]
         });
+        allMarkers.push({ m, pred });
 
-        m.on('mouseover', function () {
-          if (locked) return;
-          info.show(p);
-          this.setStyle({ weight: 2, color: '#ffd580', fillOpacity: 1 });
-          this.setRadius(radius * 1.5);
-          this.bringToFront();
-        });
-
-        m.on('mouseout', function () {
-          if (locked) return;
-          info.reset();
-          this.setStyle({ weight: 1, color: 'rgba(0,0,0,0.45)', fillOpacity });
-          this.setRadius(radius);
-        });
-
+        // Hover and lock restyle ONLY the highlight layer — the 2,000-point
+        // canvas is never redrawn by pointer events.
+        m.on('mouseover', function () { if (!locked) focusPoint(p, this.getLatLng()); });
+        m.on('mouseout',  function () { if (!locked) unfocus(); });
         m.on('click', function () {
-          if (locked === this) {
-            locked = null;
-            info.reset();
-            this.setStyle({ weight: 1, color: 'rgba(0,0,0,0.45)', fillOpacity });
-            this.setRadius(radius);
-          } else {
-            if (locked) locked.fire('mouseout');
-            locked = this;
-            info.show(p);
-            this.setStyle({ weight: 2.5, color: '#ffd580', fillOpacity: 1 });
-            this.setRadius(radius * 1.6);
-            this.bringToFront();
-          }
+          markerClicked = true;
+          if (locked === p) { locked = null; unfocus(); }
+          else { locked = p; focusPoint(p, this.getLatLng()); }
         });
 
         riskGroups[pred].addLayer(m);
-      });
+      }
 
-      // Apply initial visibility (respects zoom state set before data loaded)
       applyVisibility();
 
-      document.getElementById('leg-high').textContent = `High Risk (${counts[2].toLocaleString()})`;
-      document.getElementById('leg-med').textContent  = `Medium Risk (${counts[1].toLocaleString()})`;
-      document.getElementById('leg-low').textContent  = `Low Risk (${counts[0].toLocaleString()})`;
-    },
+      document.getElementById('cnt-2').textContent = counts[2].toLocaleString();
+      document.getElementById('cnt-1').textContent = counts[1].toLocaleString();
+      document.getElementById('cnt-0').textContent = counts[0].toLocaleString();
 
-    error: function () {
+      document.getElementById('loading').style.display = 'none';
+    })
+    .catch(() => {
       document.getElementById('loading').innerHTML = `
-        <p style="color:#ef4444;font-family:Inter,sans-serif">Could not load wildfire_predictions.csv</p>
-        <p style="font-size:9px;color:#94a3b8;margin-top:6px;font-family:Inter,sans-serif">Make sure the CSV is in the same folder as this HTML file</p>
+        <p style="color:#ef4444">Could not load wildfire_predictions.csv</p>
+        <p style="font-size:9px;margin-top:6px">Make sure the CSV is in the same folder as this HTML file</p>
       `;
-    }
-  });
-
-};
+    });
+})();
 </script>
 </body>
 </html>
