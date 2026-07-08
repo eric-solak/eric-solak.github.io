@@ -852,7 +852,8 @@
   @media (max-width: 760px) { .bg-grid { grid-template-columns: 1fr; } }
 
   .edu-card {
-    background: linear-gradient(180deg, #141a2e 0%, #0f1526 100%);
+    background: linear-gradient(165deg, rgba(10,14,26,0.88) 0%, rgba(10,14,26,0.93) 55%, rgba(8,12,22,0.96) 100%),
+                url('assets/bg/bg-edu-1.jpg') center 35%/cover no-repeat;
     border: 1px solid rgba(154,26,80,0.4);
     border-radius: 22px; padding: 34px 32px; height: 100%;
     position: relative; overflow: hidden;
@@ -863,7 +864,7 @@
   .edu-card::after {
     content: '';
     position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse 70% 45% at 15% 0%, rgba(122,0,60,0.14) 0%, transparent 60%);
+    background: radial-gradient(ellipse 70% 45% at 15% 0%, rgba(122,0,60,0.22) 0%, transparent 60%);
   }
   .edu-card:hover {
     border-color: rgba(122,0,60,0.7);
@@ -928,7 +929,8 @@
   .cc:hover { border-color: rgba(122,0,60,0.35); color: var(--t1); background: rgba(122,0,60,0.08); }
 
   .exp-card {
-    background: linear-gradient(180deg, #141a2e 0%, #0f1526 100%);
+    background: linear-gradient(165deg, rgba(10,14,26,0.88) 0%, rgba(10,14,26,0.93) 55%, rgba(8,12,22,0.96) 100%),
+                url('assets/bg/bg-exp-1.jpg') center/cover no-repeat;
     border: 1px solid rgba(200,146,42,0.28);
     border-radius: 22px; padding: 34px 32px; height: auto;
     position: relative; overflow: hidden;
@@ -937,7 +939,7 @@
   .exp-card::before {
     content: '';
     position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse 70% 45% at 85% 0%, rgba(200,146,42,0.1) 0%, transparent 60%);
+    background: radial-gradient(ellipse 70% 45% at 85% 0%, rgba(200,146,42,0.16) 0%, transparent 60%);
   }
   .exp-card:hover { border-color: rgba(200,146,42,0.5); box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 0 40px rgba(200,146,42,0.1); transform: translateY(-3px); }
   .exp-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
@@ -976,7 +978,8 @@
   .exp-item-text .hl-stat { color: #e8b060; font-weight: 700; }
 
   .lead-card {
-    background: linear-gradient(180deg, #131a2c 0%, #0f1526 100%);
+    background: linear-gradient(165deg, rgba(10,14,26,0.9) 0%, rgba(10,14,26,0.94) 55%, rgba(8,12,22,0.96) 100%),
+                url('assets/bg/bg-edu-2.jpg') center/cover no-repeat;
     border: 1px solid rgba(122,0,60,0.35);
     border-radius: 22px; padding: 24px 28px; margin-top: 16px;
     display: flex; gap: 16px; align-items: flex-start;
