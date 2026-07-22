@@ -786,6 +786,8 @@
     overflow: hidden; position: relative;
   }
   .proj-tile-img img { width: 100%; height: 100%; object-fit: cover; }
+  .proj-tile-img.tile-chart { background: linear-gradient(to bottom, #0e1628, #080c16); }
+  .proj-tile-img.tile-chart img { object-fit: contain; }
   .tile-over {
     position: absolute; inset: 0;
     background: linear-gradient(to right, rgba(11,15,25,.7) 0%, transparent 50%);
@@ -836,6 +838,27 @@
     font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
   }
   @media (max-width: 480px) { .arch-agents { grid-template-columns: 1fr; } }
+  .ad-b { background: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.6); }
+  .ad-c { background: #22d3ee; box-shadow: 0 0 8px rgba(34,211,238,0.6); }
+  .ad-v { background: #a78bfa; box-shadow: 0 0 8px rgba(167,139,250,0.6); }
+
+  /* musicGPT sample-output box */
+  .gen-box {
+    margin-top: 12px; padding: 16px 18px; border-radius: 12px;
+    background: rgba(8,12,22,0.5); border: 1px solid rgba(34,211,238,0.16);
+  }
+  .gen-label {
+    display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+    font-size: 10.5px; font-weight: 600; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--t3); margin-bottom: 10px;
+  }
+  .gen-label .ic { color: var(--cyan); }
+  .gen-label span { color: var(--cyan); text-transform: none; letter-spacing: 0; }
+  .gen-text {
+    font-size: 13px; color: #c7d2ef; line-height: 1.75; font-style: italic;
+    border-left: 2px solid rgba(34,211,238,0.35); padding-left: 13px;
+  }
+  .gen-note { margin-top: 10px; font-size: 11px; color: var(--t3); line-height: 1.6; }
 
   /* BACKGROUND */
   #background {
@@ -1517,8 +1540,8 @@
           </div>
           <div class="proof-divider"></div>
           <div class="proof-item">
-            <div class="proof-num" data-count="94.3" data-suffix="%">94.3%</div>
-            <div class="proof-lbl">Wildfire model<br>accuracy</div>
+            <div class="proof-num" data-count="45" data-suffix="M">45M</div>
+            <div class="proof-lbl">parameter AI model<br>created from scratch</div>
           </div>
         </div>
       </div>
@@ -1536,7 +1559,7 @@
   <div class="wrap">
     <div class="pitch-inner rv">
       <h2 class="pitch-lead">
-        I work across the <strong>entire stack</strong> — from training neural networks on 100k+ samples to designing the interface that delivers the result.
+        I work across the <strong>entire stack</strong> — from pretraining a 45M-parameter language model from scratch to designing the interface that delivers the result.
       </h2>
     </div>
   </div>
@@ -1550,7 +1573,7 @@
       <div class="wid-card rv" style="--wid-color:59,130,246">
         <div class="wid-icon"><svg class="ic" aria-hidden="true"><use href="#i-brain"></use></svg></div>
         <div class="wid-name">AI & Machine Learning</div>
-        <div class="wid-desc">PyTorch neural networks on 100k+ samples, OpenAI Whisper pipelines, LLM integrations. I build AI that actually makes it to production, not just a notebook.</div>
+        <div class="wid-desc">A 45M-parameter LLM pretrained from scratch, PyTorch neural networks on 100k+ samples, OpenAI Whisper pipelines. I don't just call AI models — I build them.</div>
       </div>
       <div class="wid-card rv d1" style="--wid-color:96,165,250">
         <div class="wid-icon"><svg class="ic" aria-hidden="true"><use href="#i-code"></use></svg></div>
@@ -1623,6 +1646,69 @@
     <div class="sec-eyebrow rv">Projects</div>
     <div class="sec-title rv">Don't take my word for it.<br><span>See what I've built.</span></div>
     <div class="projects-grid">
+
+      <!-- musicGPT -->
+      <div class="proj rv" onclick="toggleDetail('gpt')">
+        <div class="proj-main">
+          <div class="proj-stripe"></div>
+          <div class="proj-content">
+            <div class="proj-top-row">
+              <div class="proj-title">musicGPT</div>
+              <span class="proj-badge">LLM Built From Scratch</span>
+            </div>
+            <div class="proj-date">Jul 2026</div>
+            <div class="proj-hook">A 45M-parameter GPT built from scratch in PyTorch (attention, RoPE, training loop, all hand-written), pretrained on ~1 billion Wikipedia tokens on a single GPU to write fluent, music-literate prose.</div>
+            <div class="pill-row">
+              <span class="pill">Python</span><span class="pill">PyTorch</span><span class="pill">NumPy</span><span class="pill">tiktoken</span><span class="pill">pytest</span>
+            </div>
+            <!-- Sample generation -->
+              <div class="gen-box">
+                <div class="gen-label">Prompt: <span>&ldquo;The electric guitar&rdquo;</span></div>
+                <div class="gen-label"><svg class="ic" aria-hidden="true"><use href="#i-terminal"></use></svg>Output:</div>
+                <div class="gen-text">&ldquo;The electric guitar has its own distinctive sound that involves creating &lsquo;the dynamic range&rsquo; of an ensemble or string section, being used in some music styles such as blues, R&amp;B, soul-rock&hellip;&rdquo;</div>
+                <div class="gen-note">Raw completion from the trained model — fluent, music-literate prose learned from ~2 passes over the corpus, generated one token at a time.</div>
+              </div>
+            <div class="proj-detail" id="d-gpt">
+              <div class="proj-detail-inner">
+              <div class="proj-detail-item"><div class="pd-dot"></div>Implemented a decoder-only transformer (44.6M parameters — 6 layers, 8 heads, 512-dim) with every core component written by hand: multi-head causal self-attention, rotary positional embeddings (RoPE), LayerNorm with fp32 statistics, and GPT-style weight init — no pre-built transformer layers.</div>
+              <div class="proj-detail-item"><div class="pd-dot"></div>Engineered a streaming data pipeline that pulls official Wikipedia dumps over HTTP, strips nested wiki markup with a hand-rolled parser, and packs 0.92B GPT-2 BPE tokens into memory-mapped binaries — upweighting music articles 3× for domain fluency.</div>
+              <div class="proj-detail-item"><div class="pd-dot"></div>Trained at the compute-optimal ~20 tokens-per-parameter budget on a single L4 GPU with mixed precision, cosine LR scheduling, and gradient accumulation — sustaining ~90k tokens/sec and reaching validation perplexity ≈ 26 with train and val loss tracking tightly (3.24 / 3.26): no overfitting.</div>
+              <div class="proj-detail-item"><div class="pd-dot"></div>Built an 11-test pytest suite: manual-attention vs. fused-kernel equivalence, causality, RoPE rotation geometry, and an init-loss sanity check that caught a real weight-tying bug during development.</div>
+
+              <!-- Architecture diagram -->
+              <div class="arch" aria-label="musicGPT training pipeline">
+                <div class="arch-cap" style="margin-top:0">From raw dump to working language model</div>
+                <div class="arch-step arch-io">Wikipedia dump &middot; streamed over HTTP &middot; 0.92B tokens</div>
+                <div class="arch-flow"></div>
+                <div class="arch-agents">
+                  <div class="arch-agent"><span class="ad ad-b"></span>Causal Self-Attention<small>with RoPE, hand-written</small></div>
+                  <div class="arch-agent"><span class="ad ad-c"></span>LayerNorm<small>manual, fp32 stats</small></div>
+                  <div class="arch-agent"><span class="ad ad-v"></span>Feed-Forward<small>GELU, 4&times; expansion</small></div>
+                </div>
+                <div class="arch-cap">Inside each of 6 transformer blocks &mdash; every layer from scratch</div>
+                <div class="arch-flow"></div>
+                <div class="arch-step arch-board">Training loop &middot; mixed precision &middot; cosine LR &middot; ~90k tokens/sec</div>
+                <div class="arch-flow"></div>
+                <div class="arch-step arch-ctrl">Final model &middot; val perplexity &asymp; 26 &middot; coherent encyclopedic prose</div>
+              </div>
+
+              
+              </div>
+            </div>
+            <div class="proj-footer">
+              <button class="proj-toggle" id="t-gpt" onclick="event.stopPropagation(); toggleDetail('gpt')">
+                <svg class="ic" aria-hidden="true"><use href="#i-chevron-down"></use></svg> More details
+              </button>
+              <a href="https://github.com/eric-solak/musicGPT" target="_blank" class="proj-link" onclick="event.stopPropagation()"><svg class="ic" aria-hidden="true"><use href="#i-github"></use></svg> Code</a>
+              <a href="https://github.com/eric-solak/musicGPT#results" target="_blank" class="proj-link" onclick="event.stopPropagation()"><svg class="ic" aria-hidden="true"><use href="#i-chart-line"></use></svg> Training Results</a>
+            </div>
+          </div>
+          <a href="https://github.com/eric-solak/musicGPT" target="_blank" class="proj-tile-img tile-chart" onclick="event.stopPropagation()">
+            <img src="assets/img/musicgpt-loss.svg" alt="musicGPT training loss curve: 10.9 to 3.26" loading="lazy">
+            <div class="tile-over"></div>
+          </a>
+        </div>
+      </div>
 
       <!-- Pocket AI -->
       <div class="proj rv" onclick="toggleDetail('pocket')">

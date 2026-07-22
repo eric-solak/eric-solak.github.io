@@ -11,3 +11,7 @@ desktop.ini
 # Scratch / build artifacts (repo root)
 /_*
 *.bak
+
+# Resume builder (local tool, not published with the site)
+/resume-builder.html
+/resume-fonts/
