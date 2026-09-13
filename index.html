@@ -871,14 +871,24 @@
     position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(ellipse 55% 65% at 15% 50%, rgba(59,130,246,0.04) 0%, transparent 60%);
   }
-  .bg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; position: relative; z-index: 1; }
-  @media (max-width: 760px) { .bg-grid { grid-template-columns: 1fr; } }
+  .bg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; position: relative; z-index: 1; }
+  @media (max-width: 980px) {
+    /* below this the two experience columns get too narrow and the date
+       badges wrap onto their own line */
+    .bg-grid { grid-template-columns: 1fr; }
+    .edu-detail-grid { grid-template-columns: 1fr 1fr; }
+    .course-chips { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 620px) {
+    .course-chips { grid-template-columns: 1fr; }
+  }
 
   .edu-card {
     background: linear-gradient(165deg, rgba(10,14,26,0.88) 0%, rgba(10,14,26,0.93) 55%, rgba(8,12,22,0.96) 100%),
                 url('assets/bg/bg-edu-1.jpg') center 35%/cover no-repeat;
     border: 1px solid rgba(154,26,80,0.4);
-    border-radius: 22px; padding: 34px 32px; height: 100%;
+    border-radius: 22px; padding: 34px 32px; height: auto;
+    grid-column: 1 / -1;
     position: relative; overflow: hidden;
     box-shadow: none;
     transition: border-color .25s, box-shadow .25s, transform .3s var(--ease-spring);
@@ -915,7 +925,7 @@
   }
   .edu-location { font-size: 13px; color: var(--t2); font-weight: 500; }
 
-  .edu-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; position: relative; z-index: 1; }
+  .edu-detail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; position: relative; z-index: 1; }
   .edu-detail-item {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09);
     border-radius: 12px; padding: 14px 16px;
@@ -937,7 +947,7 @@
     text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 11px;
     position: relative; z-index: 1;
   }
-  .course-chips { display: flex; flex-direction: column; gap: 14px; position: relative; z-index: 1; }
+  .course-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 24px; align-items: start; position: relative; z-index: 1; }
   .course-cat-label {
     font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
     color: var(--t3); margin-bottom: 7px;
@@ -952,9 +962,14 @@
   .cc:hover { border-color: rgba(122,0,60,0.35); color: var(--t1); background: rgba(122,0,60,0.08); }
 
   .exp-card {
+    height: 100%;
+    display: flex; flex-direction: column;
+    /* per-card accent: --xa light, --xb deep (rgb triples + hex twins) */
+    --xa: 232,176,96;  --xb: 200,146,42;
+    --xa-hex: #e8b060; --xb-hex: #c8922a;
     background: linear-gradient(165deg, rgba(10,14,26,0.88) 0%, rgba(10,14,26,0.93) 55%, rgba(8,12,22,0.96) 100%),
                 url('assets/bg/bg-exp-1.jpg') center/cover no-repeat;
-    border: 1px solid rgba(200,146,42,0.28);
+    border: 1px solid rgba(var(--xb),0.28);
     border-radius: 22px; padding: 34px 32px; height: auto;
     position: relative; overflow: hidden;
     transition: border-color .25s, box-shadow .25s, transform .3s var(--ease-spring);
@@ -962,25 +977,25 @@
   .exp-card::before {
     content: '';
     position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse 70% 45% at 85% 0%, rgba(200,146,42,0.16) 0%, transparent 60%);
+    background: radial-gradient(ellipse 70% 45% at 85% 0%, rgba(var(--xb),0.16) 0%, transparent 60%);
   }
-  .exp-card:hover { border-color: rgba(200,146,42,0.5); box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 0 40px rgba(200,146,42,0.1); transform: translateY(-3px); }
+  .exp-card:hover { border-color: rgba(var(--xb),0.5); box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 0 40px rgba(var(--xb),0.1); transform: translateY(-3px); }
   .exp-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
   .exp-role {
     font-family: var(--font-display);
     font-size: 20px; font-weight: 800; letter-spacing: -0.03em;
-    background: linear-gradient(90deg, #ffffff 30%, #e8b060 70%, #c8922a);
+    background: linear-gradient(90deg, #ffffff 30%, var(--xa-hex) 70%, var(--xb-hex));
     background-size: 300% 100%;
     background-position: 100% 0;
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   }
   .exp-badge {
     padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
-    background: rgba(200,146,42,0.1); border: 1px solid rgba(200,146,42,0.3);
-    color: #e8b060; white-space: nowrap;
+    background: rgba(var(--xb),0.1); border: 1px solid rgba(var(--xb),0.3);
+    color: var(--xa-hex); white-space: nowrap;
   }
-  .exp-co { font-size: 13.5px; color: #c8922a; font-weight: 600; margin-bottom: 22px; }
-  .exp-items { display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 1; }
+  .exp-co { font-size: 13.5px; color: var(--xb-hex); font-weight: 600; margin-bottom: 22px; }
+  .exp-items { display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 1; margin-bottom: 18px; }
   .exp-item {
     display: flex; gap: 0; align-items: stretch;
     border-radius: 11px; overflow: hidden;
@@ -988,18 +1003,25 @@
     font-size: 13.5px; color: var(--t2); line-height: 1.65;
     transition: border-color .2s, background .2s;
   }
-  .exp-item:hover { border-color: rgba(200,146,42,0.35); background: rgba(200,146,42,0.05); }
+  .exp-item:hover { border-color: rgba(var(--xb),0.35); background: rgba(var(--xb),0.05); }
   .exp-dot {
     width: 4px; flex-shrink: 0; align-self: stretch;
-    background: linear-gradient(to bottom, #e8b060, #c8922a);
+    background: linear-gradient(to bottom, var(--xa-hex), var(--xb-hex));
     opacity: 0.6;
     transition: opacity .2s, box-shadow .2s;
   }
-  .exp-item:hover .exp-dot { opacity: 1; box-shadow: 0 0 10px rgba(232,176,96,0.8), 0 0 22px rgba(200,146,42,0.4); }
+  .exp-item:hover .exp-dot { opacity: 1; box-shadow: 0 0 10px rgba(var(--xa),0.8), 0 0 22px rgba(var(--xb),0.4); }
   .exp-item-text { padding: 13px 16px; color: rgba(255,255,255,0.84); font-size: 14px; line-height: 1.7; }
   .exp-item-text .hl { color: #fff; font-weight: 600; }
-  .exp-item-text .hl-stat { color: #e8b060; font-weight: 700; }
+  .exp-item-text .hl-stat { color: var(--xa-hex); font-weight: 700; }
 
+
+  /* Alloy carries a steel/cyan accent so it reads as its own venture,
+     distinct from the CATTLElytics gold */
+  .exp-card--alloy {
+    --xa: 142,216,240; --xb: 61,157,196;
+    --xa-hex: #8ed8f0; --xb-hex: #3d9dc4;
+  }
   .lead-card {
     background: linear-gradient(165deg, rgba(10,14,26,0.9) 0%, rgba(10,14,26,0.94) 55%, rgba(8,12,22,0.96) 100%),
                 url('assets/bg/bg-edu-2.jpg') center/cover no-repeat;
@@ -1037,7 +1059,7 @@
     will-change: transform;
   }
   .edu-card  .card-stripe { background: linear-gradient(to bottom, #9a1a50, #7A003C); }
-  .exp-card  .card-stripe { background: linear-gradient(to bottom, #e8b060, #c8922a); }
+  .exp-card  .card-stripe { background: linear-gradient(to bottom, var(--xa-hex), var(--xb-hex)); }
   .lead-card .card-stripe { background: linear-gradient(to bottom, #9a1a50, #7A003C); width: 3px; }
   .card-stripe.animate    { animation: stripe-grow 0.55s var(--ease-out) forwards; }
 
@@ -1064,6 +1086,23 @@
     animation: role-shimmer 0.9s var(--ease-out) forwards;
     animation-delay: 0.15s;
   }
+
+  /* stacked experience cards + card link row */
+  .exp-links {
+    display: flex; flex-wrap: wrap; gap: 18px;
+    margin-top: auto; padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    position: relative; z-index: 1;
+  }
+  .exp-link {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-body); font-size: 12.5px; font-weight: 600;
+    color: var(--xb-hex); background: none; border: 0; padding: 0; cursor: pointer;
+    transition: color .15s, transform .15s;
+  }
+  .exp-link:hover { color: var(--xa-hex); transform: translateX(2px); }
+  .exp-link:focus-visible { outline: 2px solid var(--xa-hex); outline-offset: 3px; border-radius: 3px; }
+  .exp-link .ic { font-size: 11px; }
 
 
   /* CONTACT */
@@ -1454,7 +1493,6 @@
   }
 
   @media (max-width: 400px) {
-    .edu-detail-grid { grid-template-columns: 1fr; }
     .hero-photo { width: 190px; height: 238px; }
     .vid-modal-wrap { padding: 20px 14px 18px; }
   }
@@ -1559,7 +1597,7 @@
   <div class="wrap">
     <div class="pitch-inner rv">
       <h2 class="pitch-lead">
-        I work across the <strong>entire stack</strong> — from pretraining a 45M-parameter language model from scratch to designing the interface that delivers the result.
+        <strong>Founder</strong> of Alloy and <strong>Software Engineer</strong> graduate from McMaster University
       </h2>
     </div>
   </div>
@@ -1941,36 +1979,47 @@
         </div>
       </div>
 
-      <!-- Experience + Leadership -->
-      <div>
-        <div class="exp-card rv d1">
+      <!-- Experience -->
+      <div class="exp-card exp-card--alloy rv d1">
+          <div class="card-stripe"></div>
+          <div class="exp-top">
+            <div class="exp-role">Founder &amp; Technical Lead</div>
+            <div class="exp-badge">Jun 2026 - Present</div>
+          </div>
+          <div class="exp-co">Alloy &middot; AI Automation &amp; Web Engineering &middot; Toronto, ON</div>
+          <div class="exp-items">
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Grew Alloy into a solo consultancy generating <span class="hl-stat">over $25k in contracted revenue</span> across automation and website engagements.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Design and build production systems end to end: custom sites in <span class="hl">React and TypeScript</span> on <span class="hl">Cloudflare Workers</span>, plus fully and semi-autonomous <span class="hl">AI automation pipelines</span> fitted to each business&rsquo;s existing systems.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Delivered <span class="hl-stat">10+ end-to-end automation and website projects</span> for clients across Ontario, working solo across sales, scoping, build, and delivery.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Built automation systems collectively saving client businesses <span class="hl-stat">100+ hours of manual work per month</span> across active engagements.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Sustained an <span class="hl-stat">80%+ client retention or referral rate</span> at a <span class="hl-stat">1-3 week</span> average delivery window per project.</div></div>
+          </div>
+          <div class="exp-links">
+            <a class="exp-link" href="https://alloyconsulting.net/" target="_blank" rel="noopener noreferrer">
+              <svg class="ic" aria-hidden="true"><use href="#i-external-link-alt"></use></svg> alloyconsulting.net
+            </a>
+          </div>
+      </div>
+
+      <div class="exp-card rv d2">
           <div class="card-stripe"></div>
           <div class="exp-top">
             <div class="exp-role">Software Engineer</div>
             <div class="exp-badge">Sep 2025 - Apr 2026</div>
           </div>
-          <div class="exp-co">CATTLElytics Inc. · Hamilton, ON</div>
+          <div class="exp-co">CATTLElytics Inc. &middot; Hamilton, ON</div>
           <div class="exp-items">
             <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Led AI development for <span class="hl">Pocket AI</span>, a voice-driven task management app supporting dairy operations for <span class="hl-stat">1 in 50 cows</span> across North America.</div></div>
-            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Directed a team of <span class="hl-stat">5 engineers</span> through the full product lifecycle — from requirements and architecture to production handoff, delivering an app being<span class="hl"> integrated into CATTLElytics' platform</span>.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Directed a team of <span class="hl-stat">5 engineers</span> through the full product lifecycle &mdash; from requirements and architecture to production handoff, delivering an app being<span class="hl"> integrated into CATTLElytics&rsquo; platform</span>.</div></div>
             <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Integrated <span class="hl">OpenAI Whisper</span> for real-time audio transcription, achieving <span class="hl-stat">98% voice recognition accuracy</span> under simulated barn noise, exceeding the 95% project target.</div></div>
-            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Built a <span class="hl">Flask backend</span> with <span class="hl">REST APIs</span> for authentication, task lifecycle management, and sync with CATTLElytics' proprietary storage system.</div></div>
+            <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Built a <span class="hl">Flask backend</span> with <span class="hl">REST APIs</span> for authentication, task lifecycle management, and sync with CATTLElytics&rsquo; proprietary storage system.</div></div>
             <div class="exp-item"><div class="exp-dot"></div><div class="exp-item-text">Implemented an <span class="hl">offline-first architecture</span> with local SQLite storage and background syncing for reliable performance in low-connectivity farm environments.</div></div>
           </div>
-        </div>
-        <div class="lead-card rv d2">
-          <div class="card-stripe"></div>
-          <div class="lead-ring"></div>
-          <div class="lead-icon"><svg class="ic" aria-hidden="true"><use href="#i-users"></use></svg></div>
-          <div class="lead-body">
-            <div class="lead-top">
-              <div class="lead-role">Coordinator, Impact Initiative</div>
-              <div class="lead-date">Mar - Apr 2023</div>
-            </div>
-            <div class="lead-org">McMaster University</div>
-            <div class="lead-desc">Collaborated with a team of Engineering students to design an adaptive kitchen tool for individuals with visual impairments.</div>
+          <div class="exp-links">
+            <button type="button" class="exp-link" onclick="openVideoModal()">
+              <svg class="ic" aria-hidden="true"><use href="#i-play-circle"></use></svg> Watch the Pocket AI demo
+            </button>
           </div>
-        </div>
       </div>
 
     </div>
@@ -2259,12 +2308,18 @@
     }
 
     function runExpCard() {
-      const card = document.querySelector('.exp-card');
-      if (!card) return;
-      after(100, () => card.querySelector('.card-stripe').classList.add('animate'));
-      after(200, () => card.querySelector('.exp-role').classList.add('shimmer-in'));
-      card.querySelectorAll('.exp-item').forEach((item, i) => {
-        after(280 + i * 75, () => item.classList.add('bullet-in'));
+      // There are now two experience cards, so stagger each one after the
+      // previous card's bullets finish instead of only animating the first.
+      let delay = 0;
+      document.querySelectorAll('.exp-card').forEach(card => {
+        const base = delay;
+        after(base + 100, () => card.querySelector('.card-stripe').classList.add('animate'));
+        after(base + 200, () => card.querySelector('.exp-role').classList.add('shimmer-in'));
+        const items = card.querySelectorAll('.exp-item');
+        items.forEach((item, i) => {
+          after(base + 280 + i * 75, () => item.classList.add('bullet-in'));
+        });
+        delay = base + 280 + items.length * 75;
       });
     }
 
