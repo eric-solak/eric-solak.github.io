@@ -307,6 +307,8 @@
   .pj-note { margin-top: 14px; width: fit-content; display: inline-flex; align-items: center; gap: 9px; padding: 8px 14px 8px 11px; font-size: 13.5px; color: var(--ink); background: linear-gradient(90deg, rgba(225,48,108,.08), rgba(252,175,69,.07)); border: 1px solid rgba(193,53,132,.25); border-left: 3px solid #e1306c; }
   .pj-note .ic { width: 17px; height: 17px; fill: url(#ig-grad); }
   .pj-note strong { font-weight: 700; }
+  .pj-note-ics { display: inline-flex; gap: 6px; }
+  .pj-note .ic-li { fill: #0a66c2; }
   .pj-hook { margin-top: 14px; font-size: 16px; line-height: 1.7; color: var(--ink-2); max-width: 620px; }
   .pj-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 20px; }
   .pj-list { list-style: none; margin-top: 22px; }
@@ -813,7 +815,7 @@
           <div class="pj-kicker"><span>02</span> / CATTLElytics Inc.</div>
           <h3 class="pj-title">Pocket AI</h3>
           <div class="pj-meta">Sep 2025 &ndash; Apr 2026 &middot; Python &middot; Flask &middot; React Native &middot; OpenAI Whisper &middot; REST API</div>
-          <div class="pj-note"><svg class="ic" aria-hidden="true"><use href="#i-instagram"></use></svg><span><strong>Featured</strong> on official McMaster Engineering platforms</span></div>
+          <div class="pj-note"><span class="pj-note-ics"><svg class="ic" aria-hidden="true"><use href="#i-instagram"></use></svg><svg class="ic ic-li" aria-hidden="true"><use href="#i-linkedin"></use></svg></span><span>Featured on official McMaster Engineering platforms</span></div>
           <p class="pj-hook">Speak naturally, get structured tasks. End-to-end voice-to-task system built with Whisper, an LLM pipeline, Flask API, and React Native.</p>
           <div class="pj-actions"><button type="button" class="lnk" onclick="openVideoModal()">Watch demo <svg class="ic" aria-hidden="true"><use href="#i-arrow-ne"></use></svg></button><a class="lnk" href="https://github.com/MithunPara/pocket-ai" target="_blank" rel="noopener noreferrer">Code <svg class="ic" aria-hidden="true"><use href="#i-arrow-ne"></use></svg></a><button type="button" class="toggle" id="t-pocket" onclick="toggleDetail('pocket')">More details <svg class="ic" aria-hidden="true"><use href="#i-chevron-down"></use></svg></button></div>
           <div class="proj-detail" id="d-pocket">
