@@ -211,6 +211,8 @@
     position: absolute; top: 0; left: 0; width: 1440px; height: 900px; border: 0;
     transform-origin: 0 0; transform: scale(var(--s, 0.6)); pointer-events: none;
   }
+  /* Mobile browsers can still scroll an iframe on touch despite pointer-events: none; this layer takes the touch so it opens the link */
+  .site-frame::after { content: ''; position: absolute; inset: 0; z-index: 1; }
   .sys-strip { margin-top: 18px; padding: 22px 26px 24px; background: var(--white); border: 1px solid var(--line); }
   .sys-label { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
   .sys-label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
@@ -682,7 +684,7 @@
 
         <div class="embed">
           <a class="site-frame" href="https://alloyconsulting.net/" target="_blank" rel="noopener noreferrer" aria-label="alloyconsulting.net">
-            <iframe src="https://alloyconsulting.net/" title="alloyconsulting.net" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+            <iframe src="https://alloyconsulting.net/" title="alloyconsulting.net" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe>
           </a>
           <div class="sys-strip">
             <div class="label sys-label">Automate your current systems</div>
@@ -1173,8 +1175,18 @@
   (function () {
     const frame = document.querySelector('.site-frame');
     if (!frame) return;
-    const fit = () => frame.style.setProperty('--s', frame.clientWidth / 1440);
-    new ResizeObserver(fit).observe(frame);
+    const iframe = frame.querySelector('iframe');
+    /* Measure the iframe's laid-out size, not a hard-coded 1440: mobile browsers differ on how the
+       page's zoom and iframe sizing report widths, but both elements are measured the same way.
+       Scale to cover both dimensions so the preview never leaves a gap in the frame. */
+    const fit = () => {
+      const w = iframe.offsetWidth, h = iframe.offsetHeight;
+      if (w && h) frame.style.setProperty('--s', Math.max(frame.clientWidth / w, frame.clientHeight / h));
+    };
+    const ro = new ResizeObserver(fit);
+    ro.observe(frame);
+    ro.observe(iframe);
+    iframe.addEventListener('load', fit);
     fit();
   })();
 
