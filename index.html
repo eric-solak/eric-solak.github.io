@@ -320,15 +320,48 @@
   .pj-list { list-style: none; margin-top: 22px; }
   .pj-list li { position: relative; padding: 0 0 12px 20px; font-size: 15px; line-height: 1.7; color: var(--ink-2); }
   .pj-list li::before { content: ''; position: absolute; left: 0; top: 11px; width: 7px; height: 1.5px; background: var(--accent); }
-  .arch { margin-top: 8px; padding: 22px; background: var(--white); border: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; }
-  .arch-cap { font-size: 11.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 10px 0 8px; text-align: center; }
-  .arch-step { width: 100%; padding: 11px 14px; text-align: center; font-size: 13.5px; font-weight: 500; border: 1px solid var(--line-2); background: var(--paper); }
-  .arch-ctrl { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .arch-flow { width: 1px; height: 18px; background: var(--line-2); }
-  .arch-agents { display: flex; gap: 8px; width: 100%; }
-  .arch-agent { flex: 1; padding: 11px 8px; text-align: center; font-size: 13px; font-weight: 600; border: 1px solid var(--line-2); background: var(--paper); }
-  .arch-agent small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; margin-top: 2px; }
-  .ad { display: none; }
+  /* Architecture diagrams: .an node, .ar row of nodes (--n columns), .ae vertical edge,
+     .ah horizontal edge, .af fan between a row and a single node (--out splits, --in merges,
+     --elbow drops from the last column), .ablock repeated block with residual .ares paths */
+  .arch { --wire: #9a9ea6; margin-top: 8px; padding: 22px; background: var(--white); border: 1px solid var(--line); }
+  .arch-cap { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 11.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .arch-cap::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+  .an { position: relative; padding: 10px 12px; text-align: center; font-size: 13.5px; font-weight: 600; line-height: 1.35; color: var(--ink); border: 1px solid var(--line-2); background: var(--paper); }
+  .an small { display: block; margin-top: 3px; font-size: 12px; font-weight: 400; line-height: 1.4; color: var(--muted); }
+  .an--key { color: #fff; background: var(--ink); border-color: var(--ink); }
+  .an--key small { color: rgba(255,255,255,.66); }
+  .ar { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 8px; }
+  .ar .an { padding: 10px 8px; font-size: 13px; }
+  .ar--chain { grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1fr) 16px minmax(0, 1fr); gap: 0; }
+  .ae, .af, .af i { position: relative; }
+  .ae { height: 22px; }
+  .ae--tall { height: 30px; }
+  .ae::before, .af::before, .af i::before { content: ''; position: absolute; left: 50%; width: 1px; margin-left: -.5px; background: var(--wire); }
+  .ae::before { top: 0; bottom: 0; }
+  .ae::after, .af--out i::after, .af--in::after { content: ''; position: absolute; bottom: 0; left: 50%; margin-left: -4px; border: 4px solid transparent; border-top: 5px solid var(--wire); border-bottom: 0; }
+  .ae--plain::after { display: none; }
+  .ae > span, .af > span { position: absolute; left: calc(50% + 10px); top: 50%; transform: translateY(-50%); font-size: 11.5px; line-height: 1; white-space: nowrap; color: var(--muted); }
+  .ah::before { content: ''; position: absolute; left: 2px; right: 4px; top: 50%; height: 1px; background: var(--wire); }
+  .ah::after { content: ''; position: absolute; right: 1px; top: 50%; margin-top: -4px; border: 4px solid transparent; border-left: 5px solid var(--wire); border-right: 0; }
+  .ah { position: relative; }
+  .af { --c: calc((100% - (var(--n) - 1) * 8px) / var(--n) / 2); height: 28px; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 0 8px; background: linear-gradient(var(--wire), var(--wire)) no-repeat center 12px / calc(100% - 2 * var(--c)) 1px; }
+  .af--out::before { top: 0; height: 12px; }
+  .af--out i::before { top: 12px; bottom: 0; }
+  .af--in { background-position-y: 14px; }
+  .af--in::before { top: 14px; bottom: 0; }
+  .af--in i::before { top: 0; height: 15px; }
+  .af--elbow { --n: 3; height: 38px; gap: 0 16px; background: none; }
+  .af--elbow i:not(:last-of-type)::before { display: none; }
+  .af--elbow i:nth-child(2)::after { content: ''; position: absolute; left: 50%; right: calc(-50% - 16px); top: 14px; height: 1px; background: var(--wire); }
+  .af--elbow > span { top: 22px; transform: none; }
+  .ablock { position: relative; padding: 0 14px; border: 1px solid var(--ink-2); }
+  .ablock-tag { position: absolute; top: 10px; right: 12px; max-width: calc(50% - 26px); text-align: right; font-size: 11px; font-weight: 600; line-height: 1.35; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+  .ares { position: relative; padding: 0 22px; }
+  .ares::before { content: ''; position: absolute; left: 0; right: 50%; top: 11px; bottom: 10px; border: 1px solid var(--wire); border-right: 0; }
+  .ares--first > .ae:first-child { height: 40px; }
+  .ares--first::before { top: 20px; }
+  .asum { position: relative; z-index: 1; width: 20px; height: 20px; margin: 0 auto; border: 1px solid var(--wire); border-radius: 50%; background: var(--white); font-size: 14px; line-height: 17px; text-align: center; color: var(--ink-2); }
+  .ae--tail { height: 12px; }
 
   /* SKILLS */
   .skills { display: grid; grid-template-columns: 4fr 8fr; gap: 80px; align-items: start; }
@@ -794,20 +827,28 @@
                 <li>Trained at the compute-optimal ~20 tokens-per-parameter budget on a single L4 GPU with mixed precision, cosine LR scheduling, and gradient accumulation — sustaining ~90k tokens/sec and reaching validation perplexity ≈ 26 with train and val loss tracking tightly (3.24 / 3.26): no overfitting.</li>
                 <li>Built an 11-test pytest suite: manual-attention vs. fused-kernel equivalence, causality, RoPE rotation geometry, and an init-loss sanity check that caught a real weight-tying bug during development.</li>
               </ul>
-              <div class="arch" aria-label="musicGPT training pipeline">
-                <div class="arch-cap" style="margin-top:0">From raw dump to working language model</div>
-                <div class="arch-step arch-io">Wikipedia dump &middot; streamed over HTTP &middot; 0.92B tokens</div>
-                <div class="arch-flow"></div>
-                <div class="arch-agents">
-                  <div class="arch-agent"><span class="ad ad-b"></span>Causal Self-Attention<small>with RoPE, hand-written</small></div>
-                  <div class="arch-agent"><span class="ad ad-c"></span>LayerNorm<small>manual, fp32 stats</small></div>
-                  <div class="arch-agent"><span class="ad ad-v"></span>Feed-Forward<small>GELU, 4&times; expansion</small></div>
+              <div class="arch" role="figure" aria-label="musicGPT data pipeline and model architecture">
+                <div class="arch-cap">From raw dump to trained model</div>
+                <div class="ar ar--chain">
+                  <div class="an">Wikipedia dump<small>streamed over HTTP</small></div>
+                  <div class="ah"></div>
+                  <div class="an">Markup stripper<small>hand-rolled parser</small></div>
+                  <div class="ah"></div>
+                  <div class="an">GPT-2 BPE<small>uint16 memmap</small></div>
                 </div>
-                <div class="arch-cap">Inside each of 6 transformer blocks &mdash; every layer from scratch</div>
-                <div class="arch-flow"></div>
-                <div class="arch-step arch-board">Training loop &middot; mixed precision &middot; cosine LR &middot; ~90k tokens/sec</div>
-                <div class="arch-flow"></div>
-                <div class="arch-step arch-ctrl">Final model &middot; val perplexity &asymp; 26 &middot; coherent encyclopedic prose</div>
+                <div class="af af--in af--elbow"><i></i><i></i><i></i><span>0.92B tokens &middot; music 3&times;</span></div>
+                <div class="an">Token embedding<small>50,304 &times; 512, tied with the LM head</small></div>
+                <div class="ae ae--plain"></div>
+                <div class="ablock">
+                  <div class="ablock-tag">Transformer block &times;6</div>
+                  <div class="ares ares--first"><div class="ae"></div><div class="an">Causal self-attention<small>pre-LayerNorm &middot; RoPE on Q, K &middot; 8 heads</small></div><div class="ae"></div><div class="asum">+</div></div>
+                  <div class="ares"><div class="ae"></div><div class="an">Feed-forward<small>pre-LayerNorm &middot; GELU &middot; 4&times; wide</small></div><div class="ae"></div><div class="asum">+</div></div>
+                  <div class="ae ae--plain ae--tail"></div>
+                </div>
+                <div class="ae"></div>
+                <div class="an">Final LayerNorm &rarr; LM head<small>next-token logits</small></div>
+                <div class="ae ae--tall"><span>cross-entropy loss</span></div>
+                <div class="an an--key">Training loop &middot; one L4 GPU<small>bf16, cosine LR, ~90k tokens/sec &rarr; val perplexity &asymp; 26</small></div>
               </div>
             </div>
           </div>
@@ -879,22 +920,26 @@
                 <li>Trained a custom DenseNet201 model on a labelled dataset, applying a data augmentation pipeline (perspective transforms, saturation jitter, geometric transforms) to maximize generalization.</li>
                 <li>Architected a multi-agent Blackboard system where Google Gemini 2.0 Flash, GPT-4o, and the custom PyTorch model each submit predictions to a shared space; a central Gemini controller arbitrates and selects the final result.</li>
               </ul>
-              <div class="arch" aria-label="SneakPeek multi-agent architecture">
-                <div class="arch-cap" style="margin-top:0">How a prediction is made</div>
-                <div class="arch-step arch-io">Sneaker photo uploaded</div>
-                <div class="arch-flow"></div>
-                <div class="arch-agents">
-                  <div class="arch-agent"><span class="ad ad-g"></span>Gemini<br>2.0 Flash</div>
-                  <div class="arch-agent"><span class="ad ad-o"></span>GPT-4o</div>
-                  <div class="arch-agent"><span class="ad ad-p"></span>DenseNet201<small>custom PyTorch</small></div>
+              <div class="arch" role="figure" aria-label="SneakPeek multi-agent architecture">
+                <div class="arch-cap">How a prediction is made</div>
+                <div class="an">React Native app<small>sneaker photo + optional description</small></div>
+                <div class="ae ae--tall"><span>POST /createpost</span></div>
+                <div class="an">Flask API &middot; blackboard controller</div>
+                <div class="af af--out" style="--n:3"><i></i><i></i><i></i></div>
+                <div class="ar" style="--n:3">
+                  <div class="an">GPT-4o<small>vision LLM</small></div>
+                  <div class="an">Gemini 2.0 Flash<small>vision LLM</small></div>
+                  <div class="an">DenseNet201<small>custom PyTorch</small></div>
                 </div>
-                <div class="arch-cap">3 agents predict in parallel</div>
-                <div class="arch-flow"></div>
-                <div class="arch-step arch-board">Blackboard &middot; shared prediction space</div>
-                <div class="arch-flow"></div>
-                <div class="arch-step arch-ctrl">Gemini controller arbitrates &rarr; best match</div>
-                <div class="arch-flow"></div>
-                <div class="arch-step arch-io">Brand, model &amp; purchase links</div>
+                <div class="af af--in" style="--n:3"><i></i><i></i><i></i></div>
+                <div class="an an--key">Blackboard<small>shared space holding all three predictions</small></div>
+                <div class="af af--out" style="--n:2"><i></i><i></i></div>
+                <div class="ar" style="--n:2">
+                  <div class="an">Gemini arbiter<small>reconciles brand, model, colorway</small></div>
+                  <div class="an">Gemini buying agent<small>finds retail &amp; resale links</small></div>
+                </div>
+                <div class="af af--in" style="--n:2"><i></i><i></i></div>
+                <div class="an">Result posted to the forum<small>saved to SQLite, shown in the app</small></div>
               </div>
             </div>
           </div>
