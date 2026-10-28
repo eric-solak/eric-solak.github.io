@@ -481,6 +481,18 @@
   .wu .arch { margin-top: 4px; }
   .wu-quote { margin: 56px 0 0; padding: 4px 0 4px 22px; border-left: 2px solid var(--accent); font-family: var(--font-serif); font-size: clamp(22px, 2.8vw, 28px); line-height: 1.38; color: var(--ink); }
   .wu-quote cite { display: block; margin-top: 12px; font-family: 'Inter', sans-serif; font-size: 14px; font-style: normal; color: var(--muted); }
+  /* reading column: prose stays near 70 characters a line; the header image and diagrams use the full width */
+  .pj-panel--full .pj-panel-body > :not(.wu-hero):not(.wu-cap):not(.wu), .pj-panel--full .wu > :not(.dgm):not(.wu-vid) { max-width: 700px; margin-left: auto; margin-right: auto; }
+  .wu-fig { margin: 22px auto 8px; }
+  .wu-fig img, .wu-fig video { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
+  .wu-vid { margin-top: 32px; }
+  .wu-fig figcaption { margin-top: 10px; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+  .wu-link { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-weight: 500; text-decoration: underline; text-decoration-color: var(--line-2); text-underline-offset: 4px; }
+  .wu-link:hover { text-decoration-color: var(--ink); }
+  .wu-next { display: flex; width: 100%; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line-2); font-size: clamp(18px, 2.2vw, 22px); font-weight: 600; letter-spacing: -0.015em; color: var(--ink); text-align: left; }
+  .wu-next span { flex-basis: 100%; font-family: var(--font-display); font-size: 12.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .wu-next .ic { transition: transform .25s var(--ease-out); }
+  .wu-next:hover .ic { transform: translateX(4px); }
 
   .wu-intro { margin-top: 16px; max-width: 620px; font-size: 17px; line-height: 1.65; color: var(--ink-2); }
   .wu-list { display: flex; flex-direction: column; gap: 72px; }
@@ -492,22 +504,26 @@
     .wu-list .pj--wu { grid-template-columns: 1fr; gap: 26px; }
     .wu-list .pj--wu + .pj--wu { padding-top: 0; border-top: 0; }
   }
-  /* Write-up tiles: one flat colour and one geometric motif, like an editorial cover */
-  .pj-media--deploy { background: #c49466; }
-  .pj-media--voice { background: #f4ead8; }
+  /* Write-up tiles: the real work (a redacted report, a frame of the app), with a highlighter
+     pass over the one fact each write-up is about. Marks sit in the image's own coordinates. */
+  .pj-media--deploy, .pj-media--voice { background: #fff; }
   .pj-media .cv { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform .6s var(--ease-out); }
   .pj-media:hover .cv { transform: scale(1.03); }
-  /* Alloy tile: highlight the receipt line, run the thread, highlight the ledger entry */
   .cv-mark { transform-box: fill-box; transform-origin: left center; animation: cvMark 8s ease infinite both; }
+  .cv-mark--a2 { animation-name: cvMarkA2; }
   .cv-mark--b { animation-name: cvMarkB; }
+  .cv-mark--a3 { animation-name: cvMarkA3; }
+  .cv-mark--a4 { animation-name: cvMarkA4; }
+  .cv-mark--a5 { animation-name: cvMarkA5; }
+  .cv-hl { fill: #ffd24d; mix-blend-mode: multiply; } /* highlighter on paper */
   @keyframes cvMark { 0%, 3% { transform: scaleX(0); opacity: .9; } 10%, 86% { transform: scaleX(1); opacity: .9; } 94%, 100% { transform: scaleX(1); opacity: 0; } }
+  @keyframes cvMarkA2 { 0%, 10% { transform: scaleX(0); opacity: .9; } 16%, 86% { transform: scaleX(1); opacity: .9; } 94%, 100% { transform: scaleX(1); opacity: 0; } }
   @keyframes cvMarkB { 0%, 38% { transform: scaleX(0); opacity: .9; } 46%, 86% { transform: scaleX(1); opacity: .9; } 94%, 100% { transform: scaleX(1); opacity: 0; } }
-  .cv-thread { stroke-dasharray: 1; animation: cvThread 8s ease-in-out infinite both; }
-  @keyframes cvThread { 0%, 10% { stroke-dashoffset: 1; opacity: 1; } 36%, 86% { stroke-dashoffset: 0; opacity: 1; } 94%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-  .cv-pin { animation: cvPin 8s ease infinite both; }
-  .cv-pin--b { animation-name: cvPinB; }
-  @keyframes cvPin { 0%, 9% { opacity: 0; } 11%, 86% { opacity: 1; } 94%, 100% { opacity: 0; } }
-  @keyframes cvPinB { 0%, 35% { opacity: 0; } 37%, 86% { opacity: 1; } 94%, 100% { opacity: 0; } }
+  /* a1 to a5 draw one after another, the way the app underlines each phrase as it is heard */
+  @keyframes cvMarkA3 { 0%, 16% { transform: scaleX(0); opacity: .9; } 22%, 86% { transform: scaleX(1); opacity: .9; } 94%, 100% { transform: scaleX(1); opacity: 0; } }
+  @keyframes cvMarkA4 { 0%, 22% { transform: scaleX(0); opacity: .9; } 28%, 86% { transform: scaleX(1); opacity: .9; } 94%, 100% { transform: scaleX(1); opacity: 0; } }
+  @keyframes cvMarkA5 { 0%, 28% { transform: scaleX(0); opacity: .9; } 34%, 86% { transform: scaleX(1); opacity: .9; } 94%, 100% { transform: scaleX(1); opacity: 0; } }
+  .wu-cap { margin: -30px 0 40px; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
 
   /* Write-up diagrams: left-to-right flow, short labels, colour by role (vertical copy on phones) */
   .dgm { margin: 4px 0 0; padding: 28px 24px 16px; background: var(--white); border: 1px solid var(--line); }
@@ -647,11 +663,6 @@
     position: absolute; right: -4px; top: 28%;
     width: 3px; height: 62px;
     background: #1c1c1c; border-radius: 0 2px 2px 0;
-  }
-  .vid-phone-island {
-    width: 68px; height: 17px; background: #000;
-    border-radius: 10px; margin-bottom: 5px; flex-shrink: 0;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
   }
   .vid-phone-screen {
     background: #000; border-radius: 30px;
@@ -944,24 +955,25 @@
     </div>
     <div class="wu-list">
       <article class="pj pj--wu rv">
-        <button type="button" class="pj-media pj-media--deploy" onclick="toggleDetail('deploy')" aria-label="Read the deployment write-up">
-          <svg class="cv" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><filter id="cvGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></defs><defs><radialGradient id="cvLight" cx=".25" cy=".15" r="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".14"/><stop offset=".55" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#3b2414" stop-opacity=".3"/></radialGradient></defs><g fill="none" stroke="#a5744a" stroke-linecap="round" opacity=".6"><path d="M-10 -6.0 L0 -6.0 L10 -6.0 L20 -6.3 L30 -6.9 L40 -7.6 L50 -8.2 L60 -8.8 L70 -9.1 L80 -9.0 L90 -8.6 L100 -7.8 L110 -6.9 L120 -5.9 L130 -5.0 L140 -4.4 L150 -4.0 L160 -4.0 L170 -4.2 L180 -4.6 L190 -4.9 L200 -5.1 L210 -5.1 L220 -4.9 L230 -4.6 L240 -4.2 L250 -4.1 L260 -4.1 L270 -4.5 L280 -5.1 L290 -6.0 L300 -7.0 L310 -8.0 L320 -8.7 L330 -9.1" stroke-width="1.2"/><path d="M-10 5.3 L0 5.2 L10 4.9 L20 4.3 L30 3.7 L40 3.2 L50 2.9 L60 2.7 L70 2.8 L80 2.8 L90 2.8 L100 2.6 L110 2.2 L120 1.5 L130 0.5 L140 -0.5 L150 -1.4 L160 -2.0 L170 -2.4 L180 -2.3 L190 -1.8 L200 -1.1 L210 -0.1 L220 0.8 L230 1.5 L240 2.1 L250 2.4 L260 2.4 L270 2.4 L280 2.4 L290 2.5 L300 2.8 L310 3.4 L320 4.0 L330 4.7" stroke-width="1.2"/><path d="M-10 12.4 L0 13.2 L10 13.6 L20 13.6 L30 13.4 L40 13.0 L50 12.6 L60 12.2 L70 12.1 L80 12.1 L90 12.4 L100 12.8 L110 13.1 L120 13.3 L130 13.2 L140 12.8 L150 12.1 L160 11.2 L170 10.2 L180 9.2 L190 8.5 L200 8.1 L210 8.0 L220 8.1 L230 8.4 L240 8.8 L250 9.0 L260 9.0 L270 8.7 L280 8.3 L290 7.8 L300 7.4 L310 7.1 L320 7.1 L330 7.5" stroke-width="0.5"/><path d="M-10 18.0 L0 17.7 L10 17.1 L20 16.4 L30 15.7 L40 15.1 L50 14.7 L60 14.7 L70 15.1 L80 15.8 L90 16.8 L100 17.8 L110 18.8 L120 19.5 L130 20.0 L140 20.2 L150 20.2 L160 20.0 L170 19.9 L180 20.0 L190 20.2 L200 20.7 L210 21.3 L220 21.9 L230 22.3 L240 22.5 L250 22.3 L260 21.8 L270 20.9 L280 19.9 L290 18.8 L300 17.8 L310 17.1 L320 16.7 L330 16.6" stroke-width="1.2"/><path d="M-10 29.1 L0 29.0 L10 28.7 L20 28.1 L30 27.4 L40 26.7 L50 26.1 L60 25.8 L70 25.9 L80 26.2 L90 26.8 L100 27.6 L110 28.3 L120 28.9 L130 29.2 L140 29.3 L150 29.1 L160 28.9 L170 28.6 L180 28.6 L190 28.7 L200 29.2 L210 29.9 L220 30.8 L230 31.6 L240 32.3 L250 32.8 L260 32.9 L270 32.7 L280 32.3 L290 31.7 L300 31.2 L310 30.8 L320 30.7 L330 30.8" stroke-width="0.5"/><path d="M-10 39.5 L0 40.3 L10 41.0 L20 41.5 L30 41.6 L40 41.4 L50 41.0 L60 40.5 L70 40.0 L80 39.6 L90 39.5 L100 39.6 L110 39.9 L120 40.2 L130 40.5 L140 40.6 L150 40.4 L160 40.0 L170 39.3 L180 38.5 L190 37.8 L200 37.2 L210 37.0 L220 37.1 L230 37.5 L240 38.2 L250 38.9 L260 39.6 L270 40.1 L280 40.3 L290 40.3 L300 40.0 L310 39.7 L320 39.4 L330 39.3" stroke-width="0.5"/><path d="M-10 49.1 L0 49.3 L10 49.1 L20 48.8 L30 48.2 L40 47.5 L50 46.8 L60 46.3 L70 46.1 L80 46.3 L90 46.7 L100 47.3 L110 48.0 L120 48.7 L130 49.1 L140 49.3 L150 49.2 L160 48.9 L170 48.5 L180 48.3 L190 48.2 L200 48.4 L210 48.9 L220 49.6 L230 50.4 L240 51.2 L250 51.7 L260 52.0 L270 51.9 L280 51.6 L290 51.1 L300 50.5 L310 50.0 L320 49.7 L330 49.7" stroke-width="0.7"/><path d="M-10 57.5 L0 57.2 L10 56.6 L20 56.0 L30 55.3 L40 54.9 L50 54.7 L60 54.9 L70 55.4 L80 56.2 L90 57.1 L100 57.9 L110 58.5 L120 58.9 L130 59.0 L140 58.9 L150 58.7 L160 58.4 L170 58.4 L180 58.5 L190 58.9 L200 59.5 L210 60.2 L220 60.8 L230 61.2 L240 61.3 L250 61.1 L260 60.5 L270 59.7 L280 58.9 L290 58.1 L300 57.4 L310 57.1 L320 57.0 L330 57.2" stroke-width="0.9"/><path d="M-10 63.1 L0 63.6 L10 64.4 L20 65.3 L30 66.1 L40 66.8 L50 67.2 L60 67.2 L70 67.1 L80 66.7 L90 66.4 L100 66.2 L110 66.2 L120 66.5 L130 67.0 L140 67.6 L150 68.2 L160 68.7 L170 68.9 L180 68.8 L190 68.3 L200 67.7 L210 66.9 L220 66.2 L230 65.6 L240 65.3 L250 65.3 L260 65.5 L270 65.8 L280 66.0 L290 66.1 L300 66.0 L310 65.5 L320 64.9 L330 64.0" stroke-width="0.9"/><path d="M-10 74.0 L0 73.4 L10 72.9 L20 72.6 L30 72.6 L40 72.8 L50 73.2 L60 73.6 L70 73.9 L80 74.0 L90 73.8 L100 73.3 L110 72.6 L120 71.7 L130 71.0 L140 70.5 L150 70.2 L160 70.3 L170 70.6 L180 71.1 L190 71.5 L200 71.8 L210 71.9 L220 71.7 L230 71.3 L240 70.8 L250 70.2 L260 69.9 L270 69.7 L280 69.9 L290 70.4 L300 71.1 L310 71.9 L320 72.6 L330 73.1" stroke-width="0.5"/><path d="M-10 80.9 L0 80.4 L10 80.2 L20 80.1 L30 80.0 L40 80.0 L50 79.8 L60 79.3 L70 78.7 L80 77.9 L90 77.1 L100 76.4 L110 75.9 L120 75.8 L130 76.1 L140 76.8 L150 77.9 L160 79.0 L170 80.1 L180 81.0 L190 81.6 L200 81.9 L210 82.0 L220 81.8 L230 81.6 L240 81.5 L250 81.4 L260 81.6 L270 81.8 L280 82.1 L290 82.3 L300 82.2 L310 81.8 L320 81.1 L330 80.1" stroke-width="0.5"/><path d="M-10 86.7 L0 87.8 L10 88.6 L20 89.1 L30 89.2 L40 89.1 L50 88.8 L60 88.4 L70 88.0 L80 87.9 L90 88.0 L100 88.2 L110 88.6 L120 88.9 L130 89.1 L140 88.9 L150 88.5 L160 87.7 L170 86.7 L180 85.7 L190 84.7 L200 83.9 L210 83.4 L220 83.2 L230 83.3 L240 83.6 L250 83.9 L260 84.2 L270 84.2 L280 84.0 L290 83.7 L300 83.2 L310 82.8 L320 82.6 L330 82.7" stroke-width="1.2"/><path d="M-10 96.7 L0 96.5 L10 96.0 L20 95.5 L30 94.9 L40 94.5 L50 94.3 L60 94.3 L70 94.5 L80 94.7 L90 94.8 L100 94.7 L110 94.3 L120 93.7 L130 92.8 L140 91.9 L150 91.0 L160 90.4 L170 90.1 L180 90.2 L190 90.6 L200 91.2 L210 92.0 L220 92.7 L230 93.2 L240 93.5 L250 93.5 L260 93.4 L270 93.3 L280 93.2 L290 93.3 L300 93.7 L310 94.3 L320 95.1 L330 95.9" stroke-width="0.9"/><path d="M-10 97.4 L0 98.2 L10 99.1 L20 100.1 L30 100.8 L40 101.3 L50 101.4 L60 101.2 L70 100.9 L80 100.4 L90 100.0 L100 99.7 L110 99.7 L120 99.9 L130 100.2 L140 100.5 L150 100.7 L160 100.6 L170 100.3 L180 99.6 L190 98.8 L200 97.9 L210 97.1 L220 96.4 L230 96.2 L240 96.2 L250 96.6 L260 97.2 L270 97.9 L280 98.5 L290 98.9 L300 99.1 L310 99.0 L320 98.8 L330 98.6" stroke-width="0.5"/><path d="M-10 104.2 L0 105.2 L10 106.2 L20 107.0 L30 107.5 L40 107.6 L50 107.5 L60 107.2 L70 106.8 L80 106.4 L90 106.3 L100 106.4 L110 106.6 L120 107.0 L130 107.4 L140 107.5 L150 107.5 L160 107.1 L170 106.4 L180 105.4 L190 104.4 L200 103.4 L210 102.7 L220 102.2 L230 102.1 L240 102.3 L250 102.6 L260 103.0 L270 103.3 L280 103.5 L290 103.4 L300 103.1 L310 102.7 L320 102.4 L330 102.2" stroke-width="1.2"/><path d="M-10 110.9 L0 111.0 L10 111.2 L20 111.5 L30 111.6 L40 111.6 L50 111.3 L60 110.7 L70 109.9 L80 109.0 L90 108.3 L100 107.8 L110 107.6 L120 107.7 L130 108.1 L140 108.7 L150 109.3 L160 109.8 L170 110.1 L180 110.1 L190 109.9 L200 109.6 L210 109.2 L220 109.1 L230 109.1 L240 109.5 L250 110.2 L260 111.0 L270 111.9 L280 112.8 L290 113.3 L300 113.6 L310 113.6 L320 113.3 L330 112.9" stroke-width="0.7"/><path d="M-10 118.8 L0 118.5 L10 118.4 L20 118.5 L30 118.7 L40 118.8 L50 118.7 L60 118.4 L70 117.9 L80 117.2 L90 116.5 L100 115.9 L110 115.5 L120 115.4 L130 115.8 L140 116.5 L150 117.4 L160 118.4 L170 119.3 L180 119.9 L190 120.3 L200 120.3 L210 120.2 L220 119.8 L230 119.5 L240 119.3 L250 119.2 L260 119.4 L270 119.7 L280 120.0 L290 120.2 L300 120.2 L310 119.9 L320 119.3 L330 118.5" stroke-width="0.5"/><path d="M-10 121.8 L0 121.4 L10 121.2 L20 121.4 L30 121.9 L40 122.7 L50 123.7 L60 124.7 L70 125.6 L80 126.2 L90 126.6 L100 126.6 L110 126.5 L120 126.3 L130 126.2 L140 126.3 L150 126.6 L160 127.2 L170 127.9 L180 128.5 L190 129.1 L200 129.3 L210 129.2 L220 128.7 L230 128.0 L240 127.1 L250 126.1 L260 125.4 L270 124.8 L280 124.5 L290 124.5 L300 124.6 L310 124.7 L320 124.7 L330 124.5" stroke-width="0.5"/><path d="M-10 128.7 L0 128.6 L10 128.9 L20 129.5 L30 130.3 L40 131.3 L50 132.2 L60 132.9 L70 133.3 L80 133.4 L90 133.2 L100 132.9 L110 132.5 L120 132.2 L130 132.1 L140 132.3 L150 132.6 L160 133.0 L170 133.4 L180 133.6 L190 133.6 L200 133.2 L210 132.5 L220 131.6 L230 130.6 L240 129.8 L250 129.1 L260 128.8 L270 128.8 L280 129.1 L290 129.6 L300 130.1 L310 130.4 L320 130.6 L330 130.6" stroke-width="0.5"/><path d="M-10 136.2 L0 136.3 L10 136.7 L20 137.1 L30 137.4 L40 137.6 L50 137.4 L60 137.0 L70 136.3 L80 135.6 L90 134.9 L100 134.4 L110 134.2 L120 134.3 L130 134.6 L140 135.1 L150 135.7 L160 136.1 L170 136.3 L180 136.2 L190 135.9 L200 135.4 L210 135.0 L220 134.6 L230 134.4 L240 134.6 L250 135.1 L260 135.7 L270 136.5 L280 137.2 L290 137.7 L300 138.0 L310 137.9 L320 137.6 L330 137.2" stroke-width="0.9"/><path d="M-10 147.7 L0 148.4 L10 148.9 L20 149.0 L30 148.9 L40 148.5 L50 148.0 L60 147.6 L70 147.4 L80 147.4 L90 147.6 L100 148.0 L110 148.5 L120 148.9 L130 149.1 L140 149.0 L150 148.6 L160 147.9 L170 147.1 L180 146.3 L190 145.6 L200 145.1 L210 144.9 L220 145.1 L230 145.4 L240 145.7 L250 146.0 L260 146.1 L270 145.9 L280 145.5 L290 145.0 L300 144.3 L310 143.8 L320 143.5 L330 143.6" stroke-width="0.7"/><path d="M-10 151.5 L0 151.5 L10 151.2 L20 150.7 L30 150.0 L40 149.3 L50 148.8 L60 148.5 L70 148.6 L80 149.0 L90 149.6 L100 150.3 L110 151.0 L120 151.5 L130 151.7 L140 151.6 L150 151.4 L160 151.1 L170 150.8 L180 150.6 L190 150.8 L200 151.2 L210 151.9 L220 152.7 L230 153.5 L240 154.1 L250 154.4 L260 154.5 L270 154.2 L280 153.7 L290 153.2 L300 152.7 L310 152.4 L320 152.4 L330 152.6" stroke-width="1.2"/><path d="M-10 161.7 L0 161.4 L10 161.4 L20 161.7 L30 162.0 L40 162.3 L50 162.4 L60 162.3 L70 161.9 L80 161.3 L90 160.6 L100 159.8 L110 159.3 L120 159.0 L130 159.1 L140 159.5 L150 160.1 L160 160.8 L170 161.5 L180 162.0 L190 162.3 L200 162.3 L210 162.0 L220 161.7 L230 161.4 L240 161.3 L250 161.4 L260 161.8 L270 162.4 L280 163.1 L290 163.7 L300 164.2 L310 164.3 L320 164.1 L330 163.6" stroke-width="0.9"/><path d="M-10 175.5 L0 174.9 L10 174.3 L20 173.8 L30 173.5 L40 173.4 L50 173.6 L60 173.8 L70 174.1 L80 174.3 L90 174.2 L100 173.8 L110 173.1 L120 172.2 L130 171.2 L140 170.3 L150 169.6 L160 169.2 L170 169.1 L180 169.3 L190 169.7 L200 170.1 L210 170.4 L220 170.5 L230 170.3 L240 170.0 L250 169.5 L260 169.1 L270 168.8 L280 168.9 L290 169.2 L300 169.9 L310 170.8 L320 171.7 L330 172.6" stroke-width="0.7"/><path d="M-10 180.9 L0 181.2 L10 181.5 L20 181.8 L30 181.8 L40 181.6 L50 181.1 L60 180.4 L70 179.6 L80 178.9 L90 178.4 L100 178.2 L110 178.3 L120 178.7 L130 179.3 L140 179.9 L150 180.3 L160 180.6 L170 180.6 L180 180.3 L190 180.0 L200 179.5 L210 179.3 L220 179.2 L230 179.5 L240 180.1 L250 180.8 L260 181.7 L270 182.4 L280 183.0 L290 183.3 L300 183.3 L310 183.0 L320 182.6 L330 182.2" stroke-width="0.5"/><path d="M-10 185.4 L0 186.1 L10 186.8 L20 187.6 L30 188.2 L40 188.5 L50 188.5 L60 188.3 L70 187.9 L80 187.4 L90 187.0 L100 186.9 L110 187.0 L120 187.3 L130 187.9 L140 188.4 L150 188.9 L160 189.1 L170 189.0 L180 188.7 L190 188.0 L200 187.3 L210 186.6 L220 186.0 L230 185.7 L240 185.7 L250 186.0 L260 186.4 L270 186.8 L280 187.1 L290 187.1 L300 186.9 L310 186.4 L320 185.8 L330 185.2" stroke-width="1.2"/><path d="M-10 192.9 L0 192.9 L10 192.6 L20 192.1 L30 191.4 L40 190.6 L50 189.9 L60 189.5 L70 189.4 L80 189.6 L90 190.1 L100 190.9 L110 191.7 L120 192.5 L130 193.0 L140 193.3 L150 193.4 L160 193.2 L170 193.1 L180 193.0 L190 193.1 L200 193.5 L210 194.1 L220 195.0 L230 195.8 L240 196.6 L250 197.2 L260 197.4 L270 197.2 L280 196.8 L290 196.1 L300 195.4 L310 194.8 L320 194.4 L330 194.2" stroke-width="0.7"/><path d="M-10 206.9 L0 207.4 L10 207.6 L20 207.5 L30 207.1 L40 206.6 L50 206.1 L60 205.9 L70 205.8 L80 205.9 L90 206.1 L100 206.3 L110 206.4 L120 206.2 L130 205.7 L140 204.8 L150 203.8 L160 202.7 L170 201.7 L180 200.9 L190 200.4 L200 200.3 L210 200.5 L220 200.9 L230 201.4 L240 201.9 L250 202.1 L260 202.2 L270 202.1 L280 201.9 L290 201.7 L300 201.7 L310 201.9 L320 202.5 L330 203.3" stroke-width="0.5"/><ellipse cx="62" cy="168" rx="11" ry="3.6"/><ellipse cx="62" cy="168" rx="6" ry="1.8"/></g><rect width="320" height="200" fill="url(#cvLight)"/><g transform="translate(4 -9)"><g transform="rotate(-3 213 111)"><rect x="122" y="33" width="182" height="156" rx="5" fill="#1c43ab"/><rect x="127" y="38" width="172" height="146" rx="3" fill="none" stroke="#6f8fe6" stroke-width=".7" stroke-dasharray="2.5 2" opacity=".55"/></g><g transform="translate(34 60) rotate(-13)"><path d="M0 0 H40 V80 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 Z" transform="translate(3 4)" fill="#8f6240"/><path d="M0 0 H40 V80 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 Z" fill="#e7dcc4"/><rect x="12" y="8" width="16" height="3" rx="1.5" fill="#0e2a6e" opacity=".75"/><rect x="7" y="19.2" width="14" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="25" y="19.2" width="8" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="7" y="27.2" width="10" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="27" y="27.2" width="6" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="7" y="35.2" width="16" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="26" y="35.2" width="7" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="7" y="43.2" width="12" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="25" y="43.2" width="8" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="7" y="51.2" width="9" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="27" y="51.2" width="6" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><path d="M7 66 H33" stroke="#0e2a6e" stroke-width=".6" stroke-dasharray="1.5 1.5" opacity=".5"/><rect x="7" y="70" width="10" height="2.2" rx="1.1" fill="#0e2a6e" opacity=".8"/><rect x="24" y="70" width="9" height="2.2" rx="1.1" fill="#0e2a6e" opacity=".8"/></g><g transform="translate(66 50) rotate(6)"><path d="M0 0 H40 V80 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 Z" transform="translate(3 4)" fill="#8f6240"/><path d="M0 0 H40 V80 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 l-4 4 -4 -4 Z" fill="#f6efe0"/><rect x="12" y="8" width="16" height="3" rx="1.5" fill="#0e2a6e" opacity=".75"/><rect x="7" y="19.2" width="12" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="26" y="19.2" width="7" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="7" y="27.2" width="16" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="25" y="27.2" width="8" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="7" y="35.2" width="10" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="27" y="35.2" width="6" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><path class="cv-mark cv-mark--a" d="M5 40.8 L35 40.2 L35.5 46.6 L5.5 47.2 Z" fill="#f5a524"/><rect x="7" y="43.2" width="14" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="24" y="43.2" width="9" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="7" y="51.2" width="11" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><rect x="26" y="51.2" width="7" height="1.6" rx=".8" fill="#0e2a6e" opacity=".55"/><path d="M7 66 H33" stroke="#0e2a6e" stroke-width=".6" stroke-dasharray="1.5 1.5" opacity=".5"/><rect x="7" y="70" width="10" height="2.2" rx="1.1" fill="#0e2a6e" opacity=".8"/><rect x="24" y="70" width="9" height="2.2" rx="1.1" fill="#0e2a6e" opacity=".8"/></g><g transform="translate(206 100) rotate(-5)"><rect x="-63" y="-44" width="132" height="96" rx="3" fill="#163a9c"/><rect x="-66" y="-48" width="132" height="96" rx="3" fill="#0e2a6e"/><rect x="-62" y="-45" width="61" height="89" fill="#f6efe0"/><rect x="1" y="-45" width="61" height="89" fill="#f6efe0"/><rect x="-3" y="-45" width="6" height="89" fill="#e7dcc4"/><path d="M-58 -30 H-6 M6 -30 H58 M-58 -21 H-6 M6 -21 H58 M-58 -12 H-6 M6 -12 H58 M-58 -3 H-6 M6 -3 H58 M-58 6 H-6 M6 6 H58 M-58 15 H-6 M6 15 H58 M-58 24 H-6 M6 24 H58 M-58 33 H-6 M6 33 H58" fill="none" stroke="#ddd0b4" stroke-width=".6"/><path d="M-58 -36 H-6 M6 -36 H58" fill="none" stroke="#0e2a6e" stroke-width=".9" opacity=".7"/><path d="M40 -40 V40 M42 -40 V40" fill="none" stroke="#c9a9a0" stroke-width=".5"/><path class="cv-mark cv-mark--b" d="M-58 -12 L-14 -12.7 L-13.6 -5.1 L-57.6 -4.5" fill="#f5a524"/><rect x="-55" y="-28.65" width="30" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="-55" y="-19.65" width="22" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="-55" y="-10.65" width="40" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="-55" y="-1.65" width="26" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="-55" y="7.35" width="34" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="-55" y="16.35" width="18" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="9" y="-28.65" width="20" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="46" y="-28.65" width="10" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="9" y="-19.65" width="26" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="44" y="-19.65" width="12" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="9" y="-10.65" width="16" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="48" y="-10.65" width="8" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="9" y="-1.65" width="22" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="44" y="-1.65" width="12" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="9" y="7.35" width="18" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="46" y="7.35" width="10" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="9" y="16.35" width="14" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><rect x="47" y="16.35" width="9" height="1.3" rx="0.65" fill="#0e2a6e" opacity="0.62"/><path d="M43 34.6 H57 M43 36.6 H57" stroke="#0e2a6e" stroke-width=".7"/><rect x="45" y="30.60" width="11" height="1.8" rx="0.90" fill="#0e2a6e" opacity="0.9"/></g><g transform="translate(150 172) rotate(-9)"><path d="M0 0 H92 L104 3.5 L92 7 H0 Z" transform="translate(3 4)" fill="#163a9c"/><rect x="-8" y="0" width="8" height="7" rx="1.5" fill="#e7dcc4"/><rect x="-1" y="0" width="7" height="7" fill="#9fb3e6"/><rect x="6" y="0" width="86" height="7" fill="#f6efe0"/><path d="M6 3.5 H92" stroke="#e7dcc4" stroke-width="1.2"/><path d="M92 0 L104 3.5 L92 7 Z" fill="#e2c99a"/><path d="M100 2.3 L104 3.5 L100 4.7 Z" fill="#0e2a6e"/></g><path class="cv-thread" pathLength="1" d="M99 101 C114 132, 134 130, 146 98.5" fill="none" stroke="#f5a524" stroke-width="1.3" stroke-linecap="round"/><g class="cv-pin"><circle cx="99" cy="101" r="2.4" fill="#f5a524" stroke="#0e2a6e" stroke-width=".8"/></g><g class="cv-pin cv-pin--b"><circle cx="146" cy="98.5" r="2.4" fill="#f5a524" stroke="#0e2a6e" stroke-width=".8"/></g></g><g transform="translate(314 22)"><rect x="-36" y="15" width="22" height="9" rx="4.5" transform="rotate(-30 -25 19.5)" fill="#8f6240"/><circle cx="3" cy="4" r="27" fill="#8f6240"/><rect x="-39" y="11" width="22" height="9" rx="4.5" transform="rotate(-30 -28 15.5)" fill="#f6efe0"/><circle r="27" fill="#f6efe0"/><circle r="21.5" fill="#4a2c1a"/><path d="M-14 6 a15 15 0 0 0 10 9" fill="none" stroke="#c99a6b" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></g><rect width="320" height="200" filter="url(#cvGrain)" opacity=".22" style="mix-blend-mode:overlay"/></svg>
+        <button type="button" class="pj-media pj-media--deploy" onclick="toggleDetail('deploy')" aria-label="Read the job-costing write-up" data-caption="The pipeline’s own report, run on a sample job. Client name redacted.">
+          <svg class="cv" viewBox="32 452 528 330" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="assets/img/wu-alloy-costing.webp" x="32" y="445" width="528" height="330"/><rect class="cv-mark cv-hl" x="351" y="576.5" width="84" height="14" rx="1.5"/><rect class="cv-mark cv-mark--b cv-hl" x="292" y="703" width="151" height="14" rx="1.5"/></svg>
         </button>
         <div class="pj-text">
           <div class="pj-kicker"><span>Discovery</span> / Alloy client</div>
-          <h3 class="pj-title">An LLM pipeline an accountant can audit</h3>
+          <h3 class="pj-title">An LLM pipeline a bookkeeper can audit</h3>
           <div class="pj-meta">2026 &middot; Alloy client, anonymized &middot; 2&ndash;3 discovery calls &middot; Python &middot; Claude &middot; openpyxl &middot; reportlab</div>
           <p class="pj-hook">Through Alloy, my consultancy, I automated job costing for a Canadian commercial playground distributor. <strong>Hours of typing per job became minutes</strong>, every number traces back to a document, and together with my other automations the client saves 26+ hours a month.</p>
           <div class="pj-actions"><button type="button" class="toggle" id="t-deploy" aria-haspopup="dialog" onclick="toggleDetail('deploy')">Read the write-up <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button></div>
           <div class="proj-detail" id="d-deploy">
             <div class="proj-detail-inner">
               <div class="wu">
-                <p class="wu-lede">Through Alloy, my consultancy, I automated job costing for a Canadian commercial playground distributor. The hard part wasn&rsquo;t the code. It was learning a process that lived in the bookkeeper&rsquo;s head, from someone who did it by feel and had never had to explain it.</p>
+                <p class="wu-lede">The hard part of automating their job costing wasn&rsquo;t the code. It was learning a process that lived in the bookkeeper&rsquo;s head, from someone who did it by feel and had never had to explain it.</p>
 
                 <h4>How I ran discovery</h4>
                 <ul class="pj-list">
-                  <li>2&ndash;3 calls with the bookkeeper, understanding the company workflow & their needs out of my automation, and walking through finished job folders</li>
-                  <li>Their folders contained invoices, freights, customs, site work, surfacing bills, and quotes. These files were situated as PDFs, scans and Word documents.</li>
+                  <li>2&ndash;3 calls with the bookkeeper to learn the company&rsquo;s workflow and what they needed from the automation.</li>
+                  <li>Walking through finished job folders together, bill by bill.</li>
+                  <li>Each folder held invoices, quotes, and freight, customs, site work and surfacing bills, as PDFs, scans and Word files.</li>
                 </ul>
 
                 <h4>What I asked</h4>
@@ -973,7 +985,7 @@
                 </ul>
 
                 <h4>What I learned</h4>
-                <p>Tax and currency looked like they were decided case by case. Walking through real jobs showed otherwise:</p>
+                <p>Walking through real jobs turned up four rules:</p>
                 <ul class="pj-list">
                   <li><strong>Sales tax differs by vendor.</strong> Some Canadian sales tax (HST) can be claimed back, one carrier charges none, and customs bills mix fees, duty and import tax that are each treated differently.</li>
                   <li><strong>The exchange rate is theirs, not the market&rsquo;s.</strong> It must match what their bank charged, so an automatic rate lookup would have been wrong.</li>
@@ -989,10 +1001,16 @@
                   <svg class="dg-v" viewBox="0 0 360 340" aria-hidden="true"><g class="g-io"><rect x="170" y="6" width="120" height="40" rx="20"/><text x="230" y="26">Job folder</text></g><path class="e" d="M230 52 V84"/><path class="e" d="M225 77 L230 84 L235 77"/><g class="g-llm"><rect x="160" y="90" width="140" height="40" rx="0"/><text x="230" y="110">AI agent</text></g><path class="e" d="M230 136 V176"/><path class="e" d="M225 169 L230 176 L235 169"/><text class="lb lb-start" x="240" y="156">facts, no math</text><g class="g-io"><rect x="6" y="184" width="124" height="36" rx="18"/><text x="68" y="202">Client&rsquo;s rate</text></g><path class="e" d="M136 202 H152"/><path class="e" d="M145 197 L152 202 L145 207"/><g class="g-code"><rect x="160" y="182" width="140" height="40" rx="0"/><text x="230" y="202">Python rules</text></g><path class="e" d="M215 228 C215 262 92 256 92 288"/><path class="e" d="M87 281 L92 288 L97 281"/><path class="e e-d" d="M245 228 C245 262 280 256 280 288"/><path class="e" d="M275 281 L280 288 L285 281"/><text class="lb lb-start" x="270" y="252">if unsure</text><g class="g-io"><rect x="14" y="294" width="156" height="40" rx="20"/><text x="92" y="314">Workbook + PDF</text></g><g class="g-io"><rect x="216" y="294" width="128" height="40" rx="20"/><text x="280" y="314">Review flags</text></g></svg>
                   <figcaption class="dg-key"><span class="k-io">Input / output</span><span class="k-llm">Language model</span><span class="k-code">Deterministic code</span><span class="k-dash">Dashed: only when needed</span></figcaption>
                 </figure>
-                <p style="margin-top:18px">Each finding became a design rule. Because every number had to trace to a document, the AI agent only reads the bills and plain Python does every calculation, so the bookkeeper can audit it. The vendor tax rules live in one file, so a policy change is a single edit. Because the folder is never complete, quotes standing in for invoices, bills that other documents name, and any rule I was unsure of are all flagged for review instead of guessed.</p>
+                <p style="margin-top:18px">Each finding became a design rule:</p>
+                <ul class="pj-list">
+                  <li><strong>Every number traces to a document,</strong> so the AI agent only reads the bills and plain Python does every calculation. The bookkeeper can audit any figure.</li>
+                  <li><strong>Tax differs by vendor,</strong> so the vendor rules live in one file. A policy change is a single edit.</li>
+                  <li><strong>The exchange rate is theirs,</strong> so the bookkeeper types it in. It is never looked up.</li>
+                  <li><strong>The folder is never complete,</strong> so quotes standing in for invoices, bills that other documents mention, and any rule I was unsure of are flagged for review instead of guessed.</li>
+                </ul>
 
                 <h4>Impact</h4>
-                <p>Hours of typing per job became <strong>minutes plus a short review list</strong>. Together with my other automations for them, the client saves <strong>26+ hours a month</strong>. Once running, the automation also flagged a <strong>$3,000+ government rebate</strong> they had missed more than a year earlier.</p>
+                <p>Hours of typing per job became <strong>minutes plus a short review list</strong>. Together with my other automations for them, the client saves <strong>26+ hours a month</strong>. Once running, the automation also flagged a <strong>$3,000+ government rebate</strong> that had gone unclaimed for more than a year.</p>
 
                 <blockquote class="wu-quote">&ldquo;We used to dread doing this because it would take hours out of our day. Now we are so far ahead on our work.&rdquo;<cite>The client</cite></blockquote>
 
@@ -1003,6 +1021,7 @@
                   <li><strong>Logging every flag the bookkeeper overrides,</strong> so the written rules tighten from real corrections as volume grows.</li>
                   <li><strong>Reusing the pipeline for other distributors.</strong> The rules already live in one file, so a new client means writing down their rules, not new code.</li>
                 </ul>
+                <button type="button" class="wu-next" onclick="toggleDetail('discovery')"><span>Next write-up</span>Voice tasks for dairy farms, tested with the people who use them <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button>
               </div>
             </div>
           </div>
@@ -1010,31 +1029,32 @@
       </article>
 
       <article class="pj pj--wu rv">
-        <button type="button" class="pj-media pj-media--voice" onclick="toggleDetail('discovery')" aria-label="Read the Pocket AI write-up">
-          <svg class="cv" viewBox="0 0 320 200" aria-hidden="true"><defs><filter id="cvGrain2" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><filter id="cvLinen" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".012 .7" numOctaves="2" seed="4"/><feColorMatrix type="saturate" values="0"/></filter><radialGradient id="cvLight2" cx=".3" cy=".2" r=".9"><stop offset="0" stop-color="#ffffff" stop-opacity=".35"/><stop offset=".55" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#7a5326" stop-opacity=".22"/></radialGradient><clipPath id="cv-wave"><rect class="cv-bar" x="25" y="95.5" width="5" height="9" rx="2.5"/><rect class="cv-bar" x="34" y="96.5" width="5" height="7" rx="2.5"/><rect class="cv-bar" x="43" y="94.5" width="5" height="11" rx="2.5"/><rect class="cv-bar" x="52" y="95" width="5" height="10" rx="2.5"/><rect class="cv-bar" x="61" y="90.5" width="5" height="19" rx="2.5"/><rect class="cv-bar" x="70" y="90" width="5" height="20" rx="2.5"/><rect class="cv-bar" x="79" y="83" width="5" height="34" rx="2.5"/><rect class="cv-bar" x="88" y="83" width="5" height="34" rx="2.5"/><rect class="cv-bar" x="96.75" y="67" width="5.5" height="66" rx="2.75"/><rect class="cv-bar" x="105.7" y="64" width="5.6" height="72" rx="2.8"/><rect class="cv-bar" x="114.4" y="48" width="6.2" height="104" rx="3.1"/><rect class="cv-bar" x="123.3" y="41" width="6.4" height="118" rx="3.2"/><rect class="cv-bar" x="132" y="23.5" width="7" height="153" rx="3.5"/><rect class="cv-bar" x="141" y="17.5" width="7" height="165" rx="3.5"/><rect class="cv-bar" x="150" y="9" width="7" height="182" rx="3.5"/><rect class="cv-bar" x="159" y="9" width="7" height="182" rx="3.5"/><rect class="cv-bar" x="168" y="9" width="7" height="182" rx="3.5"/><rect class="cv-bar" x="177" y="17.5" width="7" height="165" rx="3.5"/><rect class="cv-bar" x="186" y="23.5" width="7" height="153" rx="3.5"/><rect class="cv-bar" x="195.3" y="41" width="6.4" height="118" rx="3.2"/><rect class="cv-bar" x="204.4" y="48" width="6.2" height="104" rx="3.1"/><rect class="cv-bar" x="213.7" y="64" width="5.6" height="72" rx="2.8"/><rect class="cv-bar" x="222.75" y="67" width="5.5" height="66" rx="2.75"/><rect class="cv-bar" x="232" y="83" width="5" height="34" rx="2.5"/><rect class="cv-bar" x="241" y="83" width="5" height="34" rx="2.5"/><rect class="cv-bar" x="250" y="90" width="5" height="20" rx="2.5"/><rect class="cv-bar" x="259" y="90.5" width="5" height="19" rx="2.5"/><rect class="cv-bar" x="268" y="95" width="5" height="10" rx="2.5"/><rect class="cv-bar" x="277" y="94.5" width="5" height="11" rx="2.5"/><rect class="cv-bar" x="286" y="96.5" width="5" height="7" rx="2.5"/><rect class="cv-bar" x="295" y="95.5" width="5" height="9" rx="2.5"/></clipPath></defs><rect x="-120" y="-40" width="560" height="280" fill="url(#cvLight2)"/><g clip-path="url(#cv-wave)"><rect x="0" y="0" width="320" height="124" fill="#8fbfe8"/><rect x="0" y="124" width="320" height="76" fill="#6aa84f"/><g transform="translate(0 -4)"><path d="M108 128 V92 L121 69 L160 50 L199 69 L212 92 V128 Z" fill="#b8362a"/><path d="M104 95 L118 67 L160 46 L202 67 L216 95 L209 95 L196 71 L160 54 L124 71 L111 95 Z" fill="#7a1f18"/><rect x="146" y="100" width="28" height="28" fill="#f4ead8"/><path d="M146 100 L174 128 M174 100 L146 128" stroke="#b8362a" stroke-width="3"/><rect x="154" y="70" width="12" height="12" fill="#f4ead8"/></g></g><rect x="-120" y="-40" width="560" height="280" filter="url(#cvLinen)" opacity=".1" style="mix-blend-mode:multiply"/><rect x="-120" y="-40" width="560" height="280" filter="url(#cvGrain2)" opacity=".16" style="mix-blend-mode:multiply"/></svg>
+        <button type="button" class="pj-media pj-media--voice" onclick="toggleDetail('discovery')" aria-label="Read the Pocket AI write-up" data-hero-fit="meet" data-caption="My redesign concept of Pocket AI turning one spoken sentence into a task. A frame from the concept’s demo, not the shipped app.">
+          <svg class="cv" viewBox="0 377 390 244" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="assets/img/wu-pocket-task.webp" x="0" y="377" width="390" height="244"/><rect class="cv-mark" x="20" y="432.3" width="281.7" height="3" rx="1.5" fill="#2451c7"/><rect class="cv-mark cv-mark--a2" x="326.4" y="432.3" width="10.8" height="3" rx="1.5" fill="#3f8a2a"/><rect class="cv-mark cv-mark--a3" x="20" y="457.2" width="27.7" height="3" rx="1.5" fill="#3f8a2a"/><rect class="cv-mark cv-mark--a4" x="152.5" y="457.2" width="53.8" height="3" rx="1.5" fill="#5a4fc0"/><rect class="cv-mark cv-mark--a5" x="215.7" y="457.2" width="101.8" height="3" rx="1.5" fill="#c24a24"/></svg>
         </button>
         <div class="pj-text">
           <div class="pj-kicker"><span>Validation</span> / CATTLElytics</div>
           <h3 class="pj-title">Voice tasks for dairy farms, tested with the people who use them</h3>
           <div class="pj-meta">Sep 2025 &ndash; Apr 2026 &middot; Capstone with CATTLElytics &middot; Usability study, 5 operators</div>
-          <p class="pj-hook">Through my capstone with CATTLElytics, whose platform supports 1 in 50 dairy cows across North America, I led AI development on a five-engineer team. <strong>Pocket AI turns one spoken sentence into a farm task</strong>, with 98% recognition under simulated barn noise and a 4.4 out of 5 rating from operators.</p>
-          <div class="pj-actions"><button type="button" class="toggle" id="t-discovery" aria-haspopup="dialog" onclick="toggleDetail('discovery')">Read the write-up <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button></div>
+          <p class="pj-hook">Through my capstone with CATTLElytics, whose platform supports 1 in 50 dairy cows across North America, I led AI development on a five-person team. <strong>Pocket AI turns one spoken sentence into a farm task</strong>, with 98% recognition under simulated barn noise and 4.4 out of 5 for overall satisfaction from operators.</p>
+          <div class="pj-actions"><button type="button" class="toggle" id="t-discovery" aria-haspopup="dialog" onclick="toggleDetail('discovery')">Read the write-up <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button><button type="button" class="lnk" onclick="openVideoModal()">Watch the demo <svg class="ic" aria-hidden="true"><use href="#i-arrow-ne"></use></svg></button></div>
           <div class="proj-detail" id="d-discovery">
             <div class="proj-detail-inner">
               <div class="wu">
-                <p class="wu-lede">Pocket AI turns one spoken sentence into a task for dairy farm workers. I led AI development on our five-person capstone team and wrote our usability report. The challenge was building for people who work with their hands full, in loud barns with weak signal, and who don&rsquo;t think in terms of software features.</p>
+                <p class="wu-lede">Pocket AI turns one spoken sentence into a task for dairy farm workers. I led AI development on our five-person capstone team and wrote our usability report. The challenge was building for people who work with their hands full, in loud barns with weak signal.</p>
 
                 <h4>Setting requirements with the client</h4>
                 <p>The CATTLElytics team set scope and priorities with us in regular Teams meetings. That gave us four requirements:</p>
                 <ul class="pj-list">
                   <li><strong>Voice first.</strong> Operators have their hands full, so a task should take one spoken sentence, not a form.</li>
                   <li><strong>Built for the barn.</strong> Recognition had to reach 95% over barn noise.</li>
-                  <li><strong>Works without signal.</strong> Farms have weak connectivity, so nothing could depend on being online.</li>
+                  <li><strong>Works without signal.</strong> Farms have weak connectivity, so tasks had to save without a connection and sync later.</li>
                   <li><strong>A focused first release.</strong> Multi-language, wearables and advanced NLP moved to stretch goals so the core loop could ship.</li>
                 </ul>
 
                 <h4>What we built</h4>
                 <p>OpenAI Whisper transcribes speech and a language model pipeline pulls the description, deadline, assignee and priority out of a single sentence. A Flask backend handles authentication, task lifecycle and sync with CATTLElytics&rsquo; proprietary storage. The app is offline-first: tasks save to local SQLite, sync in the background, and show when they are still waiting to sync. Tasks are assigned to people by name and can repeat on a schedule. Every task goes through a confirmation step before it saves, and anything can be edited by touch.</p>
+                <figure class="wu-fig"><img src="assets/img/wu-pocket-detail.webp" alt="A voice-made task in the Pocket AI redesign concept: Check the south fence for repairs, waiting to sync, high priority, due today at 5 PM, assigned to Marco Diaz." width="1440" height="900" loading="lazy"><figcaption>A task made by voice, in my redesign concept: assigned by name, and marked as waiting to sync.</figcaption></figure>
 
                 <h4>How I validated it</h4>
                 <ul class="pj-list">
@@ -1044,7 +1064,14 @@
                 </ul>
 
                 <h4>Results</h4>
-                <p>Recognition held at <strong>98%</strong> under simulated barn noise, beating the 95% target. Speech to confirmation took <strong>5.8 seconds</strong> on average, and operators rated the app <strong>4.4 out of 5</strong>. Saying the description, deadline, assignee and priority in one sentence was what all five liked most. The app was handed off to CATTLElytics for integration into their platform, and the project was highlighted on official McMaster channels.</p>
+                <p>Recognition held at <strong>98%</strong> under simulated barn noise, beating the 95% target. Speech to confirmation took <strong>5.8 seconds</strong> on average, and operators rated their overall satisfaction <strong>4.4 out of 5</strong>. Saying the description, deadline, assignee and priority in one sentence was what all five liked most. The app was handed off to CATTLElytics for integration into their platform, and the project was highlighted on official McMaster channels.</p>
+
+                <h4>What testing surfaced</h4>
+                <ul class="pj-list">
+                  <li><strong>Tapping to talk got in the way.</strong> Three of five had their hands full with animals or equipment when they needed to start a task.</li>
+                  <li><strong>Unsynced tasks looked lost.</strong> Two of five expected a new task to appear right away, before it had synced.</li>
+                  <li><strong>Everyone wanted names, not IDs.</strong> All five asked to assign tasks to people by name.</li>
+                </ul>
 
                 <h4>Next: what I handed off</h4>
                 <p>My usability report closed with a roadmap for the integration:</p>
@@ -1052,6 +1079,9 @@
                   <li><strong>A wake word,</strong> for fully hands-free use.</li>
                   <li><strong>Field testing in live barns</strong> with more operators.</li>
                 </ul>
+                <p>After the capstone, I mocked up a redesign that answers each finding. It is a concept, not the shipped app: <a class="wu-link" href="concepts/pocket-ai/">see the Pocket AI redesign concept <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a></p>
+                <figure class="wu-fig wu-vid"><video poster="assets/img/pocket-ai-concept-poster.jpg" data-poster-tall="assets/img/pocket-ai-concept-poster-tall.jpg" width="1920" height="1080" controls muted playsinline preload="none" aria-label="Scripted demo of the Pocket AI redesign concept"><source src="assets/video/pocket-ai-concept-tall.mp4" type="video/mp4" media="(max-width: 600px)"><source src="assets/video/pocket-ai-concept.mp4" type="video/mp4"></video><figcaption>The concept&rsquo;s scripted demo. The small caption under each step names the testing finding behind it.</figcaption></figure>
+                <button type="button" class="wu-next" onclick="toggleDetail('deploy')"><span>Next write-up</span>An LLM pipeline a bookkeeper can audit <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button>
               </div>
             </div>
           </div>
@@ -1131,7 +1161,7 @@
       <article class="pj rv">
         <div class="pj-note"><span class="pj-note-ics"><svg class="ic" aria-hidden="true"><use href="#i-instagram"></use></svg><svg class="ic ic-li" aria-hidden="true"><use href="#i-linkedin"></use></svg></span><span>Project highlighted on official McMaster platforms</span></div>
         <button type="button" class="pj-media pj-media--phone" onclick="openVideoModal()" aria-label="Watch the Pocket AI demo">
-          <span class="mini-phone"><img src="assets/img/pocket-ai-poster.jpg" alt="Pocket AI task list screen" loading="lazy"></span>
+          <span class="mini-phone"><img src="assets/img/pocket-ai-concept-screen.jpg" alt="The Today screen of the Pocket AI redesign concept" loading="lazy"></span>
           <span class="pj-play"><svg class="ic" aria-hidden="true"><use href="#i-play-circle"></use></svg> Watch demo</span>
         </button>
         <div class="pj-text">
@@ -1351,9 +1381,9 @@
     <!-- Left column: project story -->
     <div class="vid-info">
       <div class="vid-modal-header">
-        <div class="vid-modal-eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-microphone"></use></svg> Live Demo &middot; CATTLElytics Inc.</div>
+        <div class="vid-modal-eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-microphone"></use></svg> Redesign concept &middot; CATTLElytics capstone</div>
         <div class="vid-modal-title">Pocket AI</div>
-        <div class="vid-modal-sub">A farmer speaks a task out loud — seconds later it's structured, prioritized, and synced to the herd-management platform. Built end-to-end with Whisper, an LLM pipeline, Flask, and React Native.</div>
+        <div class="vid-modal-sub">A farmer speaks a task out loud — seconds later it's structured, prioritized, and synced to the herd-management platform. Built end-to-end with Whisper, an LLM pipeline, Flask, and React Native. The demo shows my redesign of the app&rsquo;s interface, based on what usability testing found.</div>
       </div>
 
       <!-- Pipeline timeline -->
@@ -1414,10 +1444,9 @@
       <div class="vid-phone">
         <div class="vid-phone-glow"></div>
         <div class="vid-phone-shell">
-          <div class="vid-phone-island"></div>
           <div class="vid-phone-screen paused" id="vid-screen" onclick="toggleVideoPlay(event)">
-            <video id="modal-video" src="assets/video/pocket-ai.mp4"
-              poster="assets/img/pocket-ai-poster.jpg"
+            <video id="modal-video" src="assets/video/pocket-ai-concept-screen.mp4"
+              poster="assets/img/pocket-ai-concept-screen.jpg"
               muted loop playsinline preload="none"
               style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <div class="vid-play-overlay">
@@ -1469,19 +1498,22 @@
     actions.querySelector('.toggle').remove();
     body.replaceChildren(title, card.querySelector('.pj-meta').cloneNode(true), actions,
       ...[...card.querySelector('.proj-detail-inner').children].map(el => el.cloneNode(true)));
+    if (matchMedia('(max-width: 600px)').matches) // phones play the portrait cut, so give it a matching poster and box
+      body.querySelectorAll('video[data-poster-tall]').forEach(v => { v.poster = v.dataset.posterTall; v.width = 1080; v.height = 1920; });
     if (card.classList.contains('pj--wu')) { // write-ups lead with their cover tile, as a plain picture rather than a button
       const tile = card.querySelector('.pj-media');
       const hero = document.createElement('div');
       hero.className = tile.className + ' wu-hero';
-      const art = tile.querySelector('.cv').cloneNode(true);
-      const clip = art.querySelector('clipPath');
-      if (clip) { // the copy needs its own clip id, and its own animation
-        clip.id += '-hero';
-        art.querySelector('[clip-path]').setAttribute('clip-path', `url(#${clip.id})`);
-        registerWave(art, true);
-      }
-      hero.append(art);
+      const cv = tile.querySelector('.cv').cloneNode(true);
+      if (tile.dataset.heroFit) cv.setAttribute('preserveAspectRatio', 'xMidYMid ' + tile.dataset.heroFit); // "meet" shows the whole picture on the tile's own background
+      hero.append(cv);
       body.prepend(hero);
+      if (tile.dataset.caption) { // the picture is evidence, so say plainly what it is
+        const cap = document.createElement('p');
+        cap.className = 'wu-cap';
+        cap.textContent = tile.dataset.caption;
+        hero.after(cap);
+      }
     }
     panel.classList.toggle('pj-panel--full', card.classList.contains('pj--wu'));
     panel.scrollTop = 0;
@@ -1501,6 +1533,7 @@
   }
   panel.addEventListener('close', () => {
     document.documentElement.classList.remove('panel-open');
+    panel.querySelectorAll('video').forEach(v => v.pause());
     // Lifting the scroll lock or the browser's focus restore must never move the page
     if (panelOpener) panelOpener.focus({ preventScroll: true });
     if (Math.abs(window.scrollY - panelY) > 1) window.scrollTo({ top: panelY, behavior: 'instant' });
@@ -1531,53 +1564,6 @@
   /* Scroll reveal */
   const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Pocket AI cover: each bar's height is a short Fourier series (three sines at its own frequencies and phases)
-     times a shared phrasing swell, written straight to the SVG attributes. Attribute updates animate the clip
-     path in every browser, which CSS transforms inside a clipPath do not. Runs only while a wave is on screen. */
-  const waves = new Set();
-  let heroWave = null, waveRaf = 0;
-  const waveSeen = new IntersectionObserver(entries => {
-    entries.forEach(e => { e.target.waveVisible = e.isIntersecting; });
-    if (!waveRaf) waveRaf = requestAnimationFrame(waveFrame);
-  });
-  function registerWave(svg, isHero) {
-    if (REDUCE_MOTION) return;
-    if (isHero && heroWave) { waveSeen.unobserve(heroWave.svg); waves.delete(heroWave); }
-    let seed = 7;
-    const rand = (lo, hi) => { seed = (seed * 16807) % 2147483647; return lo + (hi - lo) * (seed / 2147483647); };
-    const bars = [...svg.querySelectorAll('.cv-bar')].map(el => {
-      // remember the drawn size on the bar itself: copies made mid-animation (the reader's header) carry it along
-      el.dataset.h ??= el.getAttribute('height');
-      el.dataset.y ??= el.getAttribute('y');
-      return el;
-    }).map(el => ({
-      el, base: +el.dataset.h, mid: +el.dataset.y + el.dataset.h / 2,
-      f: [rand(1.1, 2.2), rand(2.6, 4.2), rand(5, 7.5)], p: [rand(0, 6.3), rand(0, 6.3), rand(0, 6.3)]
-    }));
-    const wave = { svg, bars };
-    waves.add(wave);
-    if (isHero) heroWave = wave;
-    waveSeen.observe(svg);
-  }
-  function waveFrame(now) {
-    const t = now / 1000 * 0.4, TAU = Math.PI * 2; // 0.4: slowed so the motion stays in the background
-    const swell = 0.93 + 0.07 * Math.sin(TAU * 0.6 * t); // slow rise and fall, like phrases of speech
-    let active = false;
-    waves.forEach(({ svg, bars }) => {
-      if (!svg.waveVisible) return;
-      active = true;
-      bars.forEach(b => {
-        const level = (Math.sin(TAU * b.f[0] * t + b.p[0]) + 0.6 * Math.sin(TAU * b.f[1] * t + b.p[1])
-          + 0.35 * Math.sin(TAU * b.f[2] * t + b.p[2])) / 1.95; // -1..1
-        const swing = 0.18 - 0.1 * Math.min(1, b.base / 180); // taller bars over the barn move less, so its details stay in view
-        const h = b.base * swell * (1 - swing + swing * level);
-        b.el.setAttribute('height', h.toFixed(1));
-        b.el.setAttribute('y', (b.mid - h / 2).toFixed(1));
-      });
-    });
-    waveRaf = active ? requestAnimationFrame(waveFrame) : 0;
-  }
-  document.querySelectorAll('.pj-media--voice .cv').forEach(svg => registerWave(svg, false));
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); } });
   }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });

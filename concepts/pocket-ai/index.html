@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket AI Redesign Concept | Eric Solak</title>
+  <meta name="description" content="A redesign concept for Pocket AI, a voice-first task app for dairy farms, built from the findings of its usability study. A concept, not the shipped app.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+  :root {
+    --paper: #faf9f6; --ink: #16181d; --ink-2: #4a4f5a; --muted: #7b7f88;
+    --line: #e3e0d8; --line-2: #cfcbc1; --accent: #2451c7;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-display: 'Oswald', 'Inter', sans-serif;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --s: 1;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { font-family: var(--font); background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-align: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .ic { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* PAGE: the note about the concept on the left, the phone on the right */
+  .stage { min-height: 100%; display: grid; grid-template-columns: minmax(0, 380px) auto; gap: 88px; align-items: center; justify-content: center; padding: 32px 40px; }
+  .rule-label { display: flex; align-items: center; gap: 14px; font-family: var(--font-display); font-size: 13px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--ink); }
+  .rule-label::after { content: ''; flex: 1; height: 1px; background: var(--line-2); }
+  .note h1 { margin-top: 22px; font-size: 32px; font-weight: 600; line-height: 1.15; letter-spacing: -0.025em; text-wrap: balance; }
+  .note > p { margin-top: 16px; font-size: 15.5px; line-height: 1.65; color: var(--ink-2); }
+  .finds { margin-top: 26px; list-style: none; border-top: 1px solid var(--line); }
+  .finds li { padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .finds .why { display: block; font-size: 13px; line-height: 1.5; color: var(--muted); }
+  .finds .what { display: block; margin-top: 3px; font-size: 15px; line-height: 1.45; color: var(--ink); }
+  .controls { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border: 1px solid var(--ink); border-radius: 999px; font-family: var(--font-display); font-size: 13.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; transition: background .2s, color .2s; }
+  .btn--solid { background: var(--ink); color: #fff; }
+  .btn--solid:hover { background: #2b2f38; }
+  .btn:not(.btn--solid):hover, .btn[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .keys { margin-top: 14px; font-size: 12.5px; line-height: 1.8; color: var(--muted); }
+  .keys kbd { font-family: var(--font); font-size: 11.5px; padding: 1px 6px; border: 1px solid var(--line-2); border-radius: 4px; color: var(--ink-2); }
+
+  /* Recording view: just the phone, centred */
+  body.record .stage { grid-template-columns: auto; }
+  body.record .note { display: none; }
+  /* captions for the recorded video: above the phone when tall, beside it when wide */
+  .cap { display: none; }
+  body.record .cap { display: block; max-width: 760px; }
+  .cap-text { min-height: 2.3em; font-size: clamp(30px, 3.2vmax, 60px); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; text-wrap: balance; }
+  .cap-sub { margin-top: .5em; min-height: 2.9em; font-size: clamp(17px, 1.5vmax, 28px); line-height: 1.45; color: var(--ink-2); text-wrap: balance; }
+  .cap-text, .cap-sub { transition: opacity .3s, transform .45s var(--ease-out); }
+  .cap.swap .cap-text, .cap.swap .cap-sub { opacity: 0; transform: translateY(12px); }
+  @media (orientation: portrait) {
+    body.record .stage { grid-template-columns: auto; justify-items: center; align-content: center; gap: 3.5vh; }
+    body.record .cap { text-align: center; }
+  }
+  @media (orientation: landscape) {
+    body.record .stage { grid-template-columns: minmax(0, 620px) auto; gap: 6vw; }
+  }
+
+  /* Screen-only view (?screen): just the app screen, filling the window, for the site's phone player */
+  body.screen-only .note, body.screen-only .cap { display: none; }
+  body.screen-only .stage { display: block; min-height: 0; padding: 0; }
+  body.screen-only .phone-fit { width: calc(390px * var(--s)); height: calc(844px * var(--s)); }
+  body.screen-only .phone { width: 390px; height: 844px; padding: 0; border-radius: 0; box-shadow: none; }
+  body.screen-only .screen { border-radius: 0; }
+
+  /* PHONE: drawn at 390 x 844 and scaled to fit the window */
+  .phone-fit { width: calc(414px * var(--s)); height: calc(868px * var(--s)); }
+  .phone { width: 414px; height: 868px; padding: 12px; border-radius: 62px; background: #0d0e11; transform: scale(var(--s)); transform-origin: top left; box-shadow: 0 0 0 1.5px #2a2c31 inset; }
+  .screen {
+    --bg: #f3f2ee; --card: #fff; --bar: rgba(247,246,242,.9); --tx: #16181d; --tx-2: #4a4f5a; --tx-3: #868a92; --hair: #e7e4dc;
+    --green: #1f6b45; --green-bg: #e7f2ea; --amber: #94600a; --amber-dot: #dc9a14; --red: #c4321c;
+    --f-task: #2451c7; --f-when: #3f8a2a; --f-who: #5a4fc0; --f-pri: #c24a24; --f-rep: #a3680c;
+    position: relative; width: 390px; height: 844px; overflow: hidden; border-radius: 50px; background: var(--bg); color: var(--tx);
+    font-size: 15px; user-select: none; -webkit-user-select: none; isolation: isolate;
+  }
+  /* Sun mode: maximum contrast for glare outdoors */
+  .screen.sun { --bg: #fff; --card: #fff; --bar: rgba(255,255,255,.96); --tx: #000; --tx-2: #1f2228; --tx-3: #3d4048; --hair: #9a968c; --green: #0f5532; --amber: #6e4500; }
+  .screen.sun .group, .screen.sun .card { box-shadow: 0 0 0 1.5px var(--hair); }
+  .screen.sun .row-title { font-size: 17.5px; }
+
+  /* status bar, island, home indicator */
+  .status { position: absolute; inset: 0 0 auto; height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 34px 0 50px; font-size: 16px; font-weight: 600; z-index: 40; pointer-events: none; background: linear-gradient(var(--bg) 70%, transparent); transition: background .2s; }
+  .screen.scrolled .status, .screen.pushed .status { background: none; }
+  .status > * { transition: opacity .2s; }
+  .screen.heard .status > * { opacity: 0; }
+  .status-r { display: flex; align-items: center; gap: 6px; }
+  .status-r svg { height: 13px; width: auto; }
+  .wifi-on { display: none; }
+  .screen.online .wifi-on { display: block; }
+  .screen.online .wifi-off { display: none; }
+  .island { position: absolute; top: 11px; left: 50%; z-index: 50; width: 124px; height: 36px; margin-left: -62px; border-radius: 20px; background: #000; color: #fff; display: flex; align-items: center; gap: 10px; padding: 0 16px; overflow: hidden; font-size: 13.5px; font-weight: 600; white-space: nowrap; transition: width .45s var(--ease-out), margin-left .45s var(--ease-out); }
+  .island > * { opacity: 0; transition: opacity .2s; }
+  .island.open { width: 236px; margin-left: -118px; }
+  .island.open > * { opacity: 1; transition-delay: .18s; }
+  .island-wave { display: flex; align-items: center; gap: 2px; height: 16px; }
+  .island-wave i { width: 3px; height: 30%; border-radius: 2px; background: #6be39a; animation: iw .7s ease-in-out infinite alternate; }
+  .island-wave i:nth-child(2) { animation-delay: -.2s; } .island-wave i:nth-child(3) { animation-delay: -.45s; } .island-wave i:nth-child(4) { animation-delay: -.1s; }
+  @keyframes iw { to { height: 100%; } }
+  .island-q { color: #b8f0cd; }
+  .home-ind { position: absolute; left: 50%; bottom: 8px; z-index: 60; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #16181d; pointer-events: none; }
+
+  /* views: one per tab, plus the pushed task detail */
+  .view { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; padding: 54px 16px 130px; transition: transform .45s var(--ease-out), filter .45s; }
+  .view::-webkit-scrollbar { display: none; }
+  .view[hidden] { display: none; }
+  .screen.pushed .view:not(.detail) { transform: translateX(-28%); filter: brightness(.94); }
+
+  /* compact nav bar: appears once the large title scrolls away */
+  .nav { position: absolute; inset: 0 0 auto; z-index: 30; height: 98px; padding: 54px 16px 0; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; background: var(--bar); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5); border-bottom: 1px solid var(--hair); opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .screen.scrolled:not(.pushed) .nav { opacity: 1; pointer-events: auto; }
+  .nav-title { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+  .nav-r { justify-self: end; display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: var(--tx-3); }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber-dot); }
+  .screen.online .nav-dot { background: #2f9e5c; }
+
+  /* shared bits */
+  .ib { position: relative; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: var(--tx-2); }
+  .ib .ic { font-size: 21px; }
+  .badge { position: absolute; top: 3px; right: 2px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--red); color: #fff; font-size: 10.5px; font-weight: 700; display: grid; place-items: center; box-shadow: 0 0 0 2px var(--bg); }
+  .av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; }
+  .av--lg { width: 40px; height: 40px; font-size: 13.5px; }
+  .av-you { background: #dbe9df; color: #1f5a3b; } .av-marco { background: #e1e8fa; color: #2451c7; }
+  .av-priya { background: #ebe7fb; color: #5a4fc0; } .av-sam { background: #f6ead3; color: #8a5a00; }
+  .big { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+  .sub { margin-top: 3px; display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--tx-3); }
+  .sub .ic { font-size: 15px; }
+  .chips { display: flex; gap: 8px; margin: 14px -16px 0; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex-shrink: 0; height: 34px; padding: 0 14px; border-radius: 17px; display: inline-flex; align-items: center; gap: 6px; background: var(--card); box-shadow: 0 0 0 1px var(--hair) inset; font-size: 14px; font-weight: 600; color: var(--tx-2); transition: background .2s, color .2s; }
+  .chip b { font-weight: 600; color: var(--tx-3); }
+  .chip.on { background: var(--tx); color: var(--bg); box-shadow: none; }
+  .chip.on b { color: inherit; opacity: .6; }
+  .sec-h { margin: 22px 6px 8px; display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--tx-3); }
+  .sec-h b { font-weight: 600; letter-spacing: 0; color: var(--tx-3); opacity: .8; }
+  .sec-h.late { color: var(--red); }
+  .group, .card { list-style: none; background: var(--card); border-radius: 16px; overflow: hidden; }
+  .search { margin-top: 14px; height: 40px; border-radius: 12px; background: #e9e7e1; display: flex; align-items: center; gap: 8px; padding: 0 12px; font-size: 15.5px; color: var(--tx-3); }
+  .screen.sun .search { background: #f0f0f0; box-shadow: 0 0 0 1.5px var(--hair) inset; }
+  .search .ic { font-size: 17px; }
+
+  /* TODAY */
+  .topbar { height: 44px; display: flex; align-items: center; justify-content: space-between; margin: 0 -6px 0 -2px; }
+  .farm { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px 0 10px; border-radius: 17px; background: var(--card); box-shadow: 0 0 0 1px var(--hair) inset; font-size: 14px; font-weight: 600; }
+  .farm .ic { font-size: 16px; color: var(--green); }
+  .farm .ic:last-child { font-size: 13px; color: var(--tx-3); }
+  .tb-r { display: flex; align-items: center; gap: 2px; }
+  .tb-r .av { margin-left: 6px; }
+  .title-row { margin-top: 10px; display: flex; align-items: flex-end; justify-content: space-between; }
+  .ring-wrap { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; font-size: 13px; font-weight: 600; color: var(--tx-3); text-align: right; line-height: 1.25; }
+  .ring { width: 40px; height: 40px; transform: rotate(-90deg); }
+  .ring circle { fill: none; stroke-width: 4.5; }
+  .ring-bg { stroke: var(--hair); }
+  .ring-fg { stroke: var(--green); stroke-linecap: round; stroke-dasharray: 100.5; transition: stroke-dashoffset .6s var(--ease-out); }
+  .days { margin: 16px -4px 0; display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .day { height: 58px; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11.5px; font-weight: 600; color: var(--tx-3); position: relative; }
+  .day b { font-size: 17px; font-weight: 600; color: var(--tx); }
+  .day.has::after { content: ''; position: absolute; bottom: 6px; width: 4px; height: 4px; border-radius: 50%; background: var(--tx-3); }
+  .day.on { background: var(--tx); color: rgba(255,255,255,.7); }
+  .day.on b { color: #fff; }
+  .day.on::after { background: #6be39a; }
+  .pills { margin-top: 14px; display: flex; gap: 8px; white-space: nowrap; }
+  .pill { height: 30px; display: inline-flex; align-items: center; gap: 7px; padding: 0 12px 0 10px; border-radius: 15px; background: var(--card); box-shadow: 0 0 0 1px var(--hair) inset; font-size: 13px; font-weight: 500; color: var(--tx-2); }
+  .pill .ic { font-size: 14px; }
+  .net-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber-dot); }
+  .net.ok .net-dot { background: #2f9e5c; }
+  .net.busy .net-dot { background: none; border: 2px solid var(--hair); border-top-color: var(--green); animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .wake-dot { width: 7px; height: 7px; border-radius: 50%; background: #2f9e5c; animation: ping 2.4s ease-out infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(47,158,92,.45); } 70%, 100% { box-shadow: 0 0 0 6px rgba(47,158,92,0); } }
+
+  .row { display: grid; grid-template-rows: 1fr; overflow: hidden; transition: background 1.2s ease; cursor: pointer; }
+  .row[hidden] { display: none; }
+  .row + .row .row-in { border-top: 1px solid var(--hair); }
+  .row-in { min-height: 0; display: flex; align-items: flex-start; gap: 11px; padding: 12px 14px 12px 10px; }
+  .row.enter { animation: rowIn .55s var(--ease-out) both; }
+  @keyframes rowIn { from { grid-template-rows: 0fr; opacity: 0; } }
+  .row.fresh { background: var(--green-bg); }
+  .row.pressed { background: #ecebe6; transition: none; }
+  .check { width: 30px; height: 30px; margin-top: -3px; flex-shrink: 0; border-radius: 50%; display: grid; place-items: center; position: relative; }
+  .check::before { content: ''; width: 22px; height: 22px; border-radius: 50%; box-shadow: 0 0 0 1.75px var(--line-2) inset; transition: background .25s, box-shadow .25s; }
+  .check .ic { position: absolute; font-size: 13px; stroke: #fff; stroke-width: 3; opacity: 0; transition: opacity .2s; }
+  .row.done .check::before { background: var(--green); box-shadow: none; }
+  .row.done .check .ic { opacity: 1; }
+  .row-main { flex: 1; min-width: 0; }
+  .row-title { font-size: 16px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; transition: color .3s; }
+  .row.done .row-title { color: var(--tx-3); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+  .row-meta { margin-top: 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 3px 10px; font-size: 13px; color: var(--tx-3); }
+  .row-meta > span { display: inline-flex; align-items: center; gap: 4px; }
+  .row-meta .ic { font-size: 13px; }
+  .row-side { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .row-side .av { width: 28px; height: 28px; font-size: 10.5px; }
+  .row.done .row-side { opacity: .5; }
+  .flag { font-size: 15px; }
+  .flag--High { color: var(--red); fill: var(--red); } .flag--Medium { color: #d08a0b; fill: #d08a0b; }
+  .sync { font-weight: 600; color: var(--amber); transition: opacity .5s; }
+  .sync.ok { color: var(--green); }
+  .sync.gone { opacity: 0; }
+  .voice { color: var(--green); }
+
+  /* TAB BAR with the talk button in the middle */
+  .tabbar { position: absolute; inset: auto 0 0; z-index: 35; height: 88px; padding: 7px 6px 0; display: grid; grid-template-columns: repeat(5, 1fr); align-items: start; background: var(--bar); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5); border-top: 1px solid var(--hair); transition: transform .4s var(--ease-out), background .3s; }
+  .tab { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 2px; font-size: 10.5px; font-weight: 600; color: var(--tx-3); transition: color .2s, opacity .3s; position: relative; }
+  .tab .ic { font-size: 25px; stroke-width: 1.8; }
+  .tab.on { color: var(--tx); }
+  .tab.on .ic { stroke-width: 2.2; }
+  .tab .badge { top: -3px; right: calc(50% - 22px); box-shadow: 0 0 0 2px var(--bar); }
+  .talk { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; color: var(--tx); touch-action: none; }
+  .mic { position: relative; width: 62px; height: 62px; margin-top: -27px; border-radius: 50%; background: #16181d; color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 5px var(--bg), 0 8px 18px rgba(22,24,29,.22); transition: transform .2s var(--ease-out), background .25s; }
+  .mic .ic { font-size: 27px; }
+  .mic::after { content: ''; position: absolute; top: 5px; right: 5px; width: 10px; height: 10px; border-radius: 50%; background: #3fc77a; box-shadow: 0 0 0 2.5px #16181d; }
+  .talk.held .mic { transform: scale(.94); }
+  .screen.sheet-open .tabbar { background: var(--card); }
+  .screen.sheet-open .tab { opacity: .3; }
+  .screen.sheet-open .mic { background: #d92d20; animation: micPulse 1.6s ease-out infinite; }
+  .screen.sheet-open .mic::after { display: none; }
+  @keyframes micPulse { 0% { box-shadow: 0 0 0 5px var(--card), 0 0 0 5px rgba(217,45,32,.35); } 100% { box-shadow: 0 0 0 5px var(--card), 0 0 0 22px rgba(217,45,32,0); } }
+  .screen.confirming .tabbar, .screen.pushed .tabbar { transform: translateY(calc(100% + 40px)); } /* clear the raised mic too */
+  .screen.sun .mic { background: #000; }
+
+  /* toast */
+  .toast { position: absolute; left: 16px; right: 16px; bottom: 102px; z-index: 34; display: flex; align-items: center; gap: 10px; padding: 13px 16px; border-radius: 16px; background: #16181d; color: #fff; font-size: 14px; line-height: 1.35; font-weight: 500; opacity: 0; transform: translateY(10px); transition: opacity .3s, transform .4s var(--ease-out); pointer-events: none; }
+  .toast.show { opacity: 1; transform: none; }
+  .toast .ic { font-size: 18px; color: #f2c14e; }
+
+  /* listening sheet */
+  .scrim { position: absolute; inset: 0; z-index: 31; background: rgba(22,24,29,.28); opacity: 0; pointer-events: none; transition: opacity .35s; }
+  .screen.sheet-open .scrim { opacity: 1; pointer-events: auto; }
+  .sheet { position: absolute; inset: auto 0 0; z-index: 33; padding: 10px 20px 104px; border-radius: 30px 30px 0 0; background: var(--card); transform: translateY(105%); transition: transform .5s var(--ease-out), padding .4s var(--ease-out); }
+  .screen.sheet-open .sheet { transform: none; }
+  .sheet[data-phase="confirm"] { padding-bottom: 34px; }
+  .handle { width: 38px; height: 5px; margin: 0 auto 14px; border-radius: 3px; background: var(--hair); }
+  .sheet-head { display: flex; align-items: center; gap: 9px; }
+  .rec { width: 9px; height: 9px; border-radius: 50%; background: #e0312b; animation: blink 1.1s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .35; } }
+  .sheet-title { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .ondevice { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 500; color: var(--tx-3); }
+  .ondevice .ic { font-size: 13px; }
+  .wave { height: 44px; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 3px; transition: height .35s var(--ease-out), margin .35s, opacity .3s; }
+  .wave i { width: 4px; border-radius: 2px; background: var(--tx); height: 4px; }
+  .transcript { min-height: 96px; margin-top: 12px; font-size: 22px; font-weight: 600; line-height: 1.38; letter-spacing: -0.015em; color: var(--tx); transition: min-height .35s var(--ease-out); }
+  .transcript .w { animation: wIn .25s ease both; }
+  @keyframes wIn { from { opacity: 0; } }
+  .seg { padding-bottom: 2px; background: linear-gradient(var(--fc), var(--fc)) no-repeat 0 100% / 0 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size .45s var(--ease-out); }
+  .seg.u { background-size: 100% 3px; }
+  .transcript .caret { display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -3px; background: var(--tx-3); animation: blink .9s steps(1) infinite; }
+  .fields { margin-top: 16px; border-top: 1px solid var(--hair); }
+  .f { display: flex; align-items: center; gap: 10px; min-height: 46px; border-bottom: 1px solid var(--hair); }
+  .f dt { display: flex; align-items: center; gap: 9px; width: 96px; font-size: 14px; color: var(--tx-3); }
+  .f dt::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--fc); opacity: .3; transition: opacity .3s; }
+  .f.on dt::before { opacity: 1; }
+  .f dd { flex: 1; font-size: 16px; font-weight: 600; color: var(--tx-3); display: flex; align-items: center; gap: 8px; }
+  .f dd .av { width: 24px; height: 24px; font-size: 9.5px; }
+  .f.on dd { color: var(--tx); animation: pop .4s var(--ease-out); }
+  .f.def dd { color: var(--tx-2); font-weight: 500; }
+  @keyframes pop { from { opacity: 0; transform: translateY(5px); } }
+  .f > .ic { font-size: 16px; color: var(--tx-3); opacity: 0; transition: opacity .3s; }
+  .sheet[data-phase="confirm"] .f > .ic { opacity: 1; }
+  [data-f="task"] { --fc: var(--f-task); } [data-f="when"] { --fc: var(--f-when); } [data-f="who"] { --fc: var(--f-who); }
+  [data-f="pri"] { --fc: var(--f-pri); } [data-f="rep"] { --fc: var(--f-rep); }
+  .acts { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .4s var(--ease-out), opacity .3s; }
+  .acts > div { min-height: 0; overflow: hidden; }
+  .acts-in { display: flex; gap: 10px; padding-top: 18px; }
+  .primary { flex: 1; height: 56px; border-radius: 28px; background: var(--green); color: #fff; font-size: 17px; font-weight: 600; text-align: center; transition: transform .15s; }
+  .primary.tap { transform: scale(.97); }
+  .secondary { height: 56px; padding: 0 22px; border-radius: 28px; font-size: 16px; font-weight: 600; color: var(--tx-2); box-shadow: 0 0 0 1px var(--hair) inset; text-align: center; }
+  .hint { padding-top: 12px; text-align: center; font-size: 13.5px; color: var(--tx-3); }
+  .sheet[data-phase="confirm"] .acts { grid-template-rows: 1fr; opacity: 1; }
+  .sheet[data-phase="confirm"] .rec { display: none; }
+  .sheet[data-phase="confirm"] .wave { height: 0; margin-top: 0; opacity: 0; }
+  .sheet[data-phase="confirm"] .transcript { min-height: 0; font-size: 18px; color: var(--tx-2); }
+
+  /* TASK DETAIL (pushed) */
+  .detail { z-index: 32; padding: 0; overflow: hidden; display: flex; flex-direction: column; background: var(--bg); transform: translateX(100%); box-shadow: -10px 0 30px rgba(22,24,29,.08); }
+  .screen.pushed .detail { transform: none; }
+  .dnav { flex-shrink: 0; height: 98px; padding: 54px 10px 0 6px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid transparent; }
+  .back { display: inline-flex; align-items: center; gap: 2px; height: 40px; padding: 0 8px; font-size: 17px; font-weight: 500; color: var(--green); }
+  .back .ic { font-size: 22px; stroke-width: 2.4; }
+  .dbody { flex: 1; overflow-y: auto; scrollbar-width: none; padding: 2px 16px 120px; }
+  .dbody::-webkit-scrollbar { display: none; }
+  .d-title { font-size: 26px; font-weight: 700; line-height: 1.2; letter-spacing: -0.025em; }
+  .d-chips { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { height: 26px; display: inline-flex; align-items: center; gap: 5px; padding: 0 10px; border-radius: 13px; font-size: 12.5px; font-weight: 600; }
+  .tag .ic { font-size: 13px; }
+  .tag--ok { background: var(--green-bg); color: var(--green); } .tag--wait { background: #fbf1d9; color: var(--amber); }
+  .tag--High { background: #fbe9e4; color: var(--red); } .tag--Medium { background: #fbf1d9; color: #85570a; } .tag--Low, .tag--Normal { background: #eceae4; color: var(--tx-2); }
+  .tag--done { background: var(--green); color: #fff; }
+  .card-h { margin: 22px 6px 8px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--tx-3); }
+  .kv { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 14px; }
+  .kv + .kv { border-top: 1px solid var(--hair); }
+  .kv dt { width: 92px; font-size: 14.5px; color: var(--tx-3); }
+  .kv dd { flex: 1; display: flex; align-items: center; gap: 8px; font-size: 15.5px; font-weight: 600; }
+  .kv dd .av { width: 26px; height: 26px; font-size: 10px; }
+  .vcard { padding: 14px; }
+  .player { display: flex; align-items: center; gap: 12px; }
+  .play { width: 40px; height: 40px; border-radius: 50%; background: var(--tx); color: var(--bg); display: grid; place-items: center; flex-shrink: 0; }
+  .play .ic { font-size: 16px; fill: currentColor; stroke: none; margin-left: 2px; }
+  .vbars { flex: 1; display: flex; align-items: center; gap: 2px; height: 30px; }
+  .vbars i { flex: 1; border-radius: 2px; background: var(--tx-3); opacity: .45; }
+  .vbars i.p { background: var(--green); opacity: 1; }
+  .dur { font-size: 13px; font-weight: 600; color: var(--tx-3); font-variant-numeric: tabular-nums; }
+  .said { margin-top: 12px; font-size: 16px; font-weight: 500; line-height: 1.45; color: var(--tx-2); }
+  .add-step { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; font-size: 15.5px; font-weight: 500; color: var(--green); }
+  .add-step .ic { font-size: 18px; }
+  .act { position: relative; display: flex; gap: 12px; padding: 12px 14px 12px 36px; font-size: 14.5px; line-height: 1.4; }
+  .act + .act { border-top: 1px solid var(--hair); }
+  .act::before { content: ''; position: absolute; left: 15px; top: 18px; width: 8px; height: 8px; border-radius: 50%; background: var(--tx-3); }
+  .act.ok::before { background: #2f9e5c; } .act.wait::before { background: var(--amber-dot); }
+  .act span { flex: 1; } .act time { color: var(--tx-3); font-size: 13px; white-space: nowrap; }
+  .dfoot { position: absolute; inset: auto 0 0; display: flex; gap: 10px; padding: 12px 16px 34px; background: var(--bar); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); border-top: 1px solid var(--hair); }
+
+  /* HERD, TEAM, INBOX */
+  .lrow { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px; }
+  .lrow + .lrow { border-top: 1px solid var(--hair); }
+  .l-main { flex: 1; min-width: 0; }
+  .l-name { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+  .l-sub { margin-top: 2px; font-size: 13px; color: var(--tx-3); }
+  .etag { position: relative; width: 40px; height: 44px; flex-shrink: 0; border-radius: 11px 11px 15px 15px; background: #f2c14e; color: #3b2a00; display: grid; place-items: end center; padding-bottom: 6px; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .etag::before { content: ''; position: absolute; top: 6px; left: 50%; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--card); box-shadow: inset 0 0 0 1.5px rgba(59,42,0,.25); }
+  .shift { width: 9px; height: 9px; border-radius: 50%; background: #2f9e5c; box-shadow: 0 0 0 2px var(--card); position: absolute; right: -1px; bottom: -1px; }
+  .av-wrap { position: relative; }
+  .count { font-size: 13px; font-weight: 600; color: var(--tx-2); background: #eceae4; padding: 3px 9px; border-radius: 10px; }
+  .msg { display: flex; gap: 12px; padding: 13px 14px; }
+  .msg + .msg { border-top: 1px solid var(--hair); }
+  .msg-ic { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; background: #eceae4; color: var(--tx-2); }
+  .msg-ic .ic { font-size: 19px; }
+  .msg p { font-size: 14.5px; line-height: 1.4; color: var(--tx-2); }
+  .msg p b { color: var(--tx); font-weight: 600; }
+  .msg q { display: block; margin-top: 4px; color: var(--tx); quotes: '\201C' '\201D'; }
+  .msg time { display: block; margin-top: 4px; font-size: 12.5px; color: var(--tx-3); }
+  .msg.unread { background: #f8faf8; }
+
+  /* touch indicator for the scripted demo, like a screen recording's "show touches" */
+  .touch { position: absolute; z-index: 70; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: rgba(22,24,29,.22); box-shadow: 0 0 0 2px rgba(255,255,255,.85) inset; opacity: 0; transform: scale(.6); transition: opacity .18s, transform .25s var(--ease-out), left .45s var(--ease-out), top .45s var(--ease-out); pointer-events: none; }
+  .touch.on { opacity: 1; transform: scale(1); }
+  .touch.press { transform: scale(.82); }
+
+  @media (max-width: 860px) {
+    .stage { grid-template-columns: 1fr; gap: 36px; justify-items: center; padding: 28px 16px 40px; }
+    .note { max-width: 520px; }
+    .keys, #rec-toggle { display: none; } /* keyboard shortcuts and recording are desktop tools */
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+  </style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/></symbol>
+  <symbol id="i-cloud-up" viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5"/><path d="M12 13v8M9 16l3-3 3 3"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-chev-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chev-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-chip" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1.5v3.5M15 1.5v3.5M9 19v3.5M15 19v3.5M1.5 9H5M1.5 15H5M19 9h3.5M19 15h3.5"/></symbol>
+  <symbol id="i-saved" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10 18h4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20.5 20.5l-4.5-4.5"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></symbol>
+  <symbol id="i-barn" viewBox="0 0 24 24"><path d="M3 21V10l9-6.5L21 10v11"/><path d="M8.5 21v-7h7v7M8.5 14l7 7M15.5 14l-7 7"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21.5s-7-6.2-7-11.5a7 7 0 0 1 14 0c0 5.3-7 11.5-7 11.5z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21.5V3.5M5 4h11.5l-2.5 4.5L16.5 13H5"/></symbol>
+  <symbol id="i-today" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M8 2.5v4M16 2.5v4M8.5 15l2.5 2.5 4.5-4.5"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M8 3h8l2.5 4v11.5a3 3 0 0 1-3 3h-7a3 3 0 0 1-3-3V7z"/><circle cx="12" cy="7.5" r="1.6"/><path d="M9 14.5h6M9 17.5h4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20.5a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3a6.5 6.5 0 0 1 3.5 6.2"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3.5 13.5l2.6-8a2 2 0 0 1 1.9-1.4h8a2 2 0 0 1 1.9 1.4l2.6 8v5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/><path d="M3.5 13.5h4.5l1.5 2.5h5l1.5-2.5h4.5"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 19a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 9.5a4.5 4.5 0 0 1-.5 9.5z"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 3.5V8h4.5M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20.5V16h-4.5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 18.5V6.5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H8z"/></symbol>
+</svg>
+
+<main class="stage">
+  <section class="note" aria-labelledby="concept-title">
+    <div class="rule-label">Redesign concept</div>
+    <h1 id="concept-title">Pocket AI, redesigned from what operators told us</h1>
+    <p>A concept I made after the capstone. It is not the app we shipped or tested. Each change answers a finding from our usability study with five dairy farm operators.</p>
+    <ul class="finds">
+      <li><span class="why">3 of 5 found tapping to talk awkward with their hands full.</span><span class="what">Say &ldquo;Hey Pocket&rdquo;, or hold the talk button.</span></li>
+      <li><span class="why">2 of 5 thought a task was lost before it synced.</span><span class="what">New tasks appear at once, marked &ldquo;Waiting to sync&rdquo;.</span></li>
+      <li><span class="why">All 5 wanted to assign tasks by name.</span><span class="what">People are named, never numbered.</span></li>
+      <li><span class="why">One asked for repeating tasks by voice.</span><span class="what">&ldquo;Every Monday at 7 AM&rdquo; sets the schedule.</span></li>
+    </ul>
+    <div class="controls">
+      <button type="button" class="btn btn--solid" id="play">Play demo</button>
+      <button type="button" class="btn" id="wake-btn">Say &ldquo;Hey Pocket&rdquo;</button>
+      <button type="button" class="btn" id="sun-toggle" aria-pressed="false">Sun mode</button>
+      <button type="button" class="btn" id="rec-toggle">Recording view</button>
+    </div>
+    <p class="keys"><kbd>Space</kbd> plays the demo &middot; <kbd>H</kbd> says &ldquo;Hey Pocket&rdquo; &middot; <kbd>R</kbd> resets &middot; <kbd>V</kbd> recording view. Or hold the talk button, tick tasks, open one, switch tabs.</p>
+  </section>
+
+  <div class="cap" id="cap" aria-live="polite">
+    <p class="cap-text" id="cap-text"></p>
+    <p class="cap-sub" id="cap-sub"></p>
+  </div>
+
+  <div class="phone-fit">
+    <div class="phone">
+      <div class="screen" id="screen" aria-label="Pocket AI concept prototype">
+        <div class="status" aria-hidden="true">
+          <span>2:10</span>
+          <span class="status-r">
+            <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor" opacity=".3"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor" opacity=".3"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor" opacity=".3"/></svg>
+            <svg class="wifi-on" viewBox="0 0 16 12"><path d="M8 11.5l2.4-2.9a3.6 3.6 0 0 0-4.8 0zM3.6 6.3a6.6 6.6 0 0 1 8.8 0l1.6-1.9a9.1 9.1 0 0 0-12 0zM.4 2.5a11.6 11.6 0 0 1 15.2 0" fill="currentColor"/></svg>
+            <svg class="wifi-off" viewBox="0 0 16 12"><path d="M8 11.5l2.4-2.9a3.6 3.6 0 0 0-4.8 0zM3.6 6.3a6.6 6.6 0 0 1 8.8 0l1.6-1.9a9.1 9.1 0 0 0-12 0zM.4 2.5a11.6 11.6 0 0 1 15.2 0" fill="currentColor" opacity=".25"/><path d="M2 .5l12 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="14" height="8" rx="2" fill="currentColor"/><path d="M25 4v4a2 2 0 0 0 0-4" fill="currentColor" opacity=".4"/></svg>
+          </span>
+        </div>
+        <div class="island" id="island" aria-live="polite"><span class="island-wave"><i></i><i></i><i></i><i></i></span><span>Heard <span class="island-q" id="island-q"></span></span></div>
+
+        <!-- compact nav bar, shown once the large title scrolls away -->
+        <div class="nav" aria-hidden="true"><span></span><span class="nav-title" id="nav-title">Today</span><span class="nav-r"><span class="nav-dot"></span><span id="nav-net">Offline</span></span></div>
+
+        <!-- TODAY -->
+        <section class="view" id="v-today" data-title="Today">
+          <div class="topbar">
+            <button type="button" class="farm"><svg class="ic"><use href="#i-barn"/></svg>Hillcrest Dairy<svg class="ic"><use href="#i-chev-down"/></svg></button>
+            <div class="tb-r">
+              <button type="button" class="ib" aria-label="Search"><svg class="ic"><use href="#i-search"/></svg></button>
+              <button type="button" class="ib" id="sun-btn" aria-label="Sun mode, high contrast for outdoors" aria-pressed="false"><svg class="ic"><use href="#i-sun"/></svg></button>
+              <span class="av av-you" aria-label="Signed in as Jess Ruiz">JR</span>
+            </div>
+          </div>
+          <div class="title-row">
+            <div><h2 class="big">Today</h2><p class="sub">Sunday, May 10 <span aria-hidden="true">&middot;</span> <svg class="ic"><use href="#i-cloud"/></svg> 11&deg;, rain at 3 PM</p></div>
+            <div class="ring-wrap"><span id="ring-text"></span><svg class="ring" viewBox="0 0 40 40" aria-hidden="true"><circle class="ring-bg" cx="20" cy="20" r="16"/><circle class="ring-fg" id="ring" cx="20" cy="20" r="16"/></svg></div>
+          </div>
+          <div class="days" aria-label="This week">
+            <button type="button" class="day on has">Sun<b>10</b></button><button type="button" class="day has">Mon<b>11</b></button><button type="button" class="day has">Tue<b>12</b></button><button type="button" class="day">Wed<b>13</b></button><button type="button" class="day has">Thu<b>14</b></button><button type="button" class="day">Fri<b>15</b></button><button type="button" class="day">Sat<b>16</b></button>
+          </div>
+          <div class="pills">
+            <button type="button" class="pill net" id="net" title="Toggle signal"><span class="net-dot"></span><span id="net-text">Offline, saved on phone</span></button>
+            <span class="pill"><span class="wake-dot"></span>&ldquo;Hey Pocket&rdquo; on</span>
+          </div>
+          <div class="chips" id="filters" role="tablist" aria-label="Filter tasks">
+            <button type="button" class="chip on" data-filter="all">All <b id="n-all"></b></button>
+            <button type="button" class="chip" data-filter="mine">Mine <b id="n-mine"></b></button>
+            <button type="button" class="chip" data-filter="high">High priority <b id="n-high"></b></button>
+            <button type="button" class="chip" data-filter="voice">By voice <b id="n-voice"></b></button>
+          </div>
+          <div id="list"></div>
+        </section>
+
+        <!-- HERD -->
+        <section class="view" id="v-herd" data-title="Herd" hidden>
+          <div class="topbar"><span></span><div class="tb-r"><button type="button" class="ib" aria-label="Add animal"><svg class="ic"><use href="#i-plus"/></svg></button></div></div>
+          <h2 class="big" style="margin-top:10px">Herd</h2>
+          <p class="sub">142 animals &middot; 3 need attention today</p>
+          <div class="search"><svg class="ic"><use href="#i-search"/></svg>Tag, name or pen</div>
+          <div class="chips"><span class="chip on">Needs attention <b>3</b></span><span class="chip">Calves <b>12</b></span><span class="chip">Fresh <b>4</b></span><span class="chip">Dry <b>18</b></span></div>
+          <h3 class="sec-h">Today</h3>
+          <ul class="group">
+            <li class="lrow"><span class="etag">78</span><div class="l-main"><div class="l-name">Cow 78</div><div class="l-sub">Holstein &middot; Pen 2 &middot; Favouring left hind</div></div><span class="tag tag--Medium">Check 4 PM</span></li>
+            <li class="lrow"><span class="etag">512</span><div class="l-main"><div class="l-name">Calf 512</div><div class="l-sub">Heifer calf &middot; 3 days &middot; Hutch 6</div></div><span class="tag tag--Medium">Weigh 2:30</span></li>
+            <li class="lrow"><span class="etag">41</span><div class="l-main"><div class="l-name">Cow 41</div><div class="l-sub">Fresh, day 6 &middot; Milk withheld to Tue</div></div><span class="tag tag--High">Withhold</span></li>
+          </ul>
+          <h3 class="sec-h">Recent</h3>
+          <ul class="group">
+            <li class="lrow"><span class="etag">73</span><div class="l-main"><div class="l-name">Heifer 73</div><div class="l-sub">Pregnancy confirmed today &middot; Due Feb 14</div></div><span class="tag tag--ok">Pregnant</span></li>
+            <li class="lrow"><span class="etag">109</span><div class="l-main"><div class="l-name">Cow 109</div><div class="l-sub">Dry since Apr 28 &middot; Due Jun 2</div></div><span class="tag tag--Normal">Dry</span></li>
+            <li class="lrow"><span class="etag">88</span><div class="l-main"><div class="l-name">Cow 88</div><div class="l-sub">Holstein &middot; Pen 1 &middot; 31 kg yesterday</div></div><span class="tag tag--Normal">Milking</span></li>
+          </ul>
+        </section>
+
+        <!-- TEAM -->
+        <section class="view" id="v-team" data-title="Team" hidden>
+          <div class="topbar"><span></span><div class="tb-r"><button type="button" class="ib" aria-label="Invite"><svg class="ic"><use href="#i-plus"/></svg></button></div></div>
+          <h2 class="big" style="margin-top:10px">Team</h2>
+          <p class="sub">3 on shift &middot; Hillcrest Dairy</p>
+          <h3 class="sec-h">On shift now</h3>
+          <ul class="group">
+            <li class="lrow"><span class="av-wrap"><span class="av av--lg av-you">JR</span><i class="shift"></i></span><div class="l-main"><div class="l-name">Jess Ruiz (you)</div><div class="l-sub">Herd manager &middot; until 6 PM</div></div><span class="count" id="c-you"></span></li>
+            <li class="lrow"><span class="av-wrap"><span class="av av--lg av-marco">MD</span><i class="shift"></i></span><div class="l-main"><div class="l-name">Marco Diaz</div><div class="l-sub">Maintenance &middot; until 5 PM</div></div><span class="count" id="c-marco"></span></li>
+            <li class="lrow"><span class="av-wrap"><span class="av av--lg av-priya">PS</span><i class="shift"></i></span><div class="l-main"><div class="l-name">Priya Shah</div><div class="l-sub">Calf care &middot; until 4 PM</div></div><span class="count" id="c-priya"></span></li>
+          </ul>
+          <h3 class="sec-h">Off today</h3>
+          <ul class="group">
+            <li class="lrow"><span class="av av--lg av-sam">SL</span><div class="l-main"><div class="l-name">Sam Lee</div><div class="l-sub">Milking &middot; back tomorrow 4 AM</div></div><span class="count">0 open</span></li>
+          </ul>
+        </section>
+
+        <!-- INBOX -->
+        <section class="view" id="v-inbox" data-title="Inbox" hidden>
+          <div class="topbar"><span></span><div class="tb-r"><button type="button" class="ib" aria-label="Mark all read"><svg class="ic"><use href="#i-check"/></svg></button></div></div>
+          <h2 class="big" style="margin-top:10px">Inbox</h2>
+          <p class="sub">2 new</p>
+          <h3 class="sec-h">Today</h3>
+          <ul class="group">
+            <li class="msg unread"><span class="av av--lg av-priya">PS</span><div class="msg-main"><p><b>Priya</b> on <b>Tag and weigh calf 512</b><q>The scale in barn B works again.</q></p><time>1:52 PM</time></div></li>
+            <li class="msg unread"><span class="av av--lg av-marco">MD</span><div class="msg-main"><p><b>Marco</b> marked <b>Fix the waterer in pen 3</b> as blocked<q>Need a new float valve. Ordered.</q></p><time>11:05 AM</time></div></li>
+            <li class="msg"><span class="msg-ic"><svg class="ic"><use href="#i-sync"/></svg></span><div class="msg-main"><p><b>6 tasks synced</b> after the signal came back in the parlour.</p><time>9:30 AM</time></div></li>
+            <li class="msg"><span class="msg-ic"><svg class="ic"><use href="#i-bell"/></svg></span><div class="msg-main"><p>Reminder: <b>Check cow 78 for lameness</b> at 4:00 PM.</p><time>7:30 AM</time></div></li>
+          </ul>
+        </section>
+
+        <!-- TASK DETAIL -->
+        <section class="view detail" id="v-detail" aria-label="Task">
+          <div class="dnav"><button type="button" class="back" id="back"><svg class="ic"><use href="#i-chev-left"/></svg>Today</button><button type="button" class="ib" aria-label="More"><svg class="ic"><use href="#i-more"/></svg></button></div>
+          <div class="dbody" id="d-body"></div>
+          <div class="dfoot"><button type="button" class="primary" id="d-done">Mark done</button><button type="button" class="secondary">Snooze</button></div>
+        </section>
+
+        <div class="toast" id="toast" role="status"><svg class="ic"><use href="#i-saved"/></svg><span id="toast-text"></span></div>
+
+        <nav class="tabbar" aria-label="Sections">
+          <button type="button" class="tab on" data-tab="today"><svg class="ic"><use href="#i-today"/></svg>Today</button>
+          <button type="button" class="tab" data-tab="herd"><svg class="ic"><use href="#i-tag"/></svg>Herd</button>
+          <button type="button" class="talk" id="talk" aria-label="Hold to talk"><span class="mic"><svg class="ic"><use href="#i-mic"/></svg></span><span id="talk-label">Hold to talk</span></button>
+          <button type="button" class="tab" data-tab="team"><svg class="ic"><use href="#i-users"/></svg>Team</button>
+          <button type="button" class="tab" data-tab="inbox"><svg class="ic"><use href="#i-inbox"/></svg>Inbox<span class="badge">2</span></button>
+        </nav>
+
+        <div class="scrim" id="scrim"></div>
+        <section class="sheet" id="sheet" data-phase="listen" aria-live="polite" aria-label="New task">
+          <div class="handle"></div>
+          <div class="sheet-head"><span class="rec"></span><span class="sheet-title" id="sheet-title">Listening</span><span class="ondevice"><svg class="ic"><use href="#i-chip"/></svg>On this phone</span></div>
+          <div class="wave" id="wave" aria-hidden="true"></div>
+          <p class="transcript" id="transcript"></p>
+          <dl class="fields">
+            <div class="f" data-f="task"><dt>Task</dt><dd>&mdash;</dd><svg class="ic"><use href="#i-chev"/></svg></div>
+            <div class="f" data-f="when"><dt>When</dt><dd>&mdash;</dd><svg class="ic"><use href="#i-chev"/></svg></div>
+            <div class="f" data-f="who"><dt>Who</dt><dd>&mdash;</dd><svg class="ic"><use href="#i-chev"/></svg></div>
+            <div class="f" data-f="pri"><dt>Priority</dt><dd>&mdash;</dd><svg class="ic"><use href="#i-chev"/></svg></div>
+            <div class="f" data-f="rep"><dt>Repeats</dt><dd>&mdash;</dd><svg class="ic"><use href="#i-chev"/></svg></div>
+          </dl>
+          <div class="acts"><div>
+            <div class="acts-in"><button type="button" class="primary" id="add">Add task</button><button type="button" class="secondary" id="discard">Discard</button></div>
+            <p class="hint">Say &ldquo;yes&rdquo; to add it, or &ldquo;make it 6 PM&rdquo; to change it.</p>
+          </div></div>
+        </section>
+        <div class="touch" id="touch"></div>
+        <div class="home-ind"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const screen = $('screen'), sheet = $('sheet'), transcript = $('transcript'), island = $('island');
+  const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const icon = id => `<svg class="ic"><use href="#i-${id}"/></svg>`;
+
+  /* ---------- data ---------- */
+  const PEOPLE = {
+    You: { ini: 'JR', name: 'Jess Ruiz (you)', cls: 'you' },
+    Marco: { ini: 'MD', name: 'Marco Diaz', cls: 'marco' },
+    Priya: { ini: 'PS', name: 'Priya Shah', cls: 'priya' },
+  };
+  const av = who => `<span class="av av-${PEOPLE[who].cls}" title="${PEOPLE[who].name}">${PEOPLE[who].ini}</span>`;
+  const GROUPS = [['late', 'Overdue'], ['today', 'Today'], ['tom', 'Tomorrow']];
+  const SEED = [
+    { id: 1, g: 'late', t: 0, title: 'Fix the waterer in pen 3', time: 'Yesterday, 4:00 PM', who: 'Marco', pri: 'High', place: 'Pen 3', by: 'Marco', made: 'Yesterday, 8:15 AM' },
+    { id: 2, g: 'today', t: 780, title: 'Pregnancy check on heifer 73', time: '1:00 PM', who: 'You', pri: 'High', place: 'Heifer 73', done: true, by: 'You', made: 'Friday, 9:02 AM' },
+    { id: 3, g: 'today', t: 870, title: 'Tag and weigh calf 512', time: '2:30 PM', who: 'Priya', pri: 'Medium', place: 'Hutch 6', by: 'You', made: '8:47 AM',
+      said: [['Tag and weigh calf 512', 'task'], [' at ', null], ['2:30', 'when'], [', ', null], ['Priya', 'who'], [', ', null], ['medium priority', 'pri'], ['.', null]] },
+    { id: 4, g: 'today', t: 960, title: 'Check cow 78 for lameness', time: '4:00 PM', who: 'You', pri: 'Low', place: 'Pen 2', by: 'Marco', made: '7:30 AM' },
+    { id: 5, g: 'tom', t: 360, title: 'Clean the parlour', time: '6:00 AM', who: 'Marco', rep: 'Every day', place: 'Parlour', by: 'You', made: 'Apr 2' },
+    { id: 6, g: 'tom', t: 540, title: 'Order feed', time: '9:00 AM', who: 'You', pri: 'Medium', place: 'Office', by: 'You', made: 'Thursday' },
+  ];
+  // What the operator says, split into the phrases that fill each field.
+  const SCRIPTS = [
+    {
+      segs: [['Check the south fence for repairs', 'task'], [' at ', null], ['5 PM', 'when'], [', assign it to ', null], ['Marco', 'who'], [', ', null], ['high priority', 'pri'], ['.', null]],
+      vals: { task: 'Check the south fence for repairs', when: 'Today, 5:00 PM', who: 'Marco', pri: 'High' },
+      defs: { rep: 'Doesn’t repeat' },
+      task: { g: 'today', t: 1020, title: 'Check the south fence for repairs', time: '5:00 PM', who: 'Marco', pri: 'High', place: 'South fence', by: 'You', made: '2:10 PM' },
+    },
+    {
+      segs: [['Every Monday', 'rep'], [' at ', null], ['7 AM', 'when'], [', ', null], ['Priya', 'who'], [' ', null], ['checks the calf pens', 'task'], ['.', null]],
+      vals: { rep: 'Every Monday', when: 'Mondays, 7:00 AM', who: 'Priya', task: 'Check the calf pens' },
+      defs: { pri: 'Normal' },
+      task: { g: 'tom', t: 420, title: 'Check the calf pens', time: '7:00 AM', who: 'Priya', rep: 'Every Monday', place: 'Calf pens', by: 'You', made: '2:11 PM' },
+    },
+  ];
+
+  /* ---------- state ---------- */
+  let tasks, online, nextId, scriptIx, busy, holding, stream, filter, tab, detailId;
+
+  /* ---------- Today list ---------- */
+  function rowHTML(t) {
+    const meta = [`<span>${icon('clock')}${t.time}</span>`, `<span>${icon('pin')}${t.place}</span>`];
+    if (t.rep) meta.push(`<span>${icon('repeat')}${t.rep}</span>`);
+    if (t.said) meta.push(`<span class="voice" title="Created by voice">${icon('mic')}</span>`);
+    if (t.pending) meta.push(`<span class="sync">${icon('cloud-up')}Waiting to sync</span>`);
+    const flag = t.pri === 'High' || t.pri === 'Medium' ? `<svg class="ic flag flag--${t.pri}" aria-label="${t.pri} priority"><use href="#i-flag"/></svg>` : '';
+    return `<div class="row-in"><button type="button" class="check" aria-label="Mark done">${icon('check')}</button>
+      <div class="row-main"><div class="row-title">${t.title}</div><div class="row-meta">${meta.join('')}</div></div>
+      <div class="row-side">${av(t.who)}${flag}</div></div>`;
+  }
+  function makeRow(t) {
+    const li = document.createElement('li');
+    li.className = 'row' + (t.done ? ' done' : '');
+    li.dataset.id = t.id;
+    li.innerHTML = rowHTML(t);
+    return li;
+  }
+  const rowOf = id => $('list').querySelector(`.row[data-id="${id}"]`);
+  const taskOf = id => tasks.find(t => t.id == id);
+  function renderList() {
+    $('list').innerHTML = GROUPS.map(([g, label]) => `<div class="sec" data-g="${g}"><h3 class="sec-h${g === 'late' ? ' late' : ''}">${label} <b></b></h3><ul class="group" data-g="${g}"></ul></div>`).join('');
+    tasks.forEach(t => $('list').querySelector(`ul[data-g="${t.g}"]`).append(makeRow(t)));
+    refresh();
+  }
+  function insertTask(t) {
+    tasks.push(t);
+    const ul = $('list').querySelector(`ul[data-g="${t.g}"]`);
+    const after = [...ul.children].find(li => taskOf(li.dataset.id).t > t.t);
+    const li = makeRow(t);
+    li.classList.add('enter', 'fresh');
+    ul.insertBefore(li, after || null);
+    setTimeout(() => li.classList.remove('fresh'), 1400);
+    setTimeout(() => reveal(li), 380);
+    refresh();
+    return li;
+  }
+  const MATCH = { all: () => true, mine: t => t.who === 'You', high: t => t.pri === 'High', voice: t => !!t.said };
+  // Counts, filter visibility, progress ring and team counts all follow the task list.
+  function refresh() {
+    Object.keys(MATCH).forEach(k => { $('n-' + k).textContent = tasks.filter(MATCH[k]).length; });
+    tasks.forEach(t => { const li = rowOf(t.id); if (li) li.hidden = !MATCH[filter](t); });
+    $('list').querySelectorAll('.sec').forEach(sec => {
+      const n = [...sec.querySelectorAll('.row')].filter(li => !li.hidden).length;
+      sec.hidden = !n; sec.querySelector('.sec-h b').textContent = n;
+    });
+    const today = tasks.filter(t => t.g === 'today'), done = today.filter(t => t.done).length;
+    $('ring-text').innerHTML = `${done} of ${today.length}<br>done`;
+    $('ring').style.strokeDashoffset = (100.5 * (1 - (today.length ? done / today.length : 0))).toFixed(1);
+    [['you', 'You'], ['marco', 'Marco'], ['priya', 'Priya']].forEach(([id, who]) => { $('c-' + id).textContent = tasks.filter(t => t.who === who && !t.done).length + ' open'; });
+  }
+  function setDone(id, on) {
+    const t = taskOf(id); if (!t) return;
+    t.done = on;
+    if (on) t.doneAt = '2:13 PM';
+    rowOf(id).classList.toggle('done', on);
+    refresh();
+    if (detailId == id) renderDetail();
+  }
+  function setFilter(f) {
+    filter = f;
+    $('filters').querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.dataset.filter === f));
+    refresh();
+  }
+  // Scroll the active view (never the page) so an element sits clear of the nav bar and tab bar.
+  function reveal(el, smooth = true) {
+    const v = el.closest('.view'), vr = v.getBoundingClientRect(), k = vr.width / 390, r = el.getBoundingClientRect();
+    const top = vr.top + 110 * k, bottom = vr.bottom - 110 * k;
+    let dy = 0;
+    if (r.bottom > bottom) dy = (r.bottom - bottom) / k + 12;
+    else if (r.top < top) dy = (r.top - top) / k - 12;
+    if (dy) v.scrollBy({ top: dy, behavior: smooth && !REDUCE ? 'smooth' : 'auto' });
+  }
+
+  /* ---------- tabs, nav bar, detail ---------- */
+  const VIEWS = ['today', 'herd', 'team', 'inbox'];
+  function showTab(name) {
+    tab = name;
+    VIEWS.forEach(v => { $('v-' + v).hidden = v !== name; });
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+    $('nav-title').textContent = $('v-' + name).dataset.title;
+    onScroll();
+  }
+  function onScroll() { screen.classList.toggle('scrolled', $('v-' + tab).scrollTop > 70); }
+  VIEWS.forEach(v => $('v-' + v).addEventListener('scroll', onScroll, { passive: true }));
+
+  function renderDetail() {
+    const t = taskOf(detailId); if (!t) return;
+    const due = t.g === 'today' ? `Today, ${t.time}` : t.g === 'tom' ? `Tomorrow, ${t.time}` : t.time;
+    const status = t.done ? `<span class="tag tag--done">${icon('check')}Done</span>`
+      : t.pending ? `<span class="tag tag--wait">${icon('cloud-up')}Waiting to sync</span>` : `<span class="tag tag--ok">${icon('check')}Synced</span>`;
+    const pri = t.pri || 'Normal';
+    let voice = '';
+    if (t.said) {
+      const bars = Array.from({ length: 34 }, (_, i) => `<i class="${i < 9 ? 'p' : ''}" style="height:${(22 + 70 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * .45))).toFixed(0)}%"></i>`).join('');
+      const said = t.said.map(([s, f]) => f ? `<span class="seg u" data-f="${f}">${s}</span>` : s).join('');
+      voice = `<h3 class="card-h">Original request</h3><div class="card vcard"><div class="player"><span class="play">${icon('play')}</span><span class="vbars">${bars}</span><span class="dur">0:05</span></div><p class="said">&ldquo;${said}&rdquo;</p></div>`;
+    }
+    const acts = [`<li class="act"><span>${t.by === 'You' ? 'You' : PEOPLE[t.by].name.split(' ')[0]} added this${t.said ? ' by voice' : ''}</span><time>${t.made}</time></li>`];
+    if (t.pending) acts.push(`<li class="act wait"><span>Saved on this phone. Waiting for signal.</span><time>${t.made}</time></li>`);
+    else acts.push(`<li class="act ok"><span>Synced to the farm account</span><time>${t.syncedAt || t.made}</time></li>`);
+    if (t.done) acts.push(`<li class="act ok"><span>Marked done</span><time>${t.doneAt || '1:04 PM'}</time></li>`);
+    $('d-body').innerHTML = `
+      <h2 class="d-title">${t.title}</h2>
+      <div class="d-chips">${status}<span class="tag tag--${pri}">${icon('flag')}${pri} priority</span></div>
+      <h3 class="card-h">Details</h3>
+      <dl class="card">
+        <div class="kv"><dt>Due</dt><dd>${due}</dd></div>
+        <div class="kv"><dt>Assigned to</dt><dd>${av(t.who)}${PEOPLE[t.who].name}</dd></div>
+        <div class="kv"><dt>Where</dt><dd>${t.place}</dd></div>
+        <div class="kv"><dt>Repeats</dt><dd>${t.rep || 'Never'}</dd></div>
+      </dl>
+      ${voice}
+      <h3 class="card-h">Steps</h3>
+      <div class="card"><div class="add-step">${icon('plus')}Add a step</div></div>
+      <h3 class="card-h">Activity</h3>
+      <ol class="card">${acts.join('')}</ol>`;
+    $('d-done').textContent = t.done ? 'Mark not done' : 'Mark done';
+  }
+  function openDetail(id) {
+    detailId = id;
+    renderDetail();
+    $('d-body').scrollTop = 0;
+    screen.classList.add('pushed');
+  }
+  function closeDetail() { screen.classList.remove('pushed'); detailId = null; }
+
+  /* ---------- connectivity ---------- */
+  function setNet(state) { // 'off' | 'busy' | 'ok'
+    $('net').className = 'pill net' + (state === 'ok' ? ' ok' : state === 'busy' ? ' busy' : '');
+    const pending = tasks.filter(t => t.pending).length;
+    $('net-text').textContent = state === 'off' ? 'Offline, saved on phone'
+      : state === 'busy' ? `Syncing ${pending} task${pending === 1 ? '' : 's'}…` : 'Online, synced just now';
+    $('nav-net').textContent = state === 'off' ? 'Offline' : state === 'busy' ? 'Syncing' : 'Synced';
+    screen.classList.toggle('online', state !== 'off');
+  }
+  async function goOnline(wait) {
+    online = true;
+    setNet('busy');
+    await wait(1100);
+    tasks.filter(t => t.pending).forEach(t => {
+      t.pending = false; t.syncedAt = '2:11 PM';
+      const s = rowOf(t.id)?.querySelector('.sync');
+      if (s) { s.classList.add('ok'); s.innerHTML = icon('check') + 'Synced'; setTimeout(() => { s.classList.add('gone'); setTimeout(() => s.remove(), 500); }, 1300); }
+    });
+    setNet('ok');
+    if (detailId) renderDetail();
+  }
+  function goOffline() { online = false; setNet('off'); }
+
+  /* ---------- toast + island ---------- */
+  let toastTimer;
+  function toast(text, ms = 2600) {
+    $('toast-text').textContent = text;
+    $('toast').classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => $('toast').classList.remove('show'), ms);
+  }
+  function heard(text) { $('island-q').textContent = `“${text}”`; island.classList.add('open'); screen.classList.add('heard'); }
+  function unheard() { island.classList.remove('open'); screen.classList.remove('heard'); }
+  const setTalk = text => { $('talk-label').textContent = text; };
+  // Video captions (shown in recording view only): fade the old line out, then the new one in.
+  let capTimer;
+  function setCap(text, sub = '') {
+    clearTimeout(capTimer);
+    $('cap').classList.add('swap');
+    capTimer = setTimeout(() => { $('cap-text').textContent = text; $('cap-sub').textContent = sub; $('cap').classList.remove('swap'); }, REDUCE ? 0 : 300);
+  }
+
+  /* ---------- waveform ---------- */
+  const BARS = 34, bars = [];
+  for (let i = 0; i < BARS; i++) { const b = document.createElement('i'); $('wave').append(b); bars.push(b); }
+  let speaking = false, waveRaf = 0;
+  function waveFrame(now) {
+    const t = now / 1000;
+    bars.forEach((b, i) => {
+      const env = Math.sin(Math.PI * (i + .5) / BARS); // taller in the middle
+      const n = (Math.sin(t * 9.1 + i * 1.7) + Math.sin(t * 5.3 + i * .9) * .7 + Math.sin(t * 13.7 + i * 2.3) * .4) / 2.1;
+      const h = speaking ? 6 + env * (14 + 22 * (.5 + .5 * n)) : 4 + env * 3 * (.5 + .5 * Math.sin(t * 2 + i));
+      b.style.height = h.toFixed(1) + 'px';
+    });
+    waveRaf = screen.classList.contains('sheet-open') ? requestAnimationFrame(waveFrame) : 0;
+  }
+
+  /* ---------- the listening sheet ---------- */
+  function resetSheet() {
+    sheet.dataset.phase = 'listen';
+    $('sheet-title').textContent = 'Listening';
+    transcript.innerHTML = '<span class="caret"></span>';
+    sheet.querySelectorAll('.f').forEach(f => { f.className = 'f'; f.querySelector('dd').textContent = '—'; });
+  }
+  function openSheet() {
+    resetSheet();
+    screen.classList.add('sheet-open');
+    if (!waveRaf && !REDUCE) waveRaf = requestAnimationFrame(waveFrame);
+  }
+  function closeSheet() { screen.classList.remove('sheet-open', 'confirming'); speaking = false; setTalk('Hold to talk'); }
+  function fill(f, value, isDefault) {
+    const row = sheet.querySelector(`.f[data-f="${f}"]`);
+    row.querySelector('dd').innerHTML = f === 'who' && PEOPLE[value] ? av(value) + PEOPLE[value].name : value;
+    row.className = 'f on' + (isDefault ? ' def' : '');
+  }
+  // Stream a script's words into the transcript; each phrase fills its field as it ends.
+  // `pace()` is awaited between words, so a release can speed the rest up.
+  async function speak(script, pace) {
+    const caret = transcript.querySelector('.caret');
+    speaking = true;
+    for (const [text, f] of script.segs) {
+      const seg = document.createElement('span');
+      if (f) { seg.className = 'seg'; seg.dataset.f = f; }
+      transcript.insertBefore(seg, caret);
+      for (const tok of text.split(/(\s+)/).filter(Boolean)) {
+        if (/^\s+$/.test(tok)) { seg.append(tok); continue; }
+        const w = document.createElement('span'); w.className = 'w'; w.textContent = tok;
+        seg.append(w);
+        if (/\w/.test(tok)) await pace();
+      }
+      if (f) { seg.classList.add('u'); fill(f, script.vals[f]); }
+    }
+    speaking = false;
+    caret.remove();
+    Object.entries(script.defs).forEach(([f, v]) => fill(f, v, true));
+  }
+  function toConfirm() {
+    sheet.dataset.phase = 'confirm';
+    $('sheet-title').textContent = 'Add this task?';
+    screen.classList.add('confirming');
+  }
+  function commit(script) {
+    closeSheet();
+    if (tab !== 'today') showTab('today');
+    if (!MATCH[filter](script.task)) setFilter('all');
+    const t = { ...script.task, said: script.segs, id: nextId++, pending: !online, syncedAt: script.task.made };
+    const li = insertTask(t);
+    toast(online ? 'Task added and synced.' : 'Saved on this phone. It syncs when you’re back online.');
+    if (online) { // show the round trip briefly even when online
+      const meta = li.querySelector('.row-meta');
+      meta.insertAdjacentHTML('beforeend', `<span class="sync ok">${icon('check')}Synced</span>`);
+      const s = meta.lastElementChild; setTimeout(() => { s.classList.add('gone'); setTimeout(() => s.remove(), 500); }, 1600);
+    }
+    return t;
+  }
+
+  /* ---------- touch indicator ---------- */
+  const touch = $('touch');
+  function touchAt(el) {
+    const s = screen.getBoundingClientRect(), r = el.getBoundingClientRect(), k = s.width / 390;
+    touch.style.left = ((r.left + r.width / 2 - s.left) / k) + 'px';
+    touch.style.top = ((r.top + r.height / 2 - s.top) / k) + 'px';
+  }
+
+  /* ---------- scripted demo ---------- */
+  let runId = 0;
+  const sleeper = id => ms => new Promise((res, rej) => setTimeout(() => (id === runId ? res() : rej('stopped')), REDUCE ? Math.min(ms, 60) : ms));
+
+  function reset() {
+    runId++;
+    tasks = SEED.map(t => ({ ...t }));
+    nextId = 100; scriptIx = 0; busy = false; holding = false; online = false; filter = 'all'; stream = null;
+    closeDetail(); closeSheet(); unheard();
+    renderList(); setFilter('all'); goOffline(); showTab('today');
+    VIEWS.forEach(v => { $('v-' + v).scrollTop = 0; });
+    screen.classList.remove('scrolled');
+    $('toast').classList.remove('show'); touch.className = 'touch'; $('talk').classList.remove('held');
+    clearTimeout(capTimer); $('cap').classList.remove('swap');
+    $('cap-text').textContent = 'One sentence becomes a farm task.';
+    $('cap-sub').textContent = 'Pocket AI, redesigned from what five dairy farm operators told us in testing.';
+  }
+
+  async function demo() {
+    reset();
+    const id = runId, wait = sleeper(id);
+    const tap = async (el, hold = 170) => { touchAt(el); touch.classList.add('on'); await wait(650); touch.classList.add('press'); await wait(hold); touch.classList.remove('press'); };
+    busy = true;
+    try {
+      setCap('One sentence becomes a farm task.', 'Pocket AI, redesigned from what five dairy farm operators told us in testing.');
+      await wait(2200);
+      // 1. Hands-free: the wake word opens the sheet and "yes" adds the task. Offline, so it waits to sync.
+      setCap('Say “Hey Pocket”. No hands needed.', '3 of 5 operators found tapping to talk awkward with their hands full.');
+      await wait(700);
+      heard('Hey Pocket'); await wait(900);
+      openSheet(); setTalk('Listening'); await wait(700); unheard();
+      setCap('Every detail comes from one sentence.', 'What, when, who and how urgent, filled in as you speak.');
+      await speak(SCRIPTS[0], () => wait(230));
+      await wait(700); toConfirm();
+      setCap('Say “yes” to add it.', 'Nothing saves until you confirm it.');
+      await wait(1500);
+      heard('Yes'); await wait(800);
+      const fence = commit(SCRIPTS[0]); await wait(500); unheard();
+      setCap('No signal? It saves on the phone.', '2 of 5 thought a task was lost before it synced. Now the app says so.');
+      await wait(2600);
+      setCap('When signal returns, it syncs on its own.');
+      await goOnline(wait); await wait(1800);
+      // 2. Hold to talk: a repeating task, added with a tap.
+      setCap('Or hold to talk.', '“Every Monday at 7 AM” makes it repeat. People are named, never numbered.');
+      touchAt($('talk')); touch.classList.add('on'); await wait(450);
+      touch.classList.add('press'); $('talk').classList.add('held'); openSheet(); setTalk('Release'); await wait(500);
+      await speak(SCRIPTS[1], () => wait(240));
+      await wait(500); touch.classList.remove('press'); $('talk').classList.remove('held'); toConfirm(); await wait(300);
+      await tap($('add'), 180); $('add').classList.add('tap'); await wait(120); $('add').classList.remove('tap');
+      commit(SCRIPTS[1]); await wait(2200);
+      // 3. Tick one off by touch.
+      setCap('Tick tasks off with a tap.');
+      reveal(rowOf(3)); await wait(450);
+      await tap(rowOf(3).querySelector('.check'), 160); setDone(3, true); await wait(900);
+      // 4. Open the voice-made task: the original request is kept with it.
+      setCap('Every task keeps the request that made it.', 'Play it back, or read exactly what was heard.');
+      reveal(rowOf(fence.id)); await wait(450);
+      await tap(rowOf(fence.id).querySelector('.row-title'), 150);
+      rowOf(fence.id).classList.add('pressed'); await wait(120); rowOf(fence.id).classList.remove('pressed');
+      openDetail(fence.id); touch.classList.remove('on'); await wait(3400);
+      await tap($('back'), 140); closeDetail(); await wait(900);
+      // 5. A quick look at the herd, then back to today.
+      setCap('The herd, the team and an inbox, in one app.');
+      await tap(document.querySelector('[data-tab="herd"]'), 140); showTab('herd'); await wait(2200);
+      await tap(document.querySelector('[data-tab="today"]'), 140); showTab('today'); touch.classList.remove('on');
+      await wait(2200);
+    } catch (e) { if (e !== 'stopped') throw e; }
+    if (id === runId) busy = false;
+  }
+
+  /* ---------- manual use ---------- */
+  async function manualTalk(viaWake) {
+    if (busy) return;
+    busy = true;
+    closeDetail();
+    const id = ++runId, wait = sleeper(id), script = SCRIPTS[scriptIx++ % SCRIPTS.length];
+    try {
+      if (viaWake) { heard('Hey Pocket'); await wait(800); }
+      openSheet(); setTalk(viaWake ? 'Listening' : 'Release'); await wait(450); unheard();
+      await speak(script, () => wait(viaWake || holding ? 230 : 35));
+      await wait(400); toConfirm();
+      stream = script;
+    } catch (e) { if (e !== 'stopped') throw e; busy = false; }
+  }
+  const endTalk = () => { stream = null; busy = false; };
+  $('talk').addEventListener('pointerdown', e => {
+    if (busy) return;
+    holding = true; $('talk').classList.add('held'); $('talk').setPointerCapture(e.pointerId);
+    manualTalk(false);
+  });
+  const release = () => { if (!holding) return; holding = false; $('talk').classList.remove('held'); };
+  $('talk').addEventListener('pointerup', release);
+  $('talk').addEventListener('pointercancel', release);
+  $('add').addEventListener('click', () => { if (stream) { commit(stream); endTalk(); } });
+  $('discard').addEventListener('click', () => { if (stream) { closeSheet(); endTalk(); } });
+  $('scrim').addEventListener('click', () => { if (stream) { closeSheet(); endTalk(); } });
+  $('list').addEventListener('click', e => {
+    if (busy) return;
+    const row = e.target.closest('.row'); if (!row) return;
+    if (e.target.closest('.check')) setDone(row.dataset.id, !taskOf(row.dataset.id).done);
+    else openDetail(+row.dataset.id);
+  });
+  $('back').addEventListener('click', () => { if (!busy) closeDetail(); });
+  $('d-done').addEventListener('click', () => { if (!busy && detailId) setDone(detailId, !taskOf(detailId).done); });
+  document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => { if (!busy) { closeDetail(); showTab(b.dataset.tab); } }));
+  $('filters').addEventListener('click', e => { const c = e.target.closest('.chip'); if (c && !busy) setFilter(c.dataset.filter); });
+  $('net').addEventListener('click', () => { if (busy) return; online ? goOffline() : goOnline(sleeper(runId)).catch(() => {}); });
+
+  /* ---------- page controls ---------- */
+  function setSun(on) {
+    screen.classList.toggle('sun', on);
+    $('sun-toggle').setAttribute('aria-pressed', on);
+    $('sun-btn').setAttribute('aria-pressed', on);
+  }
+  $('sun-toggle').addEventListener('click', () => setSun(!screen.classList.contains('sun')));
+  $('sun-btn').addEventListener('click', () => setSun(!screen.classList.contains('sun')));
+  $('wake-btn').addEventListener('click', () => manualTalk(true));
+  $('play').addEventListener('click', demo);
+  function toggleRecord() { document.body.classList.toggle('record'); fit(); }
+  $('rec-toggle').addEventListener('click', toggleRecord);
+  addEventListener('keydown', e => {
+    if (e.target.closest('input, textarea')) return;
+    if (e.code === 'Space') { e.preventDefault(); demo(); }
+    else if (e.key === 'r' || e.key === 'R') reset();
+    else if (e.key === 'h' || e.key === 'H') manualTalk(true);
+    else if (e.key === 'v' || e.key === 'V') toggleRecord();
+  });
+
+  /* ---------- fit the phone to the window ---------- */
+  function fit() {
+    const rec = document.body.classList.contains('record'), narrow = innerWidth <= 860;
+    // in recording view the captions take the top (tall window) or the left (wide window)
+    const cap = $('cap'), tall = innerHeight > innerWidth;
+    const capH = rec && tall ? cap.offsetHeight + innerHeight * .035 : 0, capW = rec && !tall ? cap.offsetWidth + innerWidth * .06 : 0;
+    const h = (innerHeight - capH - 64) / 868;
+    const w = (rec ? innerWidth - capW - 64 : narrow ? innerWidth - 32 : innerWidth - 560) / 414;
+    if (document.body.classList.contains('screen-only')) return document.documentElement.style.setProperty('--s', (innerWidth / 390).toFixed(3));
+    const max = rec ? 2.5 : 1; // recording view fills the window, so a big screen records a big phone
+    document.documentElement.style.setProperty('--s', Math.max(.4, Math.min(max, narrow ? w : Math.min(h, w))).toFixed(3));
+  }
+  addEventListener('resize', fit);
+
+  const q = new URLSearchParams(location.search);
+  if (q.has('record')) document.body.classList.add('record');
+  if (q.has('screen')) document.body.classList.add('screen-only');
+  if (q.has('sun')) setSun(true);
+  fit(); reset();
+  document.fonts.ready.then(fit); // caption height depends on the web font
+  if (q.has('autoplay')) demo();
+})();
+</script>
+</body>
+</html>
