@@ -141,36 +141,46 @@
   /* HERO */
   #hero {
     margin-top: var(--nav-h); position: relative; isolation: isolate; color: #fff;
-    min-height: clamp(520px, calc(82svh - var(--nav-h)), 760px); /* html zoom (.8) shrinks this on screen */
+    min-height: clamp(480px, calc(72svh - var(--nav-h)), 680px); /* html zoom (.8) shrinks this on screen */
     display: flex; align-items: center;
   }
   #hero::before {
     content: ''; position: absolute; inset: 0; z-index: -2;
-    background: url('assets/bg/leaves.webp') center 40% / cover no-repeat;
-    filter: saturate(.85) brightness(.82);
+    /* zoomed and anchored so the frets sit on the right, clear of the left-aligned copy */
+    background: url('assets/bg/guitar.webp') 20% 55% / 160% auto no-repeat;
+    filter: saturate(.9) brightness(.95);
   }
   #hero::after {
     content: ''; position: absolute; inset: 0; z-index: -1;
-    /* darkest at the edges so the eye lands on the centre column */
-    background: radial-gradient(ellipse 70% 85% at 50% 45%, rgba(8,14,12,0.25), rgba(8,14,12,0.7)),
-                linear-gradient(rgba(8,14,12,0.15), rgba(8,14,12,0.45));
+    /* darkest behind the copy on the left */
+    background: linear-gradient(90deg, rgba(8,14,12,.86) 0%, rgba(8,14,12,.64) 45%, rgba(8,14,12,.44) 100%),
+                linear-gradient(rgba(8,14,12,.08), rgba(8,14,12,.38));
   }
-  .hero-inner {
-    width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center;
-    padding-top: 48px; padding-bottom: 56px;
+  @media (max-width: 900px) {
+    /* copy spans the width here: show only faint strings, never the soundhole */
+    #hero::before { background-size: 340% auto; background-position: 100% 30%; }
+    #hero::after { background: linear-gradient(90deg, rgba(8,14,12,.5), rgba(8,14,12,.15)),
+                               linear-gradient(rgba(8,14,12,.62), rgba(8,14,12,.84)); }
   }
+  .hero-inner { width: 100%; display: flex; flex-direction: column; align-items: flex-start; }
+  /* id-scoped so the later .wrap breakpoint padding can't zero the vertical padding */
+  #hero .hero-inner { padding-top: 56px; padding-bottom: 56px; }
   .hero-photo {
-    width: clamp(170px, 31svh, 240px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; margin-bottom: 30px;
-    box-shadow: 0 18px 44px rgba(0,0,0,0.5);
+    width: clamp(136px, 19svh, 168px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; margin-bottom: 30px;
+    box-shadow: 0 14px 36px rgba(0,0,0,0.45);
   }
-  .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
+  .hero-photo img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.88) brightness(.94); }
   .hero-name {
-    font-family: var(--font-serif); font-size: clamp(2.4rem, min(6.25vw, 9.5svh), 4.6rem); font-weight: 700;
-    line-height: 1.05; letter-spacing: -0.005em; margin-bottom: 16px;
+    font-family: var(--font-serif); font-size: clamp(2.6rem, min(6.4vw, 10svh), 5rem); font-weight: 700;
+    line-height: 1.05; letter-spacing: -0.005em; margin-bottom: 18px;
     text-shadow: 0 2px 24px rgba(0,0,0,0.35);
   }
-  .hero-role { font-size: clamp(1.05rem, 1.9vw, 1.45rem); font-weight: 600; line-height: 1.4; margin-bottom: 12px; text-wrap: balance; }
-  .hero-sub { font-size: clamp(16px, 1.35vw, 18.5px); line-height: 1.65; color: rgba(255,255,255,0.78); max-width: 720px; text-wrap: balance; }
+  .hero-role { font-size: clamp(1.05rem, 1.9vw, 1.45rem); font-weight: 600; line-height: 1.4; margin-bottom: 12px; max-width: 46rem; text-wrap: pretty; }
+  .hero-sub { font-size: clamp(16px, 1.35vw, 18.5px); line-height: 1.65; color: rgba(255,255,255,0.78); max-width: 42rem; text-wrap: balance; }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: 34px; }
+  .hero-actions .btn { background: #fff; color: var(--ink); }
+  .hero-actions .btn:hover { background: #e9e9e6; }
+  .hero-actions .lnk { color: #fff; padding-block: 10px; }
 
   /* ABOUT */
   .about { display: grid; grid-template-columns: 4fr 8fr; gap: 80px; align-items: start; }
@@ -178,6 +188,7 @@
   .about-text p.lead { font-size: clamp(1.35rem, 2.5vw, 1.7rem); font-weight: 500; line-height: 1.5; letter-spacing: -0.015em; color: var(--ink); margin-bottom: 28px; }
   .about-text p + p:not(.lead) { padding-top: 28px; border-top: 1px solid var(--line-2); }
   .about-text p:not(.lead) + p { margin-top: 28px; }
+  .about-text p + p.about-aside { border-top: 0; padding-top: 0; margin-top: 18px; font-size: 16.5px; }
   .about-close { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; margin-top: 36px; padding-top: 36px; border-top: 1px solid var(--line-2); }
 
   /* EXPERIENCE */
@@ -751,8 +762,9 @@
   @media (max-width: 600px) {
     :root { --nav-h: 64px; }
     .wrap { padding: 0 20px; }
-    .hero-inner { padding-top: 40px; padding-bottom: 44px; }
-    .hero-photo { width: 165px; margin-bottom: 26px; }
+    #hero { min-height: 0; }
+    #hero .hero-inner { padding-top: 48px; padding-bottom: 52px; }
+    .hero-photo { width: 132px; margin-bottom: 24px; }
     .hero-name { font-size: 13.125vw; }
     .hero-role { font-size: 16px; }
     .hero-sub { font-size: 15px; }
@@ -813,11 +825,16 @@
 <section id="hero">
   <div class="wrap hero-inner">
     <div class="hero-photo rv">
-      <img src="assets/img/me.jpg" alt="Eric Solak" fetchpriority="high">
+      <img src="assets/img/me-face.jpg" alt="Eric Solak" fetchpriority="high">
     </div>
     <h1 class="hero-name rv d1">Eric Solak</h1>
     <p class="hero-role rv d2">I&rsquo;m a Software Engineering graduate from McMaster University.</p>
     <p class="hero-sub rv d2">I also founded Alloy, a software consulting startup focused on building customized business solutions, web experiences, and more.</p>
+    <div class="hero-actions rv d3">
+      <a href="#contact" class="btn">Contact <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>
+      <a class="lnk lnk--plain" href="https://www.linkedin.com/in/ericsolak/" target="_blank" rel="noopener noreferrer">LinkedIn <svg class="ic" aria-hidden="true"><use href="#i-arrow-ne"></use></svg></a>
+      <a class="lnk lnk--plain" href="https://github.com/eric-solak" target="_blank" rel="noopener noreferrer">GitHub <svg class="ic" aria-hidden="true"><use href="#i-arrow-ne"></use></svg></a>
+    </div>
   </div>
 </section>
 
@@ -831,6 +848,7 @@
       <p class="lead">I build software systems end-to-end, from architecture and implementation through deployment. </p>
       <p>Through Alloy, I&rsquo;ve worked directly with business owners across Canada to scope projects, translate their needs into software, and deliver production systems myself.</p>
       <p>At CATTLElytics, I also led a team of engineers through the development of a production AI product. I&rsquo;ve learned how to communicate effectively with non-technical stakeholders while still being able to go deep technically and lead engineering work.</p>
+      <p class="about-aside">Outside of work, I&rsquo;m a self-taught guitarist and have been playing for 11 years.</p>
       <div class="about-close">
         <a href="#contact" class="btn btn--ink">Get in touch <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>
         <a href="https://alloyconsulting.net/" target="_blank" rel="noopener noreferrer" class="lnk lnk--plain">Visit Alloy <svg class="ic" aria-hidden="true"><use href="#i-arrow-ne"></use></svg></a>
